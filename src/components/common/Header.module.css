@@ -1,0 +1,25 @@
+.appBar {
+  background-color: #36190D; 
+}
+
+.title {
+  flex-grow: 1;
+  display: "flex";
+  align-items: "center";
+  text-decoration: none;
+  color: white;
+}
+
+.link {
+  color: white;
+  text-decoration: none;
+  margin-right: 20px;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.icon {
+  margin-left: 20px;
+}

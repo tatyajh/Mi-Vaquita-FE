@@ -1,0 +1,35 @@
+.groupCard {
+    max-width: 345px;
+    border-radius: 8px;
+    margin: 20px;
+    padding: 16px;
+    box-shadow: 0 3px 5px 2px rgba(255, 105, 135, .3);
+}
+
+.cardHeader {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.cardContent {
+    padding: 16px;
+}
+
+.cardActions {
+    display: flex;
+    justify-content: flex-end;
+}
+
+.link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.icon {
+    margin-left: auto;
+}
+
+.title {
+    flex-Grow: 1;
+}
