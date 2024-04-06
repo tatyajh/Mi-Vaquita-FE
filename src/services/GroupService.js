@@ -1,15 +1,19 @@
 import axios from 'axios';
 
-const baseUrl = process.env.REACT_APP_API_URL + '/groups';
+const baseUrl = `${process.env.REACT_APP_API_URL}/groups`;
 
-const createGroup = async (groupData) => {
+export const createGroup = async (groupData) => {
   try {
     const response = await axios.post(baseUrl, groupData);
     return response.data;
   } catch (error) {
     console.error('Error al crear el grupo:', error);
-    throw error;
+    throw error; 
   }
 };
 
-export default { createGroup };
+const GroupService = {
+  createGroup
+};
+
+export default GroupService;
