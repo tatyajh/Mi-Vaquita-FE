@@ -1,0 +1,37 @@
+.groupCard {
+  width: 100%;
+  margin-bottom: 1rem;
+}
+
+.cardHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.groupIcon {
+  width: 40px;
+  height: 40px;
+}
+
+.cardContent {
+  padding: 16px;
+}
+
+.cardActions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.icon {
+  margin-left: auto;
+}
+
+.title {
+  flex-grow: 1;
+}

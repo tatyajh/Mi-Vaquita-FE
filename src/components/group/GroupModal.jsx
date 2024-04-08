@@ -1,60 +1,106 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, Button, Typography } from '@mui/material';
 import { SketchPicker } from 'react-color';
-import GroupService from '../../services/GroupService';
 
-const GroupModal = ({ open, onClose, onCreate }) => {
+const GroupModal = ({ open, onClose, onSave, group }) => {
     const [groupName, setGroupName] = useState('');
     const [groupColor, setGroupColor] = useState('');
+    const [error, setError] = useState(false);
 
-    const handleCreateGroup = async () => {
-        try {
-            const groupData = {
-                name: groupName,
-                color: groupColor.hex || groupColor
-            };
-            const createdGroup = await GroupService.createGroup(groupData);
-            console.log('Grupo creado:', createdGroup);
-            onClose();
-            onCreate(createdGroup);
-        } catch (error) {
-            console.error('Error al crear el grupo:', error.response ? error.response.data : error.message);
+    useEffect(() => {
+        if (group) {
+            setGroupName(group.name);
+            setGroupColor(group.color);
+        } else {
+            setGroupName('');
+            setGroupColor('');
+        }
+        setError(false);
+    }, [group]);
+
+    const handleSave = async () => {
+        if (!groupName.trim()) {
+            setError(true);
+            return;
+        }
+
+        const groupData = {
+            ...group,
+            name: groupName,
+            color: groupColor.hex || groupColor,
+        };
+
+        onSave(groupData);
+    };
+
+    const handleChange = (event) => {
+        setGroupName(event.target.value);
+        if (error) {
+            setError(false);
         }
     };
 
     return (
         <Modal open={open} onClose={onClose}>
-            <Box sx={{
-                position: 'absolute',
-                top: '50%',
-                left: '50%',
-                transform: 'translate(-50%, -50%)',
-                width: 400,
-                bgcolor: 'background.paper',
-                boxShadow: 24,
-                p: 4
-            }}>
-                <Typography variant="h6" component="h2">
-                    Crear Nuevo Grupo
+            <Box
+                sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    width: 400,
+                    bgcolor: 'background.paper',
+                    boxShadow: 24,
+                    p: 4,
+                }}
+            >
+                <Typography
+                    variant="h6"
+                    component="h2"
+                    sx={{
+                        fontWeight: 'bold',
+                        fontSize: '1.5rem',
+                        textAlign: 'center',
+                        mb: 2,
+                    }}
+                >
+                    {group ? "Editar Grupo" : "Nuevo Grupo"}
                 </Typography>
                 <TextField
                     label="Nombre del Grupo"
                     value={groupName}
-                    onChange={(e) => setGroupName(e.target.value)}
+                    onChange={handleChange}
                     fullWidth
                     margin="normal"
+                    required
+                    error={error}
+                    helperText={error && "Este campo es obligatorio."}
                 />
-                <SketchPicker
-                    color={groupColor}
-                    onChangeComplete={(color) => setGroupColor(color)}
-                />
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        mt: 2,
+                    }}
+                >
+                    <SketchPicker
+                        color={groupColor}
+                        onChangeComplete={(color) => setGroupColor(color)}
+                    />
+                </Box>
                 <Button
                     variant="contained"
-                    color="primary"
-                    onClick={handleCreateGroup}
-                    sx={{ mt: 2 }}
+                    onClick={handleSave}
+                    sx={{
+                        mt: 2,
+                        width: '100%',
+                        bgcolor: '#36190D',
+                        '&:hover': {
+                            bgcolor: '#59382e',
+                        },
+                    }}
                 >
-                    Crear
+                    {group ? "Guardar" : "Crear"}
                 </Button>
             </Box>
         </Modal>
