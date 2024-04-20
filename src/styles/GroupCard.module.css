@@ -1,37 +1,81 @@
 .groupCard {
-  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   margin-bottom: 1rem;
+  max-width: calc(100% - 3rem);
 }
 
 .cardHeader {
+  background-color: #36190d;
+  color: white;
   display: flex;
   align-items: center;
-  gap: 8px;
+  padding: 0.5rem;
+}
+
+.iconContainer {
+  display: inline-flex;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: #f4f4f4;
+  margin-right: 16px;
 }
 
 .groupIcon {
-  width: 40px;
-  height: 40px;
+  width: 60px;
+  height: auto;
 }
 
 .cardContent {
-  padding: 16px;
+  padding: 1rem;
 }
 
 .cardActions {
   display: flex;
   justify-content: flex-end;
-}
-
-.link {
-  text-decoration: none;
-  color: inherit;
-}
-
-.icon {
-  margin-left: auto;
+  padding: 1rem;
 }
 
 .title {
-  flex-grow: 1;
+  font-weight: bold;
+  margin-left: 8px;
+}
+
+@media (max-width: 768px) {
+  .cardHeader {
+    background-color: transparent;
+    flex-direction: row;
+    align-items: center;
+    padding: 0.5rem;
+    color: #000;
+  }
+
+  .iconContainer {
+    background-color: #f4f4f4;
+    margin-right: 16px;
+  }
+
+  .cardContent,
+  .cardContentText {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    padding-top: 0;
+    padding-bottom: 0;
+    margin-left: 6rem;
+    color: #000;
+  }
+
+  .cardActions {
+    justify-content: flex-start;
+    margin-left: 6rem;
+    width: 100%;
+  }
+
+  .title {
+    font-weight: bold;
+    font-size: 1.2rem;
+    margin: 0;
+  }
 }

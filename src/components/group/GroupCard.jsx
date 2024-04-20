@@ -1,33 +1,48 @@
 import React from 'react';
 import { Card, CardContent, Typography, CardActions, Box } from '@mui/material';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
 import GroupSVG from '../../assets/layer-MC1.svg';
 import styles from '../../styles/GroupCard.module.css';
 import StyledButton from '../../styles/GlobalStyles';
+import GroupService from '../../services/GroupService';
 
 const GroupCard = ({ group, onEdit, onDelete }) => {
+    const handleEdit = () => {
+        onEdit(group);
+    };
+
+    const handleDelete = async () => {
+        try {
+            await GroupService.deleteGroup(group.id);
+            onDelete(group.id);
+        } catch (error) {
+            console.error('Error al eliminar el grupo:', error);
+        }
+    };
+
+
     return (
-        <Card className={styles.groupCard} sx={{ maxWidth: '80%', m: 1, boxSizing: 'border-box' }}>
-            <Box className={styles.cardHeader} sx={{ bgcolor: group.color, display: 'flex', alignItems: 'center', padding: 1 }}>
-                <img src={GroupSVG} alt="Group logo" className={styles.logo} style={{ width: '40px', height: '40px' }} />
-                <Typography variant="h6" component="div" sx={{ fontWeight: 'bold', flexGrow: 1, marginLeft: 1 }}>
+        <Card className={styles.groupCard}>
+            <Box className={styles.cardHeader}>
+                <Box className={styles.iconContainer} style={{ backgroundColor: group.color || '#F4F4F4' }}>
+                    <img src={GroupSVG} alt="Group logo" className={styles.groupIcon} />
+                </Box>
+                <Typography variant="h3" component="div" className={styles.title}>
                     {group.name}
                 </Typography>
             </Box>
-            <CardContent>
+            <CardContent className={styles.cardContent}>
                 <Typography variant="body2">
                     Debes: {group.amountOwed} pesos
                 </Typography>
                 <Typography variant="body2">
-                    Participantes: {group.participants} amig@s
+                    Participantes: {group.participants} amigos
                 </Typography>
             </CardContent>
-            <CardActions>
-                <StyledButton size="small" startIcon={<EditIcon />} onClick={() => onEdit(group)}>
+            <CardActions className={styles.cardActions}>
+                <StyledButton size="small" onClick={handleEdit}>
                     Editar
                 </StyledButton>
-                <StyledButton size="small" startIcon={<DeleteIcon />} onClick={() => onDelete(group.id)}>
+                <StyledButton size="small" onClick={handleDelete}>
                     Eliminar
                 </StyledButton>
             </CardActions>
