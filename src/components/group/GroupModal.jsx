@@ -5,33 +5,23 @@ import GroupService from '../../services/GroupService';
 
 const GroupModal = ({ open, onClose, group, onSave }) => {
     const [groupName, setGroupName] = useState('');
-    const [groupColor, setGroupColor] = useState('');
+    const [groupColor, setGroupColor] = useState('#FFFFFF'); // default to white
     const [error, setError] = useState('');
 
     useEffect(() => {
         if (group) {
             setGroupName(group.name);
-            setGroupColor(group.color);
+            setGroupColor(group.color || '#FFFFFF');
         } else {
             setGroupName('');
-            setGroupColor('');
+            setGroupColor('#FFFFFF');
         }
         setError('');
     }, [group]);
 
     const handleSave = async () => {
         const trimmedName = groupName.trim();
-        if (!trimmedName) {
-            setError('Elije un nombre para continuar.');
-            return;
-        }
-        if (trimmedName.length > 30) {
-            setError('El nombre del grupo no puede tener más de 30 caracteres.');
-            return;
-        }
-
         const groupData = {
-            ...group,
             name: trimmedName,
             color: groupColor.hex || groupColor,
         };
@@ -45,11 +35,7 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
             }
             onSave(response);
         } catch (error) {
-            if (error.response && error.response.data && error.response.data.message) {
-                setError(error.response.data.message);
-            } else {
-                setError('Ocurrió un error al guardar el grupo.');
-            }
+            setError(error.response?.data?.message || 'Ocurrió un error al guardar el grupo.');
         }
     };
 

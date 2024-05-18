@@ -11,6 +11,7 @@ const GroupsPage = () => {
   const [totalDue, setTotalDue] = useState(0);
 
   useEffect(() => {
+    console.log('Fetching groups...');
     const fetchGroups = async () => {
       try {
         const fetchedGroups = await GroupService.getGroups();
@@ -19,6 +20,7 @@ const GroupsPage = () => {
         console.error('Error al cargar grupos:', error);
       }
     };
+  
     fetchGroups();
   }, []);
 

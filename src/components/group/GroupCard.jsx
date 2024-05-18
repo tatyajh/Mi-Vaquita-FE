@@ -19,7 +19,6 @@ const GroupCard = ({ group, onEdit, onDelete }) => {
         }
     };
 
-
     return (
         <Card className={styles.groupCard}>
             <Box className={styles.cardHeader}>
