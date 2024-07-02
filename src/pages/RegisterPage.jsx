@@ -3,31 +3,25 @@ import { useNavigate } from 'react-router-dom';
 import { Box, Button, TextField, Typography, Container, Avatar, CssBaseline, Grid } from '@mui/material';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import Logo from '../assets/layer-MC1.svg';
 import usersService from '../services/UsersService';
 
 const theme = createTheme();
 
-const LoginPage = () => {
+const RegisterPage = () => {
   let navigate = useNavigate();
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
 
-  const handleLogin = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
     try {
-      const { token, user } = await usersService.login(email, password);
-      localStorage.setItem('token', token); 
-      console.log('Logged in user:', user);
-      navigate('/home');
+      await usersService.register(name, email, password);
+      navigate('/login');
     } catch (error) {
-      setError('Correo o contraseña incorrectos');
+      setError('Error al registrarse');
     }
-  };
-
-  const handleRegister = () => {
-    navigate('/register');
   };
 
   return (
@@ -45,11 +39,22 @@ const LoginPage = () => {
           <Avatar sx={{ m: 1, bgcolor: 'secondary.main' }}>
             <LockOutlinedIcon />
           </Avatar>
-          <img src={Logo} alt="Mi Vaquita" width={100} height={100} />
           <Typography component="h1" variant="h5">
-            Mi vaquita
+            Registrarse
           </Typography>
-          <Box component="form" onSubmit={handleLogin} noValidate sx={{ mt: 1 }}>
+          <Box component="form" onSubmit={handleRegister} noValidate sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="name"
+              label="Nombre"
+              name="name"
+              autoComplete="name"
+              autoFocus
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
             <TextField
               margin="normal"
               required
@@ -58,7 +63,6 @@ const LoginPage = () => {
               label="Correo"
               name="email"
               autoComplete="email"
-              autoFocus
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
@@ -81,12 +85,12 @@ const LoginPage = () => {
               variant="contained"
               sx={{ mt: 3, mb: 2 }}
             >
-              Ingresar
+              Registrarse
             </Button>
             <Grid container>
               <Grid item>
-                <Button onClick={handleRegister}>
-                  {"Registrarme"}
+                <Button onClick={() => navigate('/login')}>
+                  {"¿Ya tienes cuenta? Iniciar sesión"}
                 </Button>
               </Grid>
             </Grid>
@@ -97,4 +101,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;
