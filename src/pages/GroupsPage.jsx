@@ -3,7 +3,7 @@ import { Box, Button, Grid, Typography } from '@mui/material';
 import GroupModal from '../components/group/GroupModal';
 import GroupCard from '../components/group/GroupCard';
 import GroupService from '../services/GroupService';
-import GroupDetailPage from './GroupDetailPage';
+import GroupDetailPage from '../components/group/GroupDetailPage';
 
 const GroupsPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);

@@ -1,9 +1,11 @@
-import React, { useState } from "react";
-import { Box, Button, Typography, Grid, Card, CardContent, CardActions } from "@mui/material";
-import GroupService from '../services/GroupService';
-import GroupSVG from '../assets/layer-MC1.svg';
-import styles from '../styles/GroupCard.module.css';
-import StyledButton from '../styles/GlobalStyles';
+import React, { useState, useEffect } from 'react';
+import { Box, Button, Typography, Grid, Card, CardContent, CardActions } from '@mui/material';
+import GroupService from '../../services/GroupService';
+import FriendsService from '../../services/FriendsService';
+import GroupSVG from '../../assets/layer-MC1.svg';
+import styles from '../../styles/GroupCard.module.css';
+import StyledButton from '../../styles/GlobalStyles';
+import AddFriendsModal from "../friends/AddFriendModal";
 
 const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
   const [expenses, setExpenses] = useState([
@@ -32,6 +34,35 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       owe: 0,
     },
   ]);
+ const [isAddFriendsModalOpen, setAddFriendsModalOpen] = useState(false);
+  const [participants, setParticipants] = useState(group.participants || []);
+  const [friends, setFriends] = useState([]);
+
+  useEffect(() => {
+    const fetchFriends = async () => {
+      try {
+        const friendsData = await FriendsService.getFriends();
+        setFriends(friendsData);
+      } catch (error) {
+        console.error("Error fetching friends:", error);
+      }
+    };
+
+    fetchFriends();
+  }, []);
+
+  const handleAddFriends = async (selectedFriends) => {
+    try {
+      // Filtrar valores nulos antes de enviar
+      const validSelectedFriends = selectedFriends.filter(friendUserId => friendUserId !== null);
+      await GroupService.addGroupParticipants(group.id, validSelectedFriends);
+      const updatedParticipants = await GroupService.getGroupParticipants(group.id);
+      setParticipants(updatedParticipants);
+      setAddFriendsModalOpen(false);
+    } catch (error) {
+      console.error("Error adding friends to the group:", error);
+    }
+  };
 
   const handleDeleteGroup = async (groupId) => {
     if (window.confirm("Are you sure you want to delete this group?")) {
@@ -43,6 +74,15 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         console.error("Failed to delete the group:", error);
         alert("Failed to delete the group");
       }
+    }
+  };
+
+  const handleViewFriends = async () => {
+    try {
+      const participants = await GroupService.getGroupParticipants(group.id);
+      alert(`Participantes: ${participants.map(p => p.email).join(", ")}`);
+    } catch (error) {
+      console.error("Failed to get participants:", error);
     }
   };
 
@@ -81,19 +121,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
             bgcolor: "#36190D",
             "&:hover": { bgcolor: "#59382e" },
           }}
-          onClick={() => console.log("Nuevo Gasto")}
-        >
-          Nuevo Gasto
-        </Button>
-        <Button
-          sx={{
-            fontWeight: "bold",
-            fontSize: "1rem",
-            color: "white",
-            bgcolor: "#36190D",
-            "&:hover": { bgcolor: "#59382e" },
-          }}
-          onClick={() => console.log("Nuevo Amigo")}
+          onClick={() => setAddFriendsModalOpen(true)}
         >
           Nuevo Amigo
         </Button>
@@ -113,12 +141,12 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
               Debes: {group.amountOwed} pesos
             </Typography>
             <Typography variant="body2">
-              Participantes: {group.participants} amigos
+              Participantes: {participants.length} amigos
             </Typography>
           </CardContent>
           <CardActions className={styles.cardActions}>
-            <StyledButton size="small" onClick={() => onEdit(group)}>
-              Editar Grupo
+            <StyledButton size="small" onClick={handleViewFriends}>
+              Ver Amigos
             </StyledButton>
             <StyledButton size="small" onClick={() => handleDeleteGroup(group.id)}>
               Eliminar Grupo
@@ -173,6 +201,12 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
           </Grid>
         ))}
       </Grid>
+      <AddFriendsModal
+        open={isAddFriendsModalOpen}
+        onClose={() => setAddFriendsModalOpen(false)}
+        friends={friends}
+        onAddFriends={handleAddFriends}
+      />
     </>
   );
 };

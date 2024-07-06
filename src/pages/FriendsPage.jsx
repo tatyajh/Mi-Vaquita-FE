@@ -1,12 +1,77 @@
-import React from 'react';
-
+import React, { useEffect, useState } from 'react';
+import { Box, Button, Typography, Select, MenuItem } from '@mui/material';
+import FriendsService from '../services/FriendsService';
+import UsersService from '../services/UsersService';
 
 const FriendsPage = () => {
-    return (
-        <div>
-            <h1>Lista de amigos</h1>
-        </div>
-    );
+  const [friends, setFriends] = useState([]);
+  const [users, setUsers] = useState([]);
+  const [selectedUser, setSelectedUser] = useState('');
+
+  useEffect(() => {
+    const fetchUsersAndFriends = async () => {
+      try {
+        const usersData = await UsersService.getAllUsers();
+        setUsers(usersData);
+        const friendsData = await FriendsService.getFriends();
+        setFriends(friendsData);
+      } catch (error) {
+        console.error('Error al obtener los datos:', error);
+      }
+    };
+
+    fetchUsersAndFriends();
+  }, []);
+
+  const handleAddFriend = async () => {
+    try {
+      const newFriend = await FriendsService.addFriend({ friendUserId: selectedUser });
+      setFriends((prev) => [...prev, newFriend]);
+      setSelectedUser('');
+    } catch (error) {
+      console.error('Error al agregar el amigo:', error);
+    }
+  };
+
+  const handleDeleteFriend = async (friendUserId) => {
+    try {
+      await FriendsService.deleteFriend(friendUserId);
+      setFriends((prev) => prev.filter((friend) => friend.id !== friendUserId));
+    } catch (error) {
+      console.error('Error al eliminar el amigo:', error);
+    }
+  };
+
+  return (
+    <Box sx={{ p: 3 }}>
+      <Typography variant="h4" sx={{ mb: 3 }}>Lista de amigos</Typography>
+      <Box sx={{ display: 'flex', mb: 2 }}>
+        <Select
+          value={selectedUser}
+          onChange={(e) => setSelectedUser(e.target.value)}
+          displayEmpty
+          sx={{ mr: 2, minWidth: 200 }}
+        >
+          <MenuItem value="" disabled>Seleccionar Usuario</MenuItem>
+          {users.map((user) => (
+            <MenuItem key={user.id} value={user.id}>
+              {user.email} ({user.name})
+            </MenuItem>
+          ))}
+        </Select>
+        <Button variant="contained" onClick={handleAddFriend}>Agregar</Button>
+      </Box>
+      <Box>
+        <Typography variant="h6" sx={{ mb: 2 }}>Amigos:</Typography>
+        {friends.map((friend) => (
+          <Box key={friend.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
+            <Typography sx={{ flexGrow: 1 }}>{friend.name} ({friend.email})</Typography>
+            <Button variant="contained" color="secondary" onClick={() => handleDeleteFriend(friend.id)}>Eliminar</Button>
+          </Box>
+        ))}
+      </Box>
+    </Box>
+  );
 };
 
 export default FriendsPage;

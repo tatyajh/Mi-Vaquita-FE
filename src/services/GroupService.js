@@ -52,12 +52,34 @@ export const updateGroup = async (id, groupData) => {
   }
 };
 
+export const addGroupParticipants = async (groupId, participantIds) => {
+  try {
+    await axios.post(`${baseUrl}/participants`, { groupId, participantIds });
+    return getGroupParticipants(groupId);  
+  } catch (error) {
+    console.error('Error al agregar participantes:', error);
+    throw error;
+  }
+};
+
+export const getGroupParticipants = async (groupId) => {
+  try {
+    const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/participants/${groupId}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error al obtener los participantes del grupo:', error);
+    throw error;
+  }
+};
+
 const GroupService = {
   getGroups,
   getGroupById,
   createGroup,
   deleteGroup,
   updateGroup,
+  addGroupParticipants,
+  getGroupParticipants,
 };
 
 export default GroupService;
