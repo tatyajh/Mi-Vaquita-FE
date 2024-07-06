@@ -25,7 +25,8 @@ const FriendsPage = () => {
 
   const handleAddFriend = async () => {
     try {
-      const newFriend = await FriendsService.addFriend({ friendUserId: selectedUser });
+      const userId = 1; // ID temporal del usuario autenticado
+      const newFriend = await FriendsService.addFriend({ userId, friendUserId: selectedUser });
       setFriends((prev) => [...prev, newFriend]);
       setSelectedUser('');
     } catch (error) {
@@ -33,10 +34,10 @@ const FriendsPage = () => {
     }
   };
 
-  const handleDeleteFriend = async (friendUserId) => {
+  const handleDeleteFriend = async (friendId) => {
     try {
-      await FriendsService.deleteFriend(friendUserId);
-      setFriends((prev) => prev.filter((friend) => friend.id !== friendUserId));
+      await FriendsService.deleteFriend(friendId);
+      setFriends((prev) => prev.filter((friend) => friend.id !== friendId));
     } catch (error) {
       console.error('Error al eliminar el amigo:', error);
     }
