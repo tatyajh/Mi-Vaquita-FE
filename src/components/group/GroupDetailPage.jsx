@@ -53,7 +53,6 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
 
   const handleAddFriends = async (selectedFriends) => {
     try {
-      // Filtrar valores nulos antes de enviar
       const validSelectedFriends = selectedFriends.filter(friendUserId => friendUserId !== null);
       await GroupService.addGroupParticipants(group.id, validSelectedFriends);
       const updatedParticipants = await GroupService.getGroupParticipants(group.id);
@@ -63,6 +62,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       console.error("Error adding friends to the group:", error);
     }
   };
+  
 
   const handleDeleteGroup = async (groupId) => {
     if (window.confirm("Are you sure you want to delete this group?")) {
@@ -81,10 +81,12 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
     try {
       const participants = await GroupService.getGroupParticipants(group.id);
       alert(`Participantes: ${participants.map(p => p.email).join(", ")}`);
+      setParticipants(participants);
     } catch (error) {
       console.error("Failed to get participants:", error);
     }
   };
+  
 
   return (
     <>

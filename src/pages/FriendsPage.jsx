@@ -8,26 +8,26 @@ const FriendsPage = () => {
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState('');
 
-  useEffect(() => {
-    const fetchUsersAndFriends = async () => {
-      try {
-        const usersData = await UsersService.getAllUsers();
-        setUsers(usersData);
-        const friendsData = await FriendsService.getFriends();
-        setFriends(friendsData);
-      } catch (error) {
-        console.error('Error al obtener los datos:', error);
-      }
-    };
+  const fetchUsersAndFriends = async () => {
+    try {
+      const usersData = await UsersService.getAllUsers();
+      setUsers(usersData);
+      const friendsData = await FriendsService.getFriends();
+      setFriends(friendsData);
+    } catch (error) {
+      console.error('Error al obtener los datos:', error);
+    }
+  };
 
+  useEffect(() => {
     fetchUsersAndFriends();
   }, []);
 
   const handleAddFriend = async () => {
     try {
       const userId = 1; // ID temporal del usuario autenticado
-      const newFriend = await FriendsService.addFriend({ userId, friendUserId: selectedUser });
-      setFriends((prev) => [...prev, newFriend]);
+      await FriendsService.addFriend({ userId, friendUserId: selectedUser });
+      fetchUsersAndFriends(); // Volver a cargar amigos y usuarios
       setSelectedUser('');
     } catch (error) {
       console.error('Error al agregar el amigo:', error);
