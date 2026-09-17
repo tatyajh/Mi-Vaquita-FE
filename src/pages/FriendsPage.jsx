@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { Box, Button, Typography, Select, MenuItem } from '@mui/material';
 import FriendsService from '../services/FriendsService';
 import UsersService from '../services/UsersService';
+import { getCurrentUser } from '../services/AuthService';
 
 const FriendsPage = () => {
+  const currentUser = getCurrentUser();
   const [friends, setFriends] = useState([]);
   const [users, setUsers] = useState([]);
   const [selectedUser, setSelectedUser] = useState('');
@@ -25,8 +27,7 @@ const FriendsPage = () => {
 
   const handleAddFriend = async () => {
     try {
-      const userId = 1; // ID temporal del usuario autenticado
-      await FriendsService.addFriend({ userId, friendUserId: selectedUser });
+      await FriendsService.addFriend({ userId: currentUser?.id, friendUserId: selectedUser });
       fetchUsersAndFriends(); // Volver a cargar amigos y usuarios
       setSelectedUser('');
     } catch (error) {
@@ -43,31 +44,52 @@ const FriendsPage = () => {
     }
   };
 
+  const availableUsers = users.filter((user) => user.id !== currentUser?.id);
+
   return (
-    <Box sx={{ p: 3 }}>
-      <Typography variant="h4" sx={{ mb: 3 }}>Lista de amigos</Typography>
-      <Box sx={{ display: 'flex', mb: 2 }}>
+    <Box sx={{ p: { xs: 2, sm: 3 } }}>
+      <Typography variant="h4" sx={{ mb: 3, color: '#36190D', fontWeight: 'bold' }}>Lista de amigos</Typography>
+      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
         <Select
           value={selectedUser}
           onChange={(e) => setSelectedUser(e.target.value)}
           displayEmpty
-          sx={{ mr: 2, minWidth: 200 }}
+          sx={{ minWidth: 200, flexGrow: { xs: 1, sm: 0 } }}
         >
           <MenuItem value="" disabled>Seleccionar Usuario</MenuItem>
-          {users.map((user) => (
+          {availableUsers.map((user) => (
             <MenuItem key={user.id} value={user.id}>
               {user.email} ({user.name})
             </MenuItem>
           ))}
         </Select>
-        <Button variant="contained" onClick={handleAddFriend}>Agregar</Button>
+        <Button
+          variant="contained"
+          disabled={!selectedUser}
+          onClick={handleAddFriend}
+          sx={{ bgcolor: '#36190D', '&:hover': { bgcolor: '#59382e' } }}
+        >
+          Agregar
+        </Button>
       </Box>
       <Box>
         <Typography variant="h6" sx={{ mb: 2 }}>Amigos:</Typography>
+        {friends.length === 0 && (
+          <Typography color="text.secondary">Todavía no has agregado amigos.</Typography>
+        )}
         {friends.map((friend) => (
-          <Box key={friend.id} sx={{ display: 'flex', alignItems: 'center', mb: 1 }}>
-            <Typography sx={{ flexGrow: 1 }}>{friend.name} ({friend.email})</Typography>
-            <Button variant="contained" color="secondary" onClick={() => handleDeleteFriend(friend.id)}>Eliminar</Button>
+          <Box
+            key={friend.id}
+            sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1, mb: 1, py: 1, borderBottom: '1px solid #eee' }}
+          >
+            <Typography sx={{ flexGrow: 1, wordBreak: 'break-word' }}>{friend.name} ({friend.email})</Typography>
+            <Button
+              variant="contained"
+              onClick={() => handleDeleteFriend(friend.id)}
+              sx={{ bgcolor: '#FF0000', '&:hover': { bgcolor: '#FF3333' } }}
+            >
+              Eliminar
+            </Button>
           </Box>
         ))}
       </Box>

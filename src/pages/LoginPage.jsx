@@ -18,8 +18,8 @@ const LoginPage = () => {
     e.preventDefault();
     try {
       const { token, user } = await usersService.login(email, password);
-      localStorage.setItem('token', token); 
-      console.log('Logged in user:', user);
+      localStorage.setItem('token', token);
+      localStorage.setItem('user', JSON.stringify(user));
       navigate('/home');
     } catch (error) {
       setError('Correo o contraseña incorrectos');

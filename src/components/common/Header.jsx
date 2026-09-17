@@ -1,12 +1,20 @@
 import React from 'react';
-import { AppBar, Toolbar, Typography, IconButton, Box } from '@mui/material';
-import { Link, useLocation } from 'react-router-dom';
-import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import { AppBar, Toolbar, Typography, IconButton, Box, Tooltip } from '@mui/material';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import LogoutIcon from '@mui/icons-material/Logout';
 import styles from '../../styles/Header.module.css';
 import Logo from '../../assets/layer-MC1.svg';
+import { getCurrentUser, logout } from '../../services/AuthService';
 
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+  const currentUser = getCurrentUser();
+
+  const handleLogout = () => {
+    logout();
+    navigate('/login');
+  };
 
   return (
     <AppBar position="static" sx={{ backgroundColor: '#36190D' }}>
@@ -28,9 +36,11 @@ const Header = () => {
             Grupos
           </Link>
         </Box>
-        <IconButton color="inherit" component={Link} to="/login" className={styles.icon}>
-          <AccountCircleIcon fontSize="large" />
-        </IconButton>
+        <Tooltip title={currentUser ? `Cerrar sesión (${currentUser.name})` : 'Cerrar sesión'}>
+          <IconButton color="inherit" onClick={handleLogout} className={styles.icon}>
+            <LogoutIcon fontSize="large" />
+          </IconButton>
+        </Tooltip>
       </Toolbar>
     </AppBar>
   );
