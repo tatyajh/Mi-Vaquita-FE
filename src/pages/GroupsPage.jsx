@@ -4,17 +4,22 @@ import GroupModal from '../components/group/GroupModal';
 import GroupCard from '../components/group/GroupCard';
 import GroupService from '../services/GroupService';
 import GroupDetailPage from '../components/group/GroupDetailPage';
+import { getCurrentUser } from '../services/AuthService';
 
 const GroupsPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [viewingGroup, setViewingGroup] = useState(null);
+  const currentUser = getCurrentUser();
 
   useEffect(() => {
+    if (!currentUser?.id) {
+      return;
+    }
     const fetchGroups = async () => {
       try {
-        const fetchedGroups = await GroupService.getGroups();
+        const fetchedGroups = await GroupService.getGroups(currentUser.id);
         setGroups(fetchedGroups);
       } catch (error) {
         console.error('Error al cargar grupos:', error);
@@ -22,7 +27,8 @@ const GroupsPage = () => {
     };
 
     fetchGroups();
-  }, []);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentUser?.id]);
 
   const handleOpenModalForCreate = () => {
     setSelectedGroup(null);

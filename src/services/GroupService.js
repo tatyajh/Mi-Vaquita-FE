@@ -2,9 +2,9 @@ import axios from 'axios';
 
 const baseUrl = `${process.env.REACT_APP_API_URL}/groups`;
 
-export const getGroups = async () => {
+export const getGroups = async (userId) => {
   try {
-    const response = await axios.get(baseUrl);
+    const response = await axios.get(baseUrl, { params: { userId } });
     return response.data;
   } catch (error) {
     console.error('Error al obtener los grupos:', error);
