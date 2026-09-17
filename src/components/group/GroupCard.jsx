@@ -27,6 +27,12 @@ const GroupCard = ({ group, onView, onDelete }) => {
         setMyBalance(balances.balances.find((b) => b.userId === currentUser?.id)?.balance ?? 0);
       } catch (error) {
         console.error('Error al cargar el resumen del grupo:', error);
+        // Evita que la tarjeta se quede en "Cargando..." para siempre
+        // si la petición falla (red, backend caído, etc).
+        if (isMounted) {
+          setParticipantCount(0);
+          setMyBalance(0);
+        }
       }
     };
 
@@ -56,7 +62,21 @@ const GroupCard = ({ group, onView, onDelete }) => {
         <Box className={styles.iconContainer} style={{ backgroundColor: group.color || '#F4F4F4' }}>
           <img src={GroupSVG} alt="Group logo" className={styles.groupIcon} />
         </Box>
-        <Typography variant="h3" component="div" className={styles.title}>
+        <Typography
+          component="div"
+          className={styles.title}
+          title={group.name}
+          sx={{
+            fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' },
+            display: '-webkit-box',
+            WebkitLineClamp: 2,
+            WebkitBoxOrient: 'vertical',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            wordBreak: 'break-word',
+            lineHeight: 1.25,
+          }}
+        >
           {group.name}
         </Typography>
       </Box>
