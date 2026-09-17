@@ -28,11 +28,12 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           top: '50%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
-          width: { xs: '90%', sm: '80%', md: 420 },
+          width: { xs: '92%', sm: '80%', md: 420 },
+          maxWidth: '95vw',
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: { xs: 3, sm: 4 },
-          borderRadius: 2,
+          borderRadius: 4,
         }}
       >
         <Typography variant="h6" component="h2" sx={{ fontWeight: 'bold', mb: 2 }}>
@@ -69,8 +70,10 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
         </TextField>
         <Button
           variant="contained"
+          color="primary"
+          fullWidth
           onClick={handleSubmit}
-          sx={{ mt: 2, width: '100%', bgcolor: '#36190D', '&:hover': { bgcolor: '#59382e' } }}
+          sx={{ mt: 2 }}
         >
           Guardar
         </Button>

@@ -64,14 +64,16 @@ const GroupsPage = () => {
 
   return (
     <>
-      <Typography variant="h3" sx={{ color: '#36190D', fontWeight: 'bold', textTransform: 'uppercase', ml: 2 }}>Grupos</Typography>
+      <Typography variant="h3" sx={{ color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase', ml: 2 }}>Grupos</Typography>
       {viewingGroup ? (
         <GroupDetailPage group={viewingGroup} onBack={handleBackToGroups} onEdit={handleOpenModalForEdit} onDelete={handleDeleteGroup} />
       ) : (
         <>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end', m: 2 }}>
             <Button
-              sx={{ fontWeight: 'bold', fontSize: '1rem', color: 'white', bgcolor: '#36190D', '&:hover': { bgcolor: '#59382e' } }}
+              variant="contained"
+              color="primary"
+              sx={{ fontSize: '1rem' }}
               onClick={handleOpenModalForCreate}
             >
               Nuevo Grupo

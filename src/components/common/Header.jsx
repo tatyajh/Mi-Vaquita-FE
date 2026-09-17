@@ -17,7 +17,7 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#36190D' }}>
+    <AppBar position="static" color="primary">
       <Toolbar className={styles.toolbar}>
         <Box className={styles.logoAndTitle}>
           <img src={Logo} alt="Mi Vaquita" className={styles.logo} />

@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Typography, Select, MenuItem } from '@mui/material';
+import { Box, Button, Typography, Select, MenuItem, Grid } from '@mui/material';
 import FriendsService from '../services/FriendsService';
 import UsersService from '../services/UsersService';
 import { getCurrentUser } from '../services/AuthService';
+import FriendCard from '../components/friends/FriendCard';
 
 const FriendsPage = () => {
   const currentUser = getCurrentUser();
@@ -48,7 +49,7 @@ const FriendsPage = () => {
 
   return (
     <Box sx={{ p: { xs: 2, sm: 3 } }}>
-      <Typography variant="h4" sx={{ mb: 3, color: '#36190D', fontWeight: 'bold' }}>Lista de amigos</Typography>
+      <Typography variant="h4" sx={{ mb: 3, color: 'primary.main', fontWeight: 'bold' }}>Lista de amigos</Typography>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
         <Select
           value={selectedUser}
@@ -65,9 +66,9 @@ const FriendsPage = () => {
         </Select>
         <Button
           variant="contained"
+          color="primary"
           disabled={!selectedUser}
           onClick={handleAddFriend}
-          sx={{ bgcolor: '#36190D', '&:hover': { bgcolor: '#59382e' } }}
         >
           Agregar
         </Button>
@@ -77,21 +78,13 @@ const FriendsPage = () => {
         {friends.length === 0 && (
           <Typography color="text.secondary">Todavía no has agregado amigos.</Typography>
         )}
-        {friends.map((friend) => (
-          <Box
-            key={friend.id}
-            sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: 1, mb: 1, py: 1, borderBottom: '1px solid #eee' }}
-          >
-            <Typography sx={{ flexGrow: 1, wordBreak: 'break-word' }}>{friend.name} ({friend.email})</Typography>
-            <Button
-              variant="contained"
-              onClick={() => handleDeleteFriend(friend.id)}
-              sx={{ bgcolor: '#FF0000', '&:hover': { bgcolor: '#FF3333' } }}
-            >
-              Eliminar
-            </Button>
-          </Box>
-        ))}
+        <Grid container spacing={2}>
+          {friends.map((friend) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={friend.id}>
+              <FriendCard friend={friend} onDelete={handleDeleteFriend} />
+            </Grid>
+          ))}
+        </Grid>
       </Box>
     </Box>
   );

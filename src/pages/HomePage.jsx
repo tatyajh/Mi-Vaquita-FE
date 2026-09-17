@@ -19,7 +19,7 @@ const HomePage = () => {
       }}
     >
       <img src={Logo} alt="Mi Vaquita" width={100} height={100} />
-      <Typography variant="h4" sx={{ mt: 2, color: '#36190D', fontWeight: 'bold' }}>
+      <Typography variant="h4" sx={{ mt: 2, color: 'primary.main', fontWeight: 'bold' }}>
         {currentUser ? `¡Hola, ${currentUser.name}!` : 'Bienvenido a mi Vaquita'}
       </Typography>
       <Typography sx={{ mt: 1, mb: 4, color: 'text.secondary', maxWidth: 420 }}>
@@ -30,7 +30,7 @@ const HomePage = () => {
           component={Link}
           to="/groups"
           variant="contained"
-          sx={{ bgcolor: '#36190D', '&:hover': { bgcolor: '#59382e' } }}
+          color="primary"
         >
           Ver mis grupos
         </Button>
@@ -38,7 +38,7 @@ const HomePage = () => {
           component={Link}
           to="/friends"
           variant="outlined"
-          sx={{ color: '#36190D', borderColor: '#36190D' }}
+          color="primary"
         >
           Ver mis amigos
         </Button>

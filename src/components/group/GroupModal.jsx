@@ -47,11 +47,12 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                     top: '50%',
                     left: '50%',
                     transform: 'translate(-50%, -50%)',
-                    width: { xs: '90%', sm: '80%', md: 400 },
+                    width: { xs: '92%', sm: '80%', md: 440 },
+                    maxWidth: '95vw',
                     bgcolor: 'background.paper',
                     boxShadow: 24,
-                    p: 4,
-                    borderRadius: 2,
+                    p: { xs: 3, sm: 4 },
+                    borderRadius: 4,
                 }}
             >
                 <IconButton
@@ -84,8 +85,10 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                 </Box>
                 <Button
                     variant="contained"
+                    color="primary"
+                    fullWidth
                     onClick={handleSave}
-                    sx={{ mt: 2, width: '100%', bgcolor: '#36190D', '&:hover': { bgcolor: '#59382e' } }}
+                    sx={{ mt: 2 }}
                 >
                     {group ? "Guardar" : "Crear"}
                 </Button>
