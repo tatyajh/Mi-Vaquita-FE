@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Box, Button, TextField, Typography, Grid } from '@mui/material';
+import { Alert, Box, Button, TextField, Grid } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import usersService from '../services/UsersService';
 
@@ -9,16 +9,29 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
 
   const handleLogin = async (e) => {
     e.preventDefault();
+    setError('');
+    setSubmitting(true);
     try {
       const { token, user } = await usersService.login(email, password);
       localStorage.setItem('token', token);
       localStorage.setItem('user', JSON.stringify(user));
       navigate('/home');
-    } catch (error) {
-      setError('Correo o contraseña incorrectos');
+    } catch (err) {
+      const status = err?.response?.status;
+      const serverMessage = err?.response?.data?.message;
+      if (status === 401) {
+        setError(serverMessage || 'Correo o contraseña incorrectos');
+      } else if (!err?.response) {
+        setError('No se pudo conectar con el servidor. Verifica tu conexión e intenta de nuevo.');
+      } else {
+        setError(serverMessage || 'No se pudo iniciar sesión. Intenta de nuevo.');
+      }
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -53,15 +66,20 @@ const LoginPage = () => {
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        {error && <Typography color="error" sx={{ mt: 1 }}>{error}</Typography>}
+        {error && (
+          <Alert severity="error" sx={{ mt: 1 }} data-testid="login-error">
+            {error}
+          </Alert>
+        )}
         <Button
           type="submit"
           fullWidth
           variant="contained"
           color="primary"
+          disabled={submitting}
           sx={{ mt: 3, mb: 1, py: 1.2 }}
         >
-          Ingresar
+          {submitting ? 'Ingresando...' : 'Ingresar'}
         </Button>
         <Grid container justifyContent="center">
           <Grid item>
