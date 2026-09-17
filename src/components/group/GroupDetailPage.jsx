@@ -9,6 +9,7 @@ import styles from '../../styles/GroupCard.module.css';
 import StyledButton from '../../styles/GlobalStyles';
 import AddFriendsModal from '../friends/AddFriendModal';
 import AddExpenseModal from './AddExpenseModal';
+import ExpenseCard from './ExpenseCard';
 import { formatCurrency as currency } from '../../utils/currency';
 
 const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
@@ -60,6 +61,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       setAddFriendsModalOpen(false);
     } catch (error) {
       console.error('Error adding friends to the group:', error);
+      alert(error.response?.data?.message || 'No se pudieron agregar los amigos al grupo.');
     }
   };
 
@@ -109,40 +111,13 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
   return (
     <>
       <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', m: 2, gap: 1 }}>
-        <Button
-          sx={{
-            fontWeight: 'bold',
-            fontSize: '0.9rem',
-            color: 'white',
-            bgcolor: '#36190D',
-            '&:hover': { bgcolor: '#59382e' },
-          }}
-          onClick={onBack}
-        >
+        <Button variant="contained" color="primary" sx={{ fontSize: '0.9rem' }} onClick={onBack}>
           Volver
         </Button>
-        <Button
-          sx={{
-            fontWeight: 'bold',
-            fontSize: '0.9rem',
-            color: 'white',
-            bgcolor: '#36190D',
-            '&:hover': { bgcolor: '#59382e' },
-          }}
-          onClick={() => onEdit(group)}
-        >
+        <Button variant="contained" color="primary" sx={{ fontSize: '0.9rem' }} onClick={() => onEdit(group)}>
           Editar Grupo
         </Button>
-        <Button
-          sx={{
-            fontWeight: 'bold',
-            fontSize: '0.9rem',
-            color: 'white',
-            bgcolor: '#36190D',
-            '&:hover': { bgcolor: '#59382e' },
-          }}
-          onClick={() => setAddFriendsModalOpen(true)}
-        >
+        <Button variant="contained" color="primary" sx={{ fontSize: '0.9rem' }} onClick={() => setAddFriendsModalOpen(true)}>
           Nuevo Amigo
         </Button>
       </Box>
@@ -180,18 +155,10 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       </Box>
 
       <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', mx: 2, mt: 4, gap: 1 }}>
-        <Typography variant="h5" sx={{ color: '#36190D', fontWeight: 'bold' }}>
+        <Typography variant="h5" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
           Gastos
         </Typography>
-        <Button
-          sx={{
-            fontWeight: 'bold',
-            color: 'white',
-            bgcolor: '#36190D',
-            '&:hover': { bgcolor: '#59382e' },
-          }}
-          onClick={() => setAddExpenseModalOpen(true)}
-        >
+        <Button variant="contained" color="primary" onClick={() => setAddExpenseModalOpen(true)}>
           Agregar Gasto
         </Button>
       </Box>
@@ -204,26 +171,8 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
 
       <Grid container spacing={2} sx={{ m: 0, mt: 1, px: 2, width: '100%' }}>
         {expenses.map((expense) => (
-          <Grid item xs={12} sm={6} lg={4} key={expense.id}>
-            <Box sx={{ border: '1px solid #36190D', borderRadius: 2, p: 2, height: '100%' }}>
-              <Typography variant="h6" sx={{ wordBreak: 'break-word' }}>{expense.description}</Typography>
-              <Typography>Pagado por: {expense.paid_by_name}</Typography>
-              <Typography sx={{ fontWeight: 'bold' }}>{currency(expense.amount)}</Typography>
-              <Box sx={{ display: 'flex', gap: 2, mt: 1 }}>
-                <Button
-                  size="small"
-                  sx={{
-                    fontWeight: 'bold',
-                    color: 'white',
-                    bgcolor: '#FF0000',
-                    '&:hover': { bgcolor: '#FF3333' },
-                  }}
-                  onClick={() => handleDeleteExpense(expense.id)}
-                >
-                  Eliminar
-                </Button>
-              </Box>
-            </Box>
+          <Grid item xs={12} sm={6} md={4} lg={3} key={expense.id}>
+            <ExpenseCard expense={expense} onDelete={handleDeleteExpense} />
           </Grid>
         ))}
       </Grid>
@@ -231,7 +180,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       {balances && balances.balances.length > 0 && (
         <Box sx={{ mx: 2, mt: 4, mb: 4 }}>
           <Divider sx={{ mb: 2 }} />
-          <Typography variant="h5" sx={{ color: '#36190D', fontWeight: 'bold', mb: 2 }}>
+          <Typography variant="h5" sx={{ color: 'primary.main', fontWeight: 'bold', mb: 2 }}>
             Cuentas
           </Typography>
           <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
@@ -266,6 +215,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         onClose={() => setAddFriendsModalOpen(false)}
         friends={friends}
         onAddFriends={handleAddFriends}
+        currentMemberCount={participants.length}
       />
       <AddExpenseModal
         open={isAddExpenseModalOpen}
