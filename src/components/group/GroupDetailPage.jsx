@@ -8,7 +8,7 @@ import StyledButton from '../../styles/GlobalStyles';
 import AddFriendsModal from "../friends/AddFriendModal";
 
 const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
-  const [expenses, setExpenses] = useState([
+  const [expenses] = useState([
     {
       id: 1,
       name: "Café en Cali",
