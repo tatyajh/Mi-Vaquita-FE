@@ -25,6 +25,7 @@ import AddFriendsModal from '../friends/AddFriendModal';
 import AddExpenseModal from './AddExpenseModal';
 import ExpenseCard from './ExpenseCard';
 import EmptyState from '../common/EmptyState';
+import WaveDivider from '../common/WaveDivider';
 import { formatCurrency as currency } from '../../utils/currency';
 
 const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
@@ -202,6 +203,8 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
           <MenuItem onClick={() => handleDeleteGroup(group.id)} sx={{ color: 'error.dark' }}>Eliminar Grupo</MenuItem>
         </Menu>
       </Box>
+
+      <WaveDivider color={group.color || '#7b2ff7'} sx={{ mt: 2 }} />
 
       {/* Balances / settle-up section, promoted directly under the header */}
       <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3 }}>

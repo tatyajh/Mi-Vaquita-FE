@@ -5,7 +5,7 @@ import { Box, Button, Typography } from '@mui/material';
  * Shared page header: title + optional subtitle + optional primary action.
  * Keeps typography/spacing consistent across GroupsPage, FriendsPage, etc.
  */
-const PageHeader = ({ title, subtitle, actionLabel, onAction, actionIcon }) => {
+const PageHeader = ({ title, subtitle, actionLabel, onAction, actionIcon, titleColor, subtitleColor }) => {
   return (
     <Box
       sx={{
@@ -20,11 +20,11 @@ const PageHeader = ({ title, subtitle, actionLabel, onAction, actionIcon }) => {
       }}
     >
       <Box sx={{ minWidth: 0 }}>
-        <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 800 }}>
+        <Typography variant="h4" sx={{ color: titleColor || 'primary.main', fontWeight: 800 }}>
           {title}
         </Typography>
         {subtitle && (
-          <Typography variant="body1" sx={{ color: 'text.secondary', mt: 0.5, maxWidth: 480 }}>
+          <Typography variant="body1" sx={{ color: subtitleColor || 'text.secondary', mt: 0.5, maxWidth: 480 }}>
             {subtitle}
           </Typography>
         )}

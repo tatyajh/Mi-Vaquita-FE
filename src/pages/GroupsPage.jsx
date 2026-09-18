@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
+import { Grid, Box } from '@mui/material';
 import GroupModal from '../components/group/GroupModal';
 import GroupCard from '../components/group/GroupCard';
 import GroupService from '../services/GroupService';
@@ -7,6 +7,7 @@ import GroupDetailPage from '../components/group/GroupDetailPage';
 import { getCurrentUser } from '../services/AuthService';
 import PageHeader from '../components/common/PageHeader';
 import EmptyState from '../components/common/EmptyState';
+import WaveDivider from '../components/common/WaveDivider';
 
 const GroupsPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -76,12 +77,22 @@ const GroupsPage = () => {
         <GroupDetailPage group={viewingGroup} onBack={handleBackToGroups} onEdit={handleOpenModalForEdit} onDelete={handleDeleteGroup} />
       ) : (
         <>
-          <PageHeader
-            title="Grupos"
-            subtitle="Tus paseos y planes compartidos con amigos."
-            actionLabel={groups.length === 0 ? 'Crear tu primer paseo' : 'Nuevo Grupo'}
-            onAction={handleOpenModalForCreate}
-          />
+          <Box
+            sx={{
+              background: 'linear-gradient(135deg, #ff2d78 0%, #7b2ff7 100%)',
+              pb: 0,
+            }}
+          >
+            <PageHeader
+              title="Grupos"
+              subtitle="Tus paseos y planes compartidos con amigos."
+              actionLabel={groups.length === 0 ? 'Crear tu primer paseo' : 'Nuevo Grupo'}
+              onAction={handleOpenModalForCreate}
+              titleColor="#ffffff"
+              subtitleColor="rgba(255,255,255,0.85)"
+            />
+          </Box>
+          <WaveDivider color="#ffc93c" sx={{ mb: 2 }} />
           {groups.length === 0 ? (
             <EmptyState
               title="Todavía no tienes grupos"
