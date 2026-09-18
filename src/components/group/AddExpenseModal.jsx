@@ -94,7 +94,7 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           ))}
         </TextField>
 
-        <Box sx={{ mt: 2 }}>
+        <Box sx={{ mt: 2, width: '100%' }}>
           <input
             ref={fileInputRef}
             type="file"
@@ -120,11 +120,26 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
             </Box>
           ) : (
             <Button
-              variant="soft"
-              startIcon={<AddAPhotoIcon />}
+              variant="outlined"
+              fullWidth
+              size="large"
+              startIcon={<AddAPhotoIcon sx={{ fontSize: '1.8rem !important' }} />}
               onClick={() => fileInputRef.current?.click()}
+              sx={{
+                py: 1.5,
+                borderWidth: 2,
+                borderColor: 'primary.main',
+                color: 'primary.main',
+                fontWeight: 800,
+                fontSize: '1rem',
+                '&:hover': {
+                  borderWidth: 2,
+                  bgcolor: 'primary.main',
+                  color: '#ffffff',
+                },
+              }}
             >
-              Adjuntar recibo
+              📎 Adjuntar recibo (foto o imagen)
             </Button>
           )}
         </Box>
