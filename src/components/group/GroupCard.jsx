@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Card, CardContent, Typography, CardActions, Box, Button } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import GroupSVG from '../../assets/layer-MC1.svg';
 import GroupService from '../../services/GroupService';
 import ExpensesService from '../../services/ExpensesService';
@@ -7,9 +8,12 @@ import { getCurrentUser } from '../../services/AuthService';
 import { formatCurrency } from '../../utils/currency';
 
 const GroupCard = ({ group, onView, onDelete }) => {
+  const theme = useTheme();
   const currentUser = getCurrentUser();
   const [participantCount, setParticipantCount] = useState(null);
   const [myBalance, setMyBalance] = useState(null);
+
+  const accentColor = group.color || theme.palette.flavors.fresa;
 
   useEffect(() => {
     let isMounted = true;
@@ -55,24 +59,33 @@ const GroupCard = ({ group, onView, onDelete }) => {
   };
 
   return (
-    <Card sx={{ maxWidth: '100%' }}>
+    <Card
+      sx={{
+        maxWidth: '100%',
+        borderRadius: 6,
+        overflow: 'hidden',
+        boxShadow: `0 10px 24px ${accentColor}55`,
+        display: 'flex',
+        flexDirection: 'column',
+      }}
+    >
       <Box
         sx={{
           display: 'flex',
           alignItems: 'center',
           minWidth: 0,
-          p: 1,
-          bgcolor: 'primary.main',
-          color: 'primary.contrastText',
+          p: 2,
+          background: `linear-gradient(160deg, ${accentColor} 0%, ${accentColor}cc 100%)`,
+          color: '#ffffff',
         }}
       >
         <Box
           sx={{
             display: 'inline-flex',
             p: 1.5,
-            borderRadius: 3,
+            borderRadius: '50%',
             mr: 2,
-            bgcolor: group.color || 'secondary.light',
+            bgcolor: 'rgba(255,255,255,0.9)',
           }}
         >
           <img src={GroupSVG} alt="Group logo" width={60} height={60} style={{ display: 'block' }} />
@@ -81,10 +94,10 @@ const GroupCard = ({ group, onView, onDelete }) => {
           component="div"
           title={group.name}
           sx={{
-            fontWeight: 'bold',
+            fontWeight: 800,
             minWidth: 0,
             flex: '1 1 auto',
-            fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' },
+            fontSize: { xs: '1.2rem', sm: '1.4rem', md: '1.6rem' },
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
@@ -97,20 +110,25 @@ const GroupCard = ({ group, onView, onDelete }) => {
           {group.name}
         </Typography>
       </Box>
-      <CardContent sx={{ p: 2 }}>
-        <Typography variant="body2">
+      <CardContent sx={{ p: 2.5, bgcolor: `${accentColor}14` }}>
+        <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>
           {myBalance === null
             ? 'Cargando saldo…'
             : myBalance >= 0
               ? `Te deben ${formatCurrency(myBalance)}`
               : `Debes ${formatCurrency(Math.abs(myBalance))}`}
         </Typography>
-        <Typography variant="body2">
+        <Typography variant="body2" sx={{ mt: 0.5, color: 'text.secondary' }}>
           Participantes: {participantCount ?? '—'} amigos
         </Typography>
       </CardContent>
-      <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 0 }}>
-        <Button size="small" variant="soft" onClick={handleView}>
+      <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 0, bgcolor: `${accentColor}14` }}>
+        <Button
+          size="small"
+          variant="contained"
+          onClick={handleView}
+          sx={{ bgcolor: accentColor, '&:hover': { bgcolor: accentColor } }}
+        >
           Ver
         </Button>
         <Button size="small" variant="soft" onClick={handleDelete}>

@@ -6,6 +6,7 @@ import { getCurrentUser } from '../services/AuthService';
 import FriendCard from '../components/friends/FriendCard';
 import PageHeader from '../components/common/PageHeader';
 import EmptyState from '../components/common/EmptyState';
+import WaveDivider from '../components/common/WaveDivider';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -109,10 +110,15 @@ const FriendsPage = () => {
 
   return (
     <Box sx={{ pb: 3 }}>
-      <PageHeader
-        title="Amig@s"
-        subtitle="Las personas con las que compartes grupos y gastos."
-      />
+      <Box sx={{ background: 'linear-gradient(135deg, #ff8c42 0%, #ff2d78 100%)' }}>
+        <PageHeader
+          title="Amig@s"
+          subtitle="Las personas con las que compartes grupos y gastos."
+          titleColor="#ffffff"
+          subtitleColor="rgba(255,255,255,0.85)"
+        />
+      </Box>
+      <WaveDivider color="#8bd346" sx={{ mb: 2 }} />
 
       <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
         <Autocomplete

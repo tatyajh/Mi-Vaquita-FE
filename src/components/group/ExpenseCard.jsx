@@ -1,6 +1,19 @@
 import React, { useState } from 'react';
 import { Box, Button, Card, CardContent, Modal, Typography } from '@mui/material';
+import { useTheme } from '@mui/material/styles';
 import { formatCurrency as currency } from '../../utils/currency';
+
+// Deterministically pick a flavor color from an id/string so the same
+// expense always gets the same candy accent.
+const flavorForId = (flavors, id) => {
+  const keys = Object.keys(flavors);
+  const str = String(id ?? '');
+  let hash = 0;
+  for (let i = 0; i < str.length; i += 1) {
+    hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
+  }
+  return flavors[keys[hash % keys.length]];
+};
 
 // Íconos livianos por categoría inferida del texto de la descripción,
 // sin depender de un campo de categoría real en el backend.
@@ -22,24 +35,28 @@ const guessEmoji = (description = '') => {
 
 const ExpenseCard = ({ expense, onDelete }) => {
   const [previewOpen, setPreviewOpen] = useState(false);
+  const theme = useTheme();
+  const accentColor = flavorForId(theme.palette.flavors, expense.id);
 
   return (
     <Card
       sx={{
         height: '100%',
-        borderRadius: 4,
-        background: 'linear-gradient(160deg, #ffffff 0%, #fff3e2 100%)',
-        borderLeft: '6px solid',
-        borderColor: 'secondary.main',
+        borderRadius: 6,
+        overflow: 'hidden',
+        background: `linear-gradient(160deg, #ffffff 0%, ${accentColor}22 100%)`,
+        boxShadow: `0 10px 22px ${accentColor}55`,
+        borderTop: '8px solid',
+        borderColor: accentColor,
       }}
     >
-      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, height: '100%' }}>
+      <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, height: '100%', p: 2.5 }}>
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-          <Typography sx={{ fontSize: '1.5rem', lineHeight: 1 }}>{guessEmoji(expense.description)}</Typography>
-          <Typography variant="h6" sx={{ wordBreak: 'break-word', fontWeight: 700 }}>{expense.description}</Typography>
+          <Typography sx={{ fontSize: '1.7rem', lineHeight: 1 }}>{guessEmoji(expense.description)}</Typography>
+          <Typography variant="h6" sx={{ wordBreak: 'break-word', fontWeight: 800 }}>{expense.description}</Typography>
         </Box>
         <Typography variant="body2" color="text.secondary">Pagado por: {expense.paid_by_name}</Typography>
-        <Typography sx={{ fontWeight: 900, fontSize: '1.6rem', color: 'primary.main' }}>{currency(expense.amount)}</Typography>
+        <Typography sx={{ fontWeight: 900, fontSize: '1.7rem', color: accentColor }}>{currency(expense.amount)}</Typography>
 
         {expense.receipt_url && (
           <Box
@@ -51,10 +68,10 @@ const ExpenseCard = ({ expense, onDelete }) => {
               width: 64,
               height: 64,
               objectFit: 'cover',
-              borderRadius: 2,
+              borderRadius: 3,
               cursor: 'pointer',
               border: '2px solid',
-              borderColor: 'secondary.light',
+              borderColor: accentColor,
             }}
           />
         )}
