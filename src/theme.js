@@ -1,32 +1,32 @@
 import { createTheme } from '@mui/material/styles';
 
-// Centralized "kawaii" theme for Mi Vaquita: soft rounded corners, gentle
-// shadows and the brand's brown/cream cow palette, applied app-wide.
+// Centralized "candy" theme for Mi Vaquita: saturated, appetizing colors,
+// playful rounded typography and organic wavy dividers, applied app-wide.
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#36190d',
-      light: '#59382e',
-      dark: '#210f08',
+      main: '#ff2d78', // hot pink / magenta
+      light: '#ff6fa5',
+      dark: '#c4005c',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#f4a259',
-      light: '#ffd8a8',
-      dark: '#c97d38',
-      contrastText: '#36190d',
+      main: '#7b2ff7', // saturated purple
+      light: '#a978ff',
+      dark: '#5411c9',
+      contrastText: '#ffffff',
     },
     error: {
-      main: '#b02a37',
+      main: '#e8382f',
       light: '#fdecea',
-      dark: '#8c2129',
-      contrastText: '#b02a37',
+      dark: '#b12b23',
+      contrastText: '#e8382f',
     },
     success: {
-      main: '#1e7e34',
-      light: '#e6f4ea',
-      dark: '#155d27',
-      contrastText: '#1e7e34',
+      main: '#2fbf5b',
+      light: '#e6f9ec',
+      dark: '#1f8f42',
+      contrastText: '#2fbf5b',
     },
     background: {
       default: '#fffaf3',
@@ -34,6 +34,15 @@ const theme = createTheme({
     },
     text: {
       primary: '#36190d',
+    },
+    // Candy "flavor" accents, used for group cards without their own color
+    // (and for Friends/Expenses cards), cycled/hashed by id.
+    flavors: {
+      fresa: '#ff2d78', // strawberry - hot pink
+      mango: '#ffc93c', // mango - bright yellow
+      uva: '#7b2ff7', // grape - purple
+      limon: '#8bd346', // lime - lime green
+      durazno: '#ff8c42', // peach - coral/salmon
     },
   },
   shape: {
