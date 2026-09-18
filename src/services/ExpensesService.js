@@ -42,11 +42,30 @@ export const deleteExpense = async (id) => {
   }
 };
 
+// Best-effort: el backend puede no tener el storage de recibos
+// configurado todavía (devuelve 501). En ese caso devolvemos null en
+// vez de lanzar, para que crear el gasto nunca quede bloqueado por la
+// foto del recibo.
+export const uploadReceipt = async (file) => {
+  try {
+    const formData = new FormData();
+    formData.append('receipt', file);
+    const response = await axios.post(`${baseUrl}/upload-receipt`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    return response.data?.url || null;
+  } catch (error) {
+    console.warn('La subida del recibo no está disponible, se guardará el gasto sin foto:', error);
+    return null;
+  }
+};
+
 const ExpensesService = {
   getExpensesByGroup,
   getGroupBalances,
   createExpense,
   deleteExpense,
+  uploadReceipt,
 };
 
 export default ExpensesService;
