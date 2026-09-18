@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, CardActions, Box } from '@mui/material';
+import { Card, CardContent, Typography, CardActions, Box, Button } from '@mui/material';
 import GroupSVG from '../../assets/layer-MC1.svg';
-import styles from '../../styles/GroupCard.module.css';
-import StyledButton from '../../styles/GlobalStyles';
 import GroupService from '../../services/GroupService';
 import ExpensesService from '../../services/ExpensesService';
 import { getCurrentUser } from '../../services/AuthService';
@@ -57,16 +55,35 @@ const GroupCard = ({ group, onView, onDelete }) => {
   };
 
   return (
-    <Card className={styles.groupCard}>
-      <Box className={styles.cardHeader}>
-        <Box className={styles.iconContainer} style={{ backgroundColor: group.color || '#F4F4F4' }}>
-          <img src={GroupSVG} alt="Group logo" className={styles.groupIcon} />
+    <Card sx={{ maxWidth: '100%' }}>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          minWidth: 0,
+          p: 1,
+          bgcolor: 'primary.main',
+          color: 'primary.contrastText',
+        }}
+      >
+        <Box
+          sx={{
+            display: 'inline-flex',
+            p: 1.5,
+            borderRadius: 3,
+            mr: 2,
+            bgcolor: group.color || 'secondary.light',
+          }}
+        >
+          <img src={GroupSVG} alt="Group logo" width={60} height={60} style={{ display: 'block' }} />
         </Box>
         <Typography
           component="div"
-          className={styles.title}
           title={group.name}
           sx={{
+            fontWeight: 'bold',
+            minWidth: 0,
+            flex: '1 1 auto',
             fontSize: { xs: '1.1rem', sm: '1.3rem', md: '1.5rem' },
             display: '-webkit-box',
             WebkitLineClamp: 2,
@@ -80,7 +97,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
           {group.name}
         </Typography>
       </Box>
-      <CardContent className={styles.cardContent}>
+      <CardContent sx={{ p: 2 }}>
         <Typography variant="body2">
           {myBalance === null
             ? 'Cargando saldo…'
@@ -92,13 +109,13 @@ const GroupCard = ({ group, onView, onDelete }) => {
           Participantes: {participantCount ?? '—'} amigos
         </Typography>
       </CardContent>
-      <CardActions className={styles.cardActions}>
-        <StyledButton size="small" onClick={handleView}>
+      <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 0 }}>
+        <Button size="small" variant="soft" onClick={handleView}>
           Ver
-        </StyledButton>
-        <StyledButton size="small" onClick={handleDelete}>
+        </Button>
+        <Button size="small" variant="soft" onClick={handleDelete}>
           Eliminar
-        </StyledButton>
+        </Button>
       </CardActions>
     </Card>
   );
