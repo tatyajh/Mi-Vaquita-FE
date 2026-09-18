@@ -1,18 +1,16 @@
 import React from "react";
-import { Routes, Route } from "react-router-dom";
-import HomePage from "./pages/HomePage";
-import ExpensesPage from "./pages/ExpensesPage";
+import { Routes, Route, Navigate } from "react-router-dom";
 import FriendsPage from "./pages/FriendsPage";
 import GroupsPage from "./pages/GroupsPage";
 
 const AppRoutes = () => {
   return (
     <Routes>
-      <Route index element={<HomePage />} />
-      <Route path="home" element={<HomePage />} />
-      <Route path="expenses" element={<ExpensesPage />} />
+      <Route index element={<GroupsPage />} />
+      <Route path="home" element={<Navigate to="/groups" replace />} />
       <Route path="friends" element={<FriendsPage />} />
       <Route path="groups" element={<GroupsPage />} />
+      <Route path="*" element={<Navigate to="/groups" replace />} />
     </Routes>
   );
 };

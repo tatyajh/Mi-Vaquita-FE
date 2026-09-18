@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { Box, Button, Typography, Select, MenuItem, Grid } from '@mui/material';
+import { Box, Button, Select, MenuItem, Grid, Typography } from '@mui/material';
 import FriendsService from '../services/FriendsService';
 import UsersService from '../services/UsersService';
 import { getCurrentUser } from '../services/AuthService';
 import FriendCard from '../components/friends/FriendCard';
+import PageHeader from '../components/common/PageHeader';
+import EmptyState from '../components/common/EmptyState';
 
 const FriendsPage = () => {
   const currentUser = getCurrentUser();
@@ -48,9 +50,13 @@ const FriendsPage = () => {
   const availableUsers = users.filter((user) => user.id !== currentUser?.id);
 
   return (
-    <Box sx={{ p: { xs: 2, sm: 3 } }}>
-      <Typography variant="h4" sx={{ mb: 3, color: 'primary.main', fontWeight: 'bold' }}>Lista de amigos</Typography>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
+    <Box sx={{ pb: 3 }}>
+      <PageHeader
+        title="Amig@s"
+        subtitle="Las personas con las que compartes grupos y gastos."
+      />
+
+      <Box sx={{ px: { xs: 2, sm: 3 }, display: 'flex', flexWrap: 'wrap', gap: 2, mb: 3 }}>
         <Select
           value={selectedUser}
           onChange={(e) => setSelectedUser(e.target.value)}
@@ -70,21 +76,26 @@ const FriendsPage = () => {
           disabled={!selectedUser}
           onClick={handleAddFriend}
         >
-          Agregar
+          Agregar amigo
         </Button>
       </Box>
-      <Box>
-        <Typography variant="h6" sx={{ mb: 2 }}>Amigos:</Typography>
-        {friends.length === 0 && (
-          <Typography color="text.secondary">Todavía no has agregado amigos.</Typography>
+
+      <Box sx={{ px: { xs: 2, sm: 3 } }}>
+        <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 700 }}>Amigos</Typography>
+        {friends.length === 0 ? (
+          <EmptyState
+            title="Todavía no has agregado amigos"
+            description="Selecciona un usuario arriba y presiona 'Agregar amigo' para empezar a compartir gastos con ellos."
+          />
+        ) : (
+          <Grid container spacing={2}>
+            {friends.map((friend) => (
+              <Grid item xs={12} sm={6} md={4} lg={3} key={friend.id}>
+                <FriendCard friend={friend} onDelete={handleDeleteFriend} />
+              </Grid>
+            ))}
+          </Grid>
         )}
-        <Grid container spacing={2}>
-          {friends.map((friend) => (
-            <Grid item xs={12} sm={6} md={4} lg={3} key={friend.id}>
-              <FriendCard friend={friend} onDelete={handleDeleteFriend} />
-            </Grid>
-          ))}
-        </Grid>
       </Box>
     </Box>
   );

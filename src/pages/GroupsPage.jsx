@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Box, Button, Grid, Typography } from '@mui/material';
+import { Grid } from '@mui/material';
 import GroupModal from '../components/group/GroupModal';
 import GroupCard from '../components/group/GroupCard';
 import GroupService from '../services/GroupService';
 import GroupDetailPage from '../components/group/GroupDetailPage';
 import { getCurrentUser } from '../services/AuthService';
+import PageHeader from '../components/common/PageHeader';
+import EmptyState from '../components/common/EmptyState';
 
 const GroupsPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -70,32 +72,36 @@ const GroupsPage = () => {
 
   return (
     <>
-      <Typography variant="h3" sx={{ color: 'primary.main', fontWeight: 'bold', textTransform: 'uppercase', ml: 2 }}>Grupos</Typography>
       {viewingGroup ? (
         <GroupDetailPage group={viewingGroup} onBack={handleBackToGroups} onEdit={handleOpenModalForEdit} onDelete={handleDeleteGroup} />
       ) : (
         <>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end', m: 2 }}>
-            <Button
-              variant="contained"
-              color="primary"
-              sx={{ fontSize: '1rem' }}
-              onClick={handleOpenModalForCreate}
-            >
-              Nuevo Grupo
-            </Button>
-          </Box>
-          <Grid container spacing={2} sx={{ m: 2 }}>
-            {groups.map(group => (
-              <Grid item xs={12} sm={6} md={4} lg={3} key={group.id}>
-                <GroupCard
-                  group={group}
-                  onView={handleViewGroup}
-                  onDelete={(id) => setGroups(prev => prev.filter(g => g.id !== id))}
-                />
-              </Grid>
-            ))}
-          </Grid>
+          <PageHeader
+            title="Grupos"
+            subtitle="Tus paseos y planes compartidos con amigos."
+            actionLabel={groups.length === 0 ? 'Crear tu primer paseo' : 'Nuevo Grupo'}
+            onAction={handleOpenModalForCreate}
+          />
+          {groups.length === 0 ? (
+            <EmptyState
+              title="Todavía no tienes grupos"
+              description={'1. Crea un grupo\n2. Agrega amigos\n3. Anota los gastos\n4. Mira quién le debe a quién'}
+              actionLabel="Crear tu primer paseo"
+              onAction={handleOpenModalForCreate}
+            />
+          ) : (
+            <Grid container spacing={2} sx={{ px: { xs: 2, sm: 3 }, m: 0, width: '100%' }}>
+              {groups.map(group => (
+                <Grid item xs={12} sm={6} md={4} lg={3} key={group.id}>
+                  <GroupCard
+                    group={group}
+                    onView={handleViewGroup}
+                    onDelete={(id) => setGroups(prev => prev.filter(g => g.id !== id))}
+                  />
+                </Grid>
+              ))}
+            </Grid>
+          )}
         </>
       )}
       {isModalOpen && (

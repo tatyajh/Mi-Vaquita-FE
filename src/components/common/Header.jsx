@@ -19,7 +19,7 @@ const Header = () => {
   return (
     <AppBar position="static" color="primary">
       <Toolbar className={styles.toolbar}>
-        <Box className={styles.logoAndTitle}>
+        <Box component={Link} to="/groups" className={styles.logoAndTitle} sx={{ textDecoration: 'none', color: 'inherit' }}>
           <img src={Logo} alt="Mi Vaquita" className={styles.logo} />
           <Typography variant="h6" component="div" fontSize={'22px'} fontWeight={700}>
             Mi Vaquita
@@ -28,9 +28,6 @@ const Header = () => {
         <Box className={styles.navigation}>
           <Link to="/friends" className={`${styles.link} ${location.pathname === '/friends' ? styles.active : ''}`}>
             Amig@s
-          </Link>
-          <Link to="/expenses" className={`${styles.link} ${location.pathname === '/expenses' ? styles.active : ''}`}>
-            Gastos
           </Link>
           <Link to="/groups" className={`${styles.link} ${location.pathname === '/groups' ? styles.active : ''}`}>
             Grupos
