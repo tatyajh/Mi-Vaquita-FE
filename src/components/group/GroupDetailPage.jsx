@@ -27,6 +27,9 @@ import ExpenseCard from './ExpenseCard';
 import EmptyState from '../common/EmptyState';
 import WaveDivider from '../common/WaveDivider';
 import { formatCurrency as currency } from '../../utils/currency';
+import { getTipsForTripType } from '../../data/savingsTips';
+import { markGroupViewed } from '../../utils/lastViewed';
+import ShareIcon from '@mui/icons-material/Share';
 
 const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
 
@@ -55,6 +58,12 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
     } finally {
       setLoadingExpenses(false);
     }
+  }, [group.id]);
+
+  useEffect(() => {
+    // Marca el grupo como "visto" al entrar al detalle, para que el
+    // indicador de gastos nuevos en la lista de grupos desaparezca.
+    markGroupViewed(group.id);
   }, [group.id]);
 
   useEffect(() => {
@@ -95,7 +104,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
     }
   };
 
-  const handleAddExpense = async ({ description, amount, paidByUserId, receiptFile }) => {
+  const handleAddExpense = async ({ description, amount, paidByUserId, receiptFile, category, paymentMethod }) => {
     try {
       // El upload del recibo es best-effort: si falla o el backend no
       // lo tiene configurado (uploadReceipt ya devuelve null en ese
@@ -104,7 +113,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       if (receiptFile) {
         receiptUrl = await ExpensesService.uploadReceipt(receiptFile);
       }
-      await ExpensesService.createExpense({ groupId: group.id, paidByUserId, description, amount, receiptUrl });
+      await ExpensesService.createExpense({ groupId: group.id, paidByUserId, description, amount, receiptUrl, category, paymentMethod });
       await loadExpensesAndBalances();
     } catch (error) {
       console.error('Error adding expense:', error);
@@ -136,6 +145,29 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
 
   const members = balances?.balances ?? [];
   const settlements = balances?.settlements ?? [];
+  const tips = getTipsForTripType(group.trip_type).slice(0, 3);
+
+  const handleShare = () => {
+    const lines = [`🐮 *${group.name}* — resumen de gastos`, ''];
+    if (expenses.length === 0) {
+      lines.push('Todavía no hay gastos registrados.');
+    } else {
+      expenses.forEach((e) => {
+        lines.push(`• ${e.description}: ${currency(e.amount)} (pagó ${e.paid_by_name})`);
+      });
+      lines.push('');
+      lines.push('*¿Quién le debe a quién?*');
+      if (settlements.length === 0) {
+        lines.push('Todos están a paz y salvo 🎉');
+      } else {
+        settlements.forEach((s) => {
+          lines.push(`• ${s.from.name} le paga ${currency(s.amount)} a ${s.to.name}`);
+        });
+      }
+    }
+    const text = lines.join('\n');
+    window.open(`https://wa.me/?text=${encodeURIComponent(text)}`, '_blank');
+  };
 
   return (
     <>
@@ -269,7 +301,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       </Box>
 
       {/* Primary action */}
-      <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3, display: 'flex', justifyContent: { xs: 'stretch', sm: 'flex-start' } }}>
+      <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3, display: 'flex', gap: 1.5, flexWrap: 'wrap', justifyContent: { xs: 'stretch', sm: 'flex-start' } }}>
         <Button
           variant="contained"
           color="primary"
@@ -280,6 +312,31 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         >
           Agregar gasto
         </Button>
+        <Button
+          variant="soft"
+          size="large"
+          startIcon={<ShareIcon />}
+          onClick={handleShare}
+          sx={{ px: 3, width: { xs: '100%', sm: 'auto' } }}
+        >
+          Compartir por WhatsApp
+        </Button>
+      </Box>
+
+      {/* Consejos de ahorro contextuales */}
+      <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3 }}>
+        <Box sx={{ bgcolor: `${group.color || '#8bd346'}1a`, borderRadius: 4, p: { xs: 2, sm: 2.5 } }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'primary.main', mb: 1 }}>
+            💡 Consejos para ahorrar
+          </Typography>
+          <Box component="ul" sx={{ m: 0, pl: 2.5, display: 'flex', flexDirection: 'column', gap: 0.5 }}>
+            {tips.map((tip, i) => (
+              <Typography key={i} component="li" variant="body2" color="text.secondary">
+                {tip}
+              </Typography>
+            ))}
+          </Box>
+        </Box>
       </Box>
 
       {/* Expense list */}

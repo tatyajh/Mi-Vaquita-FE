@@ -1,17 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { Card, CardContent, Typography, CardActions, Box, Button } from '@mui/material';
+import { Card, CardContent, Typography, CardActions, Box, Button, Badge } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import GroupSVG from '../../assets/layer-MC1.svg';
 import GroupService from '../../services/GroupService';
 import ExpensesService from '../../services/ExpensesService';
 import { getCurrentUser } from '../../services/AuthService';
 import { formatCurrency } from '../../utils/currency';
+import { hasUnseenExpenses } from '../../utils/lastViewed';
 
 const GroupCard = ({ group, onView, onDelete }) => {
   const theme = useTheme();
   const currentUser = getCurrentUser();
   const [participantCount, setParticipantCount] = useState(null);
   const [myBalance, setMyBalance] = useState(null);
+  const [hasNews, setHasNews] = useState(false);
 
   const accentColor = group.color || theme.palette.flavors.fresa;
 
@@ -20,13 +22,15 @@ const GroupCard = ({ group, onView, onDelete }) => {
 
     const loadSummary = async () => {
       try {
-        const [participants, balances] = await Promise.all([
+        const [participants, balances, expenses] = await Promise.all([
           GroupService.getGroupParticipants(group.id),
           ExpensesService.getGroupBalances(group.id),
+          ExpensesService.getExpensesByGroup(group.id),
         ]);
         if (!isMounted) return;
         setParticipantCount(participants.length);
         setMyBalance(balances.balances.find((b) => b.userId === currentUser?.id)?.balance ?? 0);
+        setHasNews(hasUnseenExpenses(group.id, expenses));
       } catch (error) {
         console.error('Error al cargar el resumen del grupo:', error);
         // Evita que la tarjeta se quede en "Cargando..." para siempre
@@ -123,14 +127,16 @@ const GroupCard = ({ group, onView, onDelete }) => {
         </Typography>
       </CardContent>
       <CardActions sx={{ justifyContent: 'flex-end', p: 2, pt: 0, bgcolor: `${accentColor}14` }}>
-        <Button
-          size="small"
-          variant="contained"
-          onClick={handleView}
-          sx={{ bgcolor: accentColor, '&:hover': { bgcolor: accentColor } }}
-        >
-          Ver
-        </Button>
+        <Badge color="error" variant="dot" invisible={!hasNews} sx={{ '& .MuiBadge-badge': { top: 6, right: 6 } }}>
+          <Button
+            size="small"
+            variant="contained"
+            onClick={handleView}
+            sx={{ bgcolor: accentColor, '&:hover': { bgcolor: accentColor } }}
+          >
+            Ver
+          </Button>
+        </Badge>
         <Button size="small" variant="soft" onClick={handleDelete}>
           Eliminar
         </Button>

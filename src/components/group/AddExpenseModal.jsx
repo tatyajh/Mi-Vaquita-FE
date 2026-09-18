@@ -1,7 +1,24 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, MenuItem, Modal, TextField, Typography, IconButton } from '@mui/material';
+import { Box, Button, MenuItem, Modal, TextField, Typography, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import CloseIcon from '@mui/icons-material/Close';
+import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
+import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
+import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
+
+export const CATEGORIES = [
+  { value: 'comida', label: 'Comida', emoji: '🍔' },
+  { value: 'transporte', label: 'Transporte', emoji: '🚗' },
+  { value: 'hospedaje', label: 'Hospedaje', emoji: '🏠' },
+  { value: 'entretenimiento', label: 'Entretenimiento', emoji: '🎉' },
+  { value: 'otro', label: 'Otro', emoji: '🧾' },
+];
+
+const PAYMENT_METHODS = [
+  { value: 'efectivo', label: 'Efectivo', icon: <PaymentsOutlinedIcon fontSize="small" /> },
+  { value: 'transferencia', label: 'Transferencia', icon: <AccountBalanceOutlinedIcon fontSize="small" /> },
+  { value: 'tarjeta', label: 'Tarjeta', icon: <CreditCardOutlinedIcon fontSize="small" /> },
+];
 
 const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }) => {
   const [description, setDescription] = useState('');
@@ -9,6 +26,8 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
   const [paidByUserId, setPaidByUserId] = useState(currentUserId ?? '');
   const [receiptFile, setReceiptFile] = useState(null);
   const [receiptPreview, setReceiptPreview] = useState(null);
+  const [category, setCategory] = useState('otro');
+  const [paymentMethod, setPaymentMethod] = useState('efectivo');
   const fileInputRef = useRef(null);
 
   useEffect(() => {
@@ -18,6 +37,8 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
       setPaidByUserId(currentUserId ?? (members[0]?.userId ?? ''));
       setReceiptFile(null);
       setReceiptPreview(null);
+      setCategory('otro');
+      setPaymentMethod('efectivo');
     }
   }, [open, currentUserId, members]);
 
@@ -40,7 +61,14 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
 
   const handleSubmit = () => {
     if (!description.trim() || !amount || Number(amount) <= 0 || !paidByUserId) return;
-    onAddExpense({ description: description.trim(), amount: Number(amount), paidByUserId, receiptFile });
+    onAddExpense({
+      description: description.trim(),
+      amount: Number(amount),
+      paidByUserId,
+      receiptFile,
+      category,
+      paymentMethod,
+    });
     onClose();
   };
 
@@ -93,6 +121,38 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
             </MenuItem>
           ))}
         </TextField>
+
+        <Typography variant="caption" sx={{ display: 'block', mt: 2, mb: 0.5, fontWeight: 700, color: 'text.secondary' }}>
+          Categoría
+        </Typography>
+        <ToggleButtonGroup
+          value={category}
+          exclusive
+          onChange={(e, val) => val && setCategory(val)}
+          sx={{ flexWrap: 'wrap', gap: 1, '& .MuiToggleButton-root': { borderRadius: 999, border: '2px solid', borderColor: 'divider' } }}
+        >
+          {CATEGORIES.map((c) => (
+            <ToggleButton key={c.value} value={c.value} sx={{ px: 1.5 }}>
+              {c.emoji} {c.label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
+
+        <Typography variant="caption" sx={{ display: 'block', mt: 2, mb: 0.5, fontWeight: 700, color: 'text.secondary' }}>
+          Medio de pago
+        </Typography>
+        <ToggleButtonGroup
+          value={paymentMethod}
+          exclusive
+          onChange={(e, val) => val && setPaymentMethod(val)}
+          sx={{ gap: 1, '& .MuiToggleButton-root': { borderRadius: 999, border: '2px solid', borderColor: 'divider' } }}
+        >
+          {PAYMENT_METHODS.map((m) => (
+            <ToggleButton key={m.value} value={m.value} sx={{ px: 1.5, gap: 0.5 }}>
+              {m.icon} {m.label}
+            </ToggleButton>
+          ))}
+        </ToggleButtonGroup>
 
         <Box sx={{ mt: 2, width: '100%' }}>
           <input

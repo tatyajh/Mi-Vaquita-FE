@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
-import { Box, Button, Card, CardContent, Modal, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Chip, Modal, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { formatCurrency as currency } from '../../utils/currency';
+
+const CATEGORY_EMOJI = { comida: '🍔', transporte: '🚗', hospedaje: '🏠', entretenimiento: '🎉', otro: '🧾' };
+const PAYMENT_LABEL = { efectivo: '💵 Efectivo', transferencia: '🏦 Transferencia', tarjeta: '💳 Tarjeta' };
 
 // Deterministically pick a flavor color from an id/string so the same
 // expense always gets the same candy accent.
@@ -52,11 +55,20 @@ const ExpenseCard = ({ expense, onDelete }) => {
     >
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 0.75, height: '100%', p: 2.5 }}>
         <Box sx={{ display: 'flex', alignItems: 'flex-start', gap: 1 }}>
-          <Typography sx={{ fontSize: '1.7rem', lineHeight: 1 }}>{guessEmoji(expense.description)}</Typography>
+          <Typography sx={{ fontSize: '1.7rem', lineHeight: 1 }}>
+            {CATEGORY_EMOJI[expense.category] || guessEmoji(expense.description)}
+          </Typography>
           <Typography variant="h6" sx={{ wordBreak: 'break-word', fontWeight: 800 }}>{expense.description}</Typography>
         </Box>
         <Typography variant="body2" color="text.secondary">Pagado por: {expense.paid_by_name}</Typography>
         <Typography sx={{ fontWeight: 900, fontSize: '1.7rem', color: accentColor }}>{currency(expense.amount)}</Typography>
+        {expense.payment_method && (
+          <Chip
+            size="small"
+            label={PAYMENT_LABEL[expense.payment_method] || expense.payment_method}
+            sx={{ alignSelf: 'flex-start', bgcolor: `${accentColor}22`, fontWeight: 700 }}
+          />
+        )}
 
         {expense.receipt_url && (
           <Box

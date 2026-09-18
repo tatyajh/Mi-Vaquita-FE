@@ -1,20 +1,24 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Box, TextField, Button, Typography, IconButton } from '@mui/material';
+import { Modal, Box, TextField, Button, Typography, IconButton, MenuItem } from '@mui/material';
 import { SketchPicker } from 'react-color';
 import GroupService from '../../services/GroupService';
+import { TRIP_TYPES } from '../../data/savingsTips';
 
 const GroupModal = ({ open, onClose, group, onSave }) => {
     const [groupName, setGroupName] = useState('');
     const [groupColor, setGroupColor] = useState('#FFFFFF'); // default to white
+    const [tripType, setTripType] = useState('');
     const [error, setError] = useState('');
 
     useEffect(() => {
         if (group) {
             setGroupName(group.name);
             setGroupColor(group.color || '#FFFFFF');
+            setTripType(group.trip_type || '');
         } else {
             setGroupName('');
             setGroupColor('#FFFFFF');
+            setTripType('');
         }
         setError('');
     }, [group]);
@@ -24,6 +28,7 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
         const groupData = {
             name: trimmedName,
             color: groupColor.hex || groupColor,
+            tripType: tripType || null,
         };
 
         try {
@@ -77,6 +82,19 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                     error={!!error}
                     helperText={error}
                 />
+                <TextField
+                    select
+                    label="Tipo de paseo (para consejos de ahorro)"
+                    value={tripType}
+                    onChange={(e) => setTripType(e.target.value)}
+                    fullWidth
+                    margin="normal"
+                >
+                    <MenuItem value="">Sin especificar</MenuItem>
+                    {TRIP_TYPES.map((t) => (
+                        <MenuItem key={t.value} value={t.value}>{t.emoji} {t.label}</MenuItem>
+                    ))}
+                </TextField>
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                     <SketchPicker
                         color={groupColor}
