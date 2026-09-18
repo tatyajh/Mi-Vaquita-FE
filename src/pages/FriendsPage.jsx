@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { Alert, Box, Button, Grid, TextField, Typography } from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
+import { Alert, Autocomplete, Box, CircularProgress, Grid, TextField, Typography } from '@mui/material';
 import FriendsService from '../services/FriendsService';
 import UsersService from '../services/UsersService';
 import { getCurrentUser } from '../services/AuthService';
@@ -7,13 +7,18 @@ import FriendCard from '../components/friends/FriendCard';
 import PageHeader from '../components/common/PageHeader';
 import EmptyState from '../components/common/EmptyState';
 
+const SEARCH_DEBOUNCE_MS = 300;
+
 const FriendsPage = () => {
   const currentUser = getCurrentUser();
   const [friends, setFriends] = useState([]);
-  const [emailInput, setEmailInput] = useState('');
+  const [inputValue, setInputValue] = useState('');
+  const [options, setOptions] = useState([]);
+  const [searching, setSearching] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
+  const debounceRef = useRef(null);
 
   const fetchFriends = async () => {
     try {
@@ -28,29 +33,52 @@ const FriendsPage = () => {
     fetchFriends();
   }, []);
 
-  const handleAddFriend = async (e) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+
+    const query = inputValue.trim();
+    if (!query) {
+      setOptions([]);
+      setSearching(false);
+      return;
+    }
+
+    setSearching(true);
+    debounceRef.current = setTimeout(async () => {
+      try {
+        const results = await UsersService.searchUsers(query);
+        setOptions(Array.isArray(results) ? results : []);
+      } catch (err) {
+        console.error('Error al buscar usuarios:', err);
+        setOptions([]);
+      } finally {
+        setSearching(false);
+      }
+    }, SEARCH_DEBOUNCE_MS);
+
+    return () => clearTimeout(debounceRef.current);
+  }, [inputValue]);
+
+  const handleSelectUser = async (_e, selectedUser) => {
+    if (!selectedUser) {
+      return;
+    }
     setError('');
     setSuccess('');
 
-    const email = emailInput.trim();
-    if (!email) {
-      setError('Ingresa un correo para buscar.');
+    if (selectedUser.id === currentUser?.id) {
+      setError('No puedes agregarte a ti mismo como amigo.');
       return;
     }
 
     setSubmitting(true);
     try {
-      const foundUser = await UsersService.getUserByEmail(email);
-
-      if (foundUser?.id === currentUser?.id) {
-        setError('No puedes agregarte a ti mismo como amigo.');
-        return;
-      }
-
-      await FriendsService.addFriend({ userId: currentUser?.id, friendUserId: foundUser.id });
-      setSuccess(`¡${foundUser.name} fue agregado a tus amigos!`);
-      setEmailInput('');
+      await FriendsService.addFriend({ userId: currentUser?.id, friendUserId: selectedUser.id });
+      setSuccess(`¡${selectedUser.name} fue agregado a tus amigos!`);
+      setInputValue('');
+      setOptions([]);
       fetchFriends();
     } catch (err) {
       const status = err?.response?.status;
@@ -87,28 +115,36 @@ const FriendsPage = () => {
       />
 
       <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
-        <Box
-          component="form"
-          onSubmit={handleAddFriend}
-          sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, alignItems: 'flex-start' }}
-        >
-          <TextField
-            type="email"
-            label="Buscar por correo"
-            placeholder="amigo@correo.com"
-            value={emailInput}
-            onChange={(e) => setEmailInput(e.target.value)}
-            sx={{ minWidth: 240, flexGrow: { xs: 1, sm: 0 } }}
-          />
-          <Button
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={!emailInput.trim() || submitting}
-          >
-            Agregar amigo
-          </Button>
-        </Box>
+        <Autocomplete
+          options={options}
+          filterOptions={(x) => x}
+          getOptionLabel={(option) => (option?.name ? `${option.name} (${option.email})` : '')}
+          isOptionEqualToValue={(option, value) => option.id === value.id}
+          inputValue={inputValue}
+          onInputChange={(_e, newInputValue) => setInputValue(newInputValue)}
+          onChange={handleSelectUser}
+          value={null}
+          loading={searching}
+          disabled={submitting}
+          noOptionsText={inputValue.trim() ? 'No encontramos resultados' : 'Escribe un nombre o correo'}
+          sx={{ minWidth: 280, maxWidth: 420 }}
+          renderInput={(params) => (
+            <TextField
+              {...params}
+              label="Buscar amigo por nombre o correo"
+              placeholder="Nombre o correo"
+              InputProps={{
+                ...params.InputProps,
+                endAdornment: (
+                  <>
+                    {searching ? <CircularProgress color="inherit" size={18} /> : null}
+                    {params.InputProps.endAdornment}
+                  </>
+                ),
+              }}
+            />
+          )}
+        />
         {error && (
           <Alert severity="error" sx={{ mt: 2 }} data-testid="friends-error">
             {error}

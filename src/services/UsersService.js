@@ -37,6 +37,11 @@ export const getUserByEmail = async (email) => {
   return response.data;
 };
 
+export const searchUsers = async (query) => {
+  const response = await axios.get(`${baseUrl}/users/search`, { params: { q: query } });
+  return response.data;
+};
+
 export const getLoggedInUser = async () => {
   try {
     const response = await axios.get(`${baseUrl}/me`, {
@@ -57,6 +62,7 @@ const usersService = {
   register,
   getAllUsers,
   getUserByEmail,
+  searchUsers,
   getLoggedInUser,
 };
 
