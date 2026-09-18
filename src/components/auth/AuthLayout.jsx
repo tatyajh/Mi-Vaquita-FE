@@ -12,7 +12,7 @@ const AuthLayout = ({ title, subtitle, children }) => {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        background: 'linear-gradient(160deg, #ff2d78 0%, #7b2ff7 55%, #fffaf3 55%)',
+        background: 'linear-gradient(160deg, #ED1651 0%, #FAA918 55%, #FFF8EF 55%)',
         px: 2,
         py: { xs: 4, sm: 6 },
       }}
@@ -23,7 +23,7 @@ const AuthLayout = ({ title, subtitle, children }) => {
           sx={{
             p: { xs: 3, sm: 5 },
             borderRadius: 8,
-            boxShadow: '0 20px 45px rgba(123, 47, 247, 0.35)',
+            boxShadow: '0 20px 45px rgba(237, 22, 81, 0.30)',
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',

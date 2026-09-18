@@ -193,9 +193,9 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
           alignItems: 'center',
           gap: 2,
           flexWrap: 'wrap',
-          background: `linear-gradient(135deg, ${group.color || '#f4a259'}33 0%, ${group.color || '#f4a259'}0d 100%)`,
+          background: `linear-gradient(135deg, ${group.color || '#FAA918'}33 0%, ${group.color || '#FAA918'}0d 100%)`,
           border: '1px solid',
-          borderColor: `${group.color || '#f4a259'}55`,
+          borderColor: `${group.color || '#FAA918'}55`,
         }}
       >
         <Box
@@ -204,7 +204,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
             p: 1.5,
             borderRadius: 3,
             bgcolor: group.color || 'secondary.light',
-            boxShadow: `0 6px 14px ${group.color || '#f4a259'}66`,
+            boxShadow: `0 6px 14px ${group.color || '#FAA918'}66`,
           }}
         >
           <img src={GroupSVG} alt="" width={48} height={48} />
@@ -236,7 +236,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         </Menu>
       </Box>
 
-      <WaveDivider color={group.color || '#7b2ff7'} sx={{ mt: 2 }} />
+      <WaveDivider color={group.color || '#FAA918'} sx={{ mt: 2 }} />
 
       {/* Balances / settle-up section, promoted directly under the header */}
       <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3 }}>
@@ -325,7 +325,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
 
       {/* Consejos de ahorro contextuales */}
       <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3 }}>
-        <Box sx={{ bgcolor: `${group.color || '#8bd346'}1a`, borderRadius: 4, p: { xs: 2, sm: 2.5 } }}>
+        <Box sx={{ bgcolor: `${group.color || '#9FCB3B'}1a`, borderRadius: 4, p: { xs: 2, sm: 2.5 } }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'primary.main', mb: 1 }}>
             💡 Consejos para ahorrar
           </Typography>

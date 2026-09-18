@@ -11,7 +11,7 @@ import { Box } from '@mui/material';
  * - flip: mirrors the divider vertically (scallops pointing up instead of down)
  * - height: SVG height in px (default 32)
  */
-const WaveDivider = ({ color = '#7b2ff7', flip = false, height = 32, sx = {} }) => {
+const WaveDivider = ({ color = '#FAA918', flip = false, height = 32, sx = {} }) => {
   // 10 repeating scallops across a 0-200 viewBox, tiled via preserveAspectRatio="none"
   const scallopPath =
     'M0,0 C 8.33,20 16.67,20 25,0 C 33.33,20 41.67,20 50,0 ' +

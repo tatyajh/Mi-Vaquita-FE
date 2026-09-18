@@ -7,6 +7,7 @@ import ExpensesService from '../../services/ExpensesService';
 import { getCurrentUser } from '../../services/AuthService';
 import { formatCurrency } from '../../utils/currency';
 import { hasUnseenExpenses } from '../../utils/lastViewed';
+import { resolveAccentColor } from '../../utils/color';
 
 const GroupCard = ({ group, onView, onDelete }) => {
   const theme = useTheme();
@@ -15,7 +16,10 @@ const GroupCard = ({ group, onView, onDelete }) => {
   const [myBalance, setMyBalance] = useState(null);
   const [hasNews, setHasNews] = useState(false);
 
-  const accentColor = group.color || theme.palette.flavors.fresa;
+  // Grupos con color blanco/casi blanco (por ejemplo los creados antes de
+  // tener selector de color) recaían en un botón blanco-sobre-blanco
+  // ilegible; con color casi blanco se usa un acento de marca en su lugar.
+  const accentColor = resolveAccentColor(theme.palette.flavors, group.id, group.color);
 
   useEffect(() => {
     let isMounted = true;

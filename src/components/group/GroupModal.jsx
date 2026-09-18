@@ -6,7 +6,7 @@ import { TRIP_TYPES } from '../../data/savingsTips';
 
 const GroupModal = ({ open, onClose, group, onSave }) => {
     const [groupName, setGroupName] = useState('');
-    const [groupColor, setGroupColor] = useState('#FFFFFF'); // default to white
+    const [groupColor, setGroupColor] = useState('#ED1651'); // default to brand magenta
     const [tripType, setTripType] = useState('');
     const [error, setError] = useState('');
 
@@ -17,7 +17,7 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
             setTripType(group.trip_type || '');
         } else {
             setGroupName('');
-            setGroupColor('#FFFFFF');
+            setGroupColor('#ED1651');
             setTripType('');
         }
         setError('');

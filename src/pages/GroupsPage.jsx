@@ -79,7 +79,7 @@ const GroupsPage = () => {
         <>
           <Box
             sx={{
-              background: 'linear-gradient(135deg, #ff2d78 0%, #7b2ff7 100%)',
+              background: 'linear-gradient(135deg, #ED1651 0%, #FAA918 100%)',
               pb: 0,
             }}
           >
@@ -92,7 +92,7 @@ const GroupsPage = () => {
               subtitleColor="rgba(255,255,255,0.85)"
             />
           </Box>
-          <WaveDivider color="#ffc93c" sx={{ mb: 2 }} />
+          <WaveDivider color="#FAA918" sx={{ mb: 2 }} />
           {groups.length === 0 ? (
             <EmptyState
               title="Todavía no tienes grupos"

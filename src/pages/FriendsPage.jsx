@@ -118,7 +118,7 @@ const FriendsPage = () => {
           subtitleColor="rgba(255,255,255,0.9)"
         />
       </Box>
-      <WaveDivider color="#ffc93c" sx={{ mb: 2 }} />
+      <WaveDivider color="#FAA918" sx={{ mb: 2 }} />
 
       <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
         <Autocomplete

@@ -1,20 +1,22 @@
 import { createTheme } from '@mui/material/styles';
 
-// Centralized "candy" theme for Mi Vaquita: saturated, appetizing colors,
-// playful rounded typography and organic wavy dividers, applied app-wide.
+// Tema de marca "Cosechas" para Mi Vaquita: la paleta y tipografía real
+// de cosechasexpress.com (magenta vibrante, ámbar, verdes de marca),
+// tipografía redondeada tipo display para títulos, y las mismas curvas
+// orgánicas/formas de píldora que ya traía el tema anterior.
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#ff2d78', // hot pink / magenta
-      light: '#ff6fa5',
-      dark: '#c4005c',
+      main: '#ED1651', // magenta Cosechas
+      light: '#FF5C8A',
+      dark: '#B80F3D',
       contrastText: '#ffffff',
     },
     secondary: {
-      main: '#7b2ff7', // saturated purple
-      light: '#a978ff',
-      dark: '#5411c9',
-      contrastText: '#ffffff',
+      main: '#FAA918', // ámbar Cosechas
+      light: '#FFC65C',
+      dark: '#D68A00',
+      contrastText: '#36190d',
     },
     error: {
       main: '#e8382f',
@@ -38,20 +40,20 @@ const theme = createTheme({
       contrastText: '#1a4d0f',
     },
     background: {
-      default: '#fffaf3',
+      default: '#FFF8EF',
       paper: '#ffffff',
     },
     text: {
       primary: '#36190d',
     },
-    // Candy "flavor" accents, used for group cards without their own color
-    // (and for Friends/Expenses cards), cycled/hashed by id.
+    // Acentos "de marca" (antes "flavors" de candy), usados para tarjetas
+    // de grupo/amigo/gasto sin color propio, cicladas/hasheadas por id.
     flavors: {
-      fresa: '#ff2d78', // strawberry - hot pink
-      mango: '#ffc93c', // mango - bright yellow
-      uva: '#7b2ff7', // grape - purple
-      limon: '#8bd346', // lime - lime green
-      durazno: '#ff8c42', // peach - coral/salmon
+      magenta: '#ED1651',
+      ambar: '#FAA918',
+      ciruela: '#6D236A',
+      lima: '#9FCB3B',
+      coral: '#FF6F91',
     },
   },
   shape: {
@@ -59,16 +61,16 @@ const theme = createTheme({
   },
   typography: {
     fontFamily: [
-      '"Nunito"',
+      '"Montserrat"',
       '"Segoe UI"',
       'Roboto',
       'Arial',
       'sans-serif',
     ].join(','),
-    h3: { fontWeight: 800 },
-    h4: { fontWeight: 800 },
-    h5: { fontWeight: 700 },
-    h6: { fontWeight: 700 },
+    h3: { fontWeight: 800, fontFamily: '"Comfortaa", "Montserrat", sans-serif' },
+    h4: { fontWeight: 800, fontFamily: '"Comfortaa", "Montserrat", sans-serif' },
+    h5: { fontWeight: 700, fontFamily: '"Comfortaa", "Montserrat", sans-serif' },
+    h6: { fontWeight: 700, fontFamily: '"Comfortaa", "Montserrat", sans-serif' },
   },
   components: {
     MuiCard: {
