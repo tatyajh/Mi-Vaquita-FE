@@ -94,9 +94,16 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
     }
   };
 
-  const handleAddExpense = async ({ description, amount, paidByUserId }) => {
+  const handleAddExpense = async ({ description, amount, paidByUserId, receiptFile }) => {
     try {
-      await ExpensesService.createExpense({ groupId: group.id, paidByUserId, description, amount });
+      // El upload del recibo es best-effort: si falla o el backend no
+      // lo tiene configurado (uploadReceipt ya devuelve null en ese
+      // caso), el gasto se crea igual sin receiptUrl.
+      let receiptUrl = null;
+      if (receiptFile) {
+        receiptUrl = await ExpensesService.uploadReceipt(receiptFile);
+      }
+      await ExpensesService.createExpense({ groupId: group.id, paidByUserId, description, amount, receiptUrl });
       await loadExpensesAndBalances();
     } catch (error) {
       console.error('Error adding expense:', error);
@@ -142,14 +149,29 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         </Button>
       </Box>
 
-      {/* Group header */}
-      <Box sx={{ px: { xs: 2, sm: 3 }, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+      {/* Group header, washed in the group's own color */}
+      <Box
+        sx={{
+          mx: { xs: 2, sm: 3 },
+          mt: 1,
+          p: { xs: 2, sm: 3 },
+          borderRadius: 5,
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          flexWrap: 'wrap',
+          background: `linear-gradient(135deg, ${group.color || '#f4a259'}33 0%, ${group.color || '#f4a259'}0d 100%)`,
+          border: '1px solid',
+          borderColor: `${group.color || '#f4a259'}55`,
+        }}
+      >
         <Box
           sx={{
             display: 'inline-flex',
             p: 1.5,
             borderRadius: 3,
             bgcolor: group.color || 'secondary.light',
+            boxShadow: `0 6px 14px ${group.color || '#f4a259'}66`,
           }}
         >
           <img src={GroupSVG} alt="" width={48} height={48} />
@@ -214,7 +236,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
                     le paga <ArrowForwardIcon fontSize="small" />
                   </Typography>
                   <Typography sx={{ fontWeight: 700 }}>{s.to.name}</Typography>
-                  <Typography variant="h6" sx={{ ml: 'auto', fontWeight: 800, color: 'primary.main' }}>
+                  <Typography variant="h5" sx={{ ml: 'auto', fontWeight: 900, color: 'primary.main' }}>
                     {currency(s.amount)}
                   </Typography>
                 </Box>
