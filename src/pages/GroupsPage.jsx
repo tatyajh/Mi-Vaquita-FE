@@ -86,7 +86,7 @@ const GroupsPage = () => {
             <PageHeader
               title="Grupos"
               subtitle="Tus paseos y planes compartidos con amigos."
-              actionLabel={groups.length === 0 ? 'Crear tu primer paseo' : 'Nuevo Grupo'}
+              actionLabel={groups.length === 0 ? 'Crear tu primer parche' : 'Nuevo Grupo'}
               onAction={handleOpenModalForCreate}
               titleColor="#ffffff"
               subtitleColor="rgba(255,255,255,0.85)"
@@ -97,7 +97,7 @@ const GroupsPage = () => {
             <EmptyState
               title="Todavía no tienes grupos"
               description={'1. Crea un grupo\n2. Agrega amigos\n3. Anota los gastos\n4. Mira quién le debe a quién'}
-              actionLabel="Crear tu primer paseo"
+              actionLabel="Crear tu primer parche"
               onAction={handleOpenModalForCreate}
             />
           ) : (

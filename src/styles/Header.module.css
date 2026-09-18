@@ -5,8 +5,14 @@
   padding: 0 10px;
 }
 
+.logoAndTitle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
 .logo {
-  width: 100px;
+  width: 56px;
   margin-right: 5px;
 }
 
