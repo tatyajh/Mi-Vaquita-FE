@@ -10,7 +10,7 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
     if (open) {
       setDescription('');
       setAmount('');
-      setPaidByUserId(currentUserId ?? (members[0]?.id ?? ''));
+      setPaidByUserId(currentUserId ?? (members[0]?.userId ?? ''));
     }
   }, [open, currentUserId, members]);
 
@@ -63,7 +63,7 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           onChange={(e) => setPaidByUserId(e.target.value)}
         >
           {members.map((member) => (
-            <MenuItem key={member.id} value={member.id}>
+            <MenuItem key={member.userId} value={member.userId}>
               {member.name || member.email}
             </MenuItem>
           ))}
