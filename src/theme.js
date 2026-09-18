@@ -28,6 +28,15 @@ const theme = createTheme({
       dark: '#1f8f42',
       contrastText: '#2fbf5b',
     },
+    // Verde real de marca (tipo Cosechas: #9FCB3B/#23B24A), pensado
+    // para usarse como acento de UI de verdad (botones, banners,
+    // badges) — no solo como una opción más de `flavors`.
+    accentGreen: {
+      main: '#9fcb3b',
+      light: '#d9eab1',
+      dark: '#23b24a',
+      contrastText: '#1a4d0f',
+    },
     background: {
       default: '#fffaf3',
       paper: '#ffffff',
@@ -106,6 +115,17 @@ const theme = createTheme({
             boxShadow: 'none',
             '&:hover': {
               backgroundColor: 'rgba(54, 25, 13, 0.16)',
+            },
+          },
+        },
+        {
+          props: { variant: 'green' },
+          style: {
+            backgroundColor: '#9fcb3b',
+            color: '#1a4d0f',
+            boxShadow: '0 6px 14px rgba(159, 203, 59, 0.55)',
+            '&:hover': {
+              backgroundColor: '#8bbd2c',
             },
           },
         },

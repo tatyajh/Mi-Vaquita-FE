@@ -22,7 +22,7 @@ const Header = () => {
         <Box component={Link} to="/groups" className={styles.logoAndTitle} sx={{ textDecoration: 'none', color: 'inherit' }}>
           <img src={Logo} alt="Mi Vaquita" className={styles.logo} />
           <Typography variant="h6" component="div" fontSize={'22px'} fontWeight={700}>
-            Mi Vaquita
+            Mi Vaquita <span style={{ color: '#9fcb3b' }}>🌿</span>
           </Typography>
         </Box>
         <Box className={styles.navigation}>

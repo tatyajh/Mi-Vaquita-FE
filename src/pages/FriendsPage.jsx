@@ -110,15 +110,15 @@ const FriendsPage = () => {
 
   return (
     <Box sx={{ pb: 3 }}>
-      <Box sx={{ background: 'linear-gradient(135deg, #ff8c42 0%, #ff2d78 100%)' }}>
+      <Box sx={{ background: 'linear-gradient(135deg, #23b24a 0%, #9fcb3b 100%)' }}>
         <PageHeader
           title="Amig@s"
           subtitle="Las personas con las que compartes grupos y gastos."
           titleColor="#ffffff"
-          subtitleColor="rgba(255,255,255,0.85)"
+          subtitleColor="rgba(255,255,255,0.9)"
         />
       </Box>
-      <WaveDivider color="#8bd346" sx={{ mb: 2 }} />
+      <WaveDivider color="#ffc93c" sx={{ mb: 2 }} />
 
       <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
         <Autocomplete

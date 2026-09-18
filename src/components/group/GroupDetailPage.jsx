@@ -313,7 +313,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
           Agregar gasto
         </Button>
         <Button
-          variant="soft"
+          variant="green"
           size="large"
           startIcon={<ShareIcon />}
           onClick={handleShare}
