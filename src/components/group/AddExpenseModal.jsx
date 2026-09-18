@@ -82,6 +82,8 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           transform: 'translate(-50%, -50%)',
           width: { xs: '92%', sm: '80%', md: 420 },
           maxWidth: '95vw',
+          maxHeight: '90vh',
+          overflowY: 'auto',
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: { xs: 3, sm: 4 },
@@ -145,7 +147,7 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           value={paymentMethod}
           exclusive
           onChange={(e, val) => val && setPaymentMethod(val)}
-          sx={{ gap: 1, '& .MuiToggleButton-root': { borderRadius: 999, border: '2px solid', borderColor: 'divider' } }}
+          sx={{ flexWrap: 'wrap', gap: 1, '& .MuiToggleButton-root': { borderRadius: 999, border: '2px solid', borderColor: 'divider' } }}
         >
           {PAYMENT_METHODS.map((m) => (
             <ToggleButton key={m.value} value={m.value} sx={{ px: 1.5, gap: 0.5 }}>
