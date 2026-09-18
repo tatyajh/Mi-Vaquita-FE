@@ -1,4 +1,5 @@
-import axios from "axios";
+import apiClient from './apiClient';
+import axios from 'axios';
 
 const baseUrl = `${process.env.REACT_APP_API_URL}`;
 
@@ -24,7 +25,7 @@ export const register = async (name, email, password) => {
 
 export const getAllUsers = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/users`);
+    const response = await apiClient.get('/users');
     return response.data;
   } catch (error) {
     console.error('Error al obtener los usuarios:', error);
@@ -33,27 +34,22 @@ export const getAllUsers = async () => {
 };
 
 export const getUserByEmail = async (email) => {
-  const response = await axios.get(`${baseUrl}/users/by-email`, { params: { email } });
+  const response = await apiClient.get('/users/by-email', { params: { email } });
   return response.data;
 };
 
 export const searchUsers = async (query) => {
-  // El backend ahora requiere el JWT para excluir al usuario logueado
-  // de sus propios resultados de búsqueda.
-  const response = await axios.get(`${baseUrl}/users/search`, {
+  // El backend requiere el JWT para excluir al usuario logueado de sus
+  // propios resultados de búsqueda; apiClient lo adjunta automáticamente.
+  const response = await apiClient.get('/users/search', {
     params: { q: query },
-    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
   });
   return response.data;
 };
 
 export const getLoggedInUser = async () => {
   try {
-    const response = await axios.get(`${baseUrl}/me`, {
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem('token')}` 
-      }
-    });
+    const response = await apiClient.get('/me');
     return response.data;
   } catch (error) {
     console.error('Error al obtener el usuario logueado:', error);

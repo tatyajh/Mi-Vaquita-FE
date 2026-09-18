@@ -1,11 +1,11 @@
 // src/services/FriendsService.js
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const baseUrl = `${process.env.REACT_APP_API_URL}/friends`;
+const baseUrl = '/friends';
 
 export const getFriends = async () => {
   try {
-    const response = await axios.get(baseUrl);
+    const response = await apiClient.get(baseUrl);
     return response.data;
   } catch (error) {
     console.error('Error al obtener los amigos:', error);
@@ -15,7 +15,7 @@ export const getFriends = async () => {
 
 export const addFriend = async (friendData) => {
   try {
-    const response = await axios.post(`${baseUrl}/addFriend`, friendData);
+    const response = await apiClient.post(`${baseUrl}/addFriend`, friendData);
     return response.data;
   } catch (error) {
     console.error('Error al agregar el amigo:', error);
@@ -25,7 +25,7 @@ export const addFriend = async (friendData) => {
 
 export const deleteFriend = async (friendUserId) => {
   try {
-    const response = await axios.delete(`${baseUrl}/deleteFriend/${friendUserId}`);
+    const response = await apiClient.delete(`${baseUrl}/deleteFriend/${friendUserId}`);
     return response.data;
   } catch (error) {
     console.error('Error al eliminar el amigo:', error);

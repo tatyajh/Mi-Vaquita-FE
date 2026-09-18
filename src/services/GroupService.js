@@ -1,10 +1,10 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const baseUrl = `${process.env.REACT_APP_API_URL}/groups`;
+const baseUrl = '/groups';
 
 export const getGroups = async (userId) => {
   try {
-    const response = await axios.get(baseUrl, { params: { userId } });
+    const response = await apiClient.get(baseUrl, { params: { userId } });
     return response.data;
   } catch (error) {
     console.error('Error al obtener los grupos:', error);
@@ -14,7 +14,7 @@ export const getGroups = async (userId) => {
 
 export const getGroupById = async (id) => {
   try {
-    const response = await axios.get(`${baseUrl}/${id}`);
+    const response = await apiClient.get(`${baseUrl}/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error al obtener el grupo con ID ${id}:`, error);
@@ -24,7 +24,7 @@ export const getGroupById = async (id) => {
 
 export const createGroup = async (groupData) => {
   try {
-    const response = await axios.post(baseUrl, groupData);
+    const response = await apiClient.post(baseUrl, groupData);
     return response.data;
   } catch (error) {
     console.error('Error al crear el grupo:', error);
@@ -34,7 +34,7 @@ export const createGroup = async (groupData) => {
 
 export const deleteGroup = async (id) => {
   try {
-    const response = await axios.delete(`${baseUrl}/${id}`);
+    const response = await apiClient.delete(`${baseUrl}/${id}`);
     return response.data;
   } catch (error) {
     console.error(`Error al eliminar el grupo con ID ${id}:`, error);
@@ -44,7 +44,7 @@ export const deleteGroup = async (id) => {
 
 export const updateGroup = async (id, groupData) => {
   try {
-    const response = await axios.put(`${baseUrl}/${id}`, groupData);
+    const response = await apiClient.put(`${baseUrl}/${id}`, groupData);
     return response.data;
   } catch (error) {
     console.error(`Error al actualizar el grupo con ID ${id}:`, error);
@@ -54,8 +54,8 @@ export const updateGroup = async (id, groupData) => {
 
 export const addGroupParticipants = async (groupId, participantIds) => {
   try {
-    await axios.post(`${baseUrl}/participants`, { groupId, participantIds });
-    return getGroupParticipants(groupId);  
+    await apiClient.post(`${baseUrl}/participants`, { groupId, participantIds });
+    return getGroupParticipants(groupId);
   } catch (error) {
     console.error('Error al agregar participantes:', error);
     throw error;
@@ -64,7 +64,7 @@ export const addGroupParticipants = async (groupId, participantIds) => {
 
 export const getGroupParticipants = async (groupId) => {
   try {
-    const response = await axios.get(`${process.env.REACT_APP_API_URL}/groups/participants/${groupId}`);
+    const response = await apiClient.get(`${baseUrl}/participants/${groupId}`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener los participantes del grupo:', error);

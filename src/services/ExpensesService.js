@@ -1,10 +1,10 @@
-import axios from 'axios';
+import apiClient from './apiClient';
 
-const baseUrl = `${process.env.REACT_APP_API_URL}/expenses`;
+const baseUrl = '/expenses';
 
 export const getExpensesByGroup = async (groupId) => {
   try {
-    const response = await axios.get(`${baseUrl}/group/${groupId}`);
+    const response = await apiClient.get(`${baseUrl}/group/${groupId}`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener los gastos:', error);
@@ -14,7 +14,7 @@ export const getExpensesByGroup = async (groupId) => {
 
 export const getGroupBalances = async (groupId) => {
   try {
-    const response = await axios.get(`${baseUrl}/group/${groupId}/balances`);
+    const response = await apiClient.get(`${baseUrl}/group/${groupId}/balances`);
     return response.data;
   } catch (error) {
     console.error('Error al obtener los balances:', error);
@@ -24,7 +24,7 @@ export const getGroupBalances = async (groupId) => {
 
 export const createExpense = async (expenseData) => {
   try {
-    const response = await axios.post(baseUrl, expenseData);
+    const response = await apiClient.post(baseUrl, expenseData);
     return response.data;
   } catch (error) {
     console.error('Error al crear el gasto:', error);
@@ -34,7 +34,7 @@ export const createExpense = async (expenseData) => {
 
 export const deleteExpense = async (id) => {
   try {
-    const response = await axios.delete(`${baseUrl}/${id}`);
+    const response = await apiClient.delete(`${baseUrl}/${id}`);
     return response.data;
   } catch (error) {
     console.error('Error al eliminar el gasto:', error);
@@ -50,7 +50,7 @@ export const uploadReceipt = async (file) => {
   try {
     const formData = new FormData();
     formData.append('receipt', file);
-    const response = await axios.post(`${baseUrl}/upload-receipt`, formData, {
+    const response = await apiClient.post(`${baseUrl}/upload-receipt`, formData, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
     return response.data?.url || null;
