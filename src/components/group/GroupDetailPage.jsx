@@ -1,16 +1,33 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { Box, Button, Typography, Grid, Card, CardContent, CardActions, Chip, Divider } from '@mui/material';
+import {
+  Avatar,
+  AvatarGroup,
+  Box,
+  Button,
+  Typography,
+  Grid,
+  Chip,
+  IconButton,
+  Menu,
+  MenuItem,
+  Tooltip,
+} from '@mui/material';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import GroupService from '../../services/GroupService';
 import FriendsService from '../../services/FriendsService';
 import ExpensesService from '../../services/ExpensesService';
 import { getCurrentUser } from '../../services/AuthService';
 import GroupSVG from '../../assets/layer-MC1.svg';
-import styles from '../../styles/GroupCard.module.css';
-import StyledButton from '../../styles/GlobalStyles';
 import AddFriendsModal from '../friends/AddFriendModal';
 import AddExpenseModal from './AddExpenseModal';
 import ExpenseCard from './ExpenseCard';
+import EmptyState from '../common/EmptyState';
 import { formatCurrency as currency } from '../../utils/currency';
+
+const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
 
 const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
   const currentUser = getCurrentUser();
@@ -21,6 +38,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
   const [expenses, setExpenses] = useState([]);
   const [balances, setBalances] = useState(null);
   const [loadingExpenses, setLoadingExpenses] = useState(true);
+  const [menuAnchor, setMenuAnchor] = useState(null);
 
   const loadExpensesAndBalances = useCallback(async () => {
     setLoadingExpenses(true);
@@ -48,8 +66,19 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       }
     };
 
+    const fetchParticipants = async () => {
+      try {
+        const participantsData = await GroupService.getGroupParticipants(group.id);
+        setParticipants(participantsData);
+      } catch (error) {
+        console.error('Failed to get participants:', error);
+      }
+    };
+
     fetchFriends();
+    fetchParticipants();
     loadExpensesAndBalances();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loadExpensesAndBalances]);
 
   const handleAddFriends = async (selectedFriends) => {
@@ -84,6 +113,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
   };
 
   const handleDeleteGroup = async (groupId) => {
+    setMenuAnchor(null);
     if (window.confirm('¿Seguro que quieres eliminar este grupo?')) {
       try {
         await GroupService.deleteGroup(groupId);
@@ -96,119 +126,158 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
     }
   };
 
-  const handleViewFriends = async () => {
-    try {
-      const participantsData = await GroupService.getGroupParticipants(group.id);
-      setParticipants(participantsData);
-    } catch (error) {
-      console.error('Failed to get participants:', error);
-    }
-  };
-
   const members = balances?.balances ?? [];
-  const myBalance = members.find((m) => m.userId === currentUser?.id);
+  const settlements = balances?.settlements ?? [];
 
   return (
     <>
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'flex-end', m: 2, gap: 1 }}>
-        <Button variant="contained" color="primary" sx={{ fontSize: '0.9rem' }} onClick={onBack}>
+      <Box sx={{ px: { xs: 2, sm: 3 }, pt: 2 }}>
+        <Button
+          onClick={onBack}
+          startIcon={<ArrowBackIosNewIcon fontSize="small" />}
+          size="small"
+          sx={{ color: 'text.secondary', fontWeight: 600, pl: 0 }}
+        >
           Volver
         </Button>
-        <Button variant="contained" color="primary" sx={{ fontSize: '0.9rem' }} onClick={() => onEdit(group)}>
-          Editar Grupo
-        </Button>
-        <Button variant="contained" color="primary" sx={{ fontSize: '0.9rem' }} onClick={() => setAddFriendsModalOpen(true)}>
-          Nuevo Amigo
-        </Button>
       </Box>
-      <Box sx={{ px: 2 }}>
-        <Card className={styles.groupCard}>
-          <Box className={styles.cardHeader}>
-            <Box className={styles.iconContainer} style={{ backgroundColor: group.color || '#F4F4F4' }}>
-              <img src={GroupSVG} alt="Group logo" className={styles.groupIcon} />
-            </Box>
-            <Typography variant="h3" component="div" className={styles.title}>
-              {group.name}
+
+      {/* Group header */}
+      <Box sx={{ px: { xs: 2, sm: 3 }, display: 'flex', alignItems: 'center', gap: 2, flexWrap: 'wrap' }}>
+        <Box
+          sx={{
+            display: 'inline-flex',
+            p: 1.5,
+            borderRadius: 3,
+            bgcolor: group.color || 'secondary.light',
+          }}
+        >
+          <img src={GroupSVG} alt="" width={48} height={48} />
+        </Box>
+        <Box sx={{ minWidth: 0, flex: 1 }}>
+          <Typography variant="h4" sx={{ color: 'primary.main', fontWeight: 800, wordBreak: 'break-word' }}>
+            {group.name}
+          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, mt: 0.5 }}>
+            <AvatarGroup max={6} sx={{ '& .MuiAvatar-root': { width: 32, height: 32, fontSize: '0.85rem', bgcolor: 'primary.main' } }}>
+              {participants.map((p) => (
+                <Tooltip key={p.userId || p.id} title={p.name || p.email || ''}>
+                  <Avatar>{initials(p.name, p.email)}</Avatar>
+                </Tooltip>
+              ))}
+            </AvatarGroup>
+            <Typography variant="body2" color="text.secondary">
+              {participants.length} {participants.length === 1 ? 'participante' : 'participantes'}
             </Typography>
           </Box>
-          <CardContent className={styles.cardContent}>
-            <Typography variant="body2">
-              {myBalance
-                ? myBalance.balance >= 0
-                  ? `Te deben ${currency(myBalance.balance)}`
-                  : `Debes ${currency(Math.abs(myBalance.balance))}`
-                : 'Debes: $0'}
-            </Typography>
-            <Typography variant="body2">
-              Participantes: {participants.length} amigos
-            </Typography>
-          </CardContent>
-          <CardActions className={styles.cardActions}>
-            <StyledButton size="small" onClick={handleViewFriends}>
-              Ver Amigos
-            </StyledButton>
-            <StyledButton size="small" onClick={() => handleDeleteGroup(group.id)}>
-              Eliminar Grupo
-            </StyledButton>
-          </CardActions>
-        </Card>
+        </Box>
+        <IconButton onClick={(e) => setMenuAnchor(e.currentTarget)} aria-label="Más opciones">
+          <MoreVertIcon />
+        </IconButton>
+        <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+          <MenuItem onClick={() => { setMenuAnchor(null); onEdit(group); }}>Editar Grupo</MenuItem>
+          <MenuItem onClick={() => { setMenuAnchor(null); setAddFriendsModalOpen(true); }}>Agregar amigos al grupo</MenuItem>
+          <MenuItem onClick={() => handleDeleteGroup(group.id)} sx={{ color: 'error.dark' }}>Eliminar Grupo</MenuItem>
+        </Menu>
       </Box>
 
-      <Box sx={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'space-between', mx: 2, mt: 4, gap: 1 }}>
-        <Typography variant="h5" sx={{ color: 'primary.main', fontWeight: 'bold' }}>
-          Gastos
-        </Typography>
-        <Button variant="contained" color="primary" onClick={() => setAddExpenseModalOpen(true)}>
-          Agregar Gasto
-        </Button>
-      </Box>
-
-      {!loadingExpenses && expenses.length === 0 && (
-        <Typography sx={{ mx: 2, mt: 2, color: 'text.secondary' }}>
-          Todavía no hay gastos registrados en este grupo.
-        </Typography>
-      )}
-
-      <Grid container spacing={2} sx={{ m: 0, mt: 1, px: 2, width: '100%' }}>
-        {expenses.map((expense) => (
-          <Grid item xs={12} sm={6} md={4} lg={3} key={expense.id}>
-            <ExpenseCard expense={expense} onDelete={handleDeleteExpense} />
-          </Grid>
-        ))}
-      </Grid>
-
-      {balances && balances.balances.length > 0 && (
-        <Box sx={{ mx: 2, mt: 4, mb: 4 }}>
-          <Divider sx={{ mb: 2 }} />
-          <Typography variant="h5" sx={{ color: 'primary.main', fontWeight: 'bold', mb: 2 }}>
+      {/* Balances / settle-up section, promoted directly under the header */}
+      <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3 }}>
+        <Box
+          sx={{
+            bgcolor: 'secondary.light',
+            borderRadius: 4,
+            p: { xs: 2, sm: 3 },
+          }}
+        >
+          <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 700, mb: 1.5 }}>
             Cuentas
           </Typography>
-          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mb: 2 }}>
-            {balances.balances.map((b) => (
-              <Chip
-                key={b.userId}
-                label={`${b.name}: ${b.balance >= 0 ? '+' : ''}${currency(b.balance)}`}
-                sx={{
-                  bgcolor: b.balance >= 0 ? '#e6f4ea' : '#fdecea',
-                  color: b.balance >= 0 ? '#1e7e34' : '#b02a37',
-                  fontWeight: 'bold',
-                }}
-              />
-            ))}
-          </Box>
-          {balances.settlements.length > 0 ? (
+
+          {settlements.length > 0 ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
-              {balances.settlements.map((s, i) => (
-                <Typography key={i}>
-                  <strong>{s.from.name}</strong> le debe pagar <strong>{currency(s.amount)}</strong> a <strong>{s.to.name}</strong>
-                </Typography>
+              {settlements.map((s, i) => (
+                <Box
+                  key={i}
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 1.5,
+                    bgcolor: 'background.paper',
+                    borderRadius: 3,
+                    px: 2,
+                    py: 1.25,
+                  }}
+                >
+                  <Typography sx={{ fontWeight: 700 }}>{s.from.name}</Typography>
+                  <Typography color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+                    le paga <ArrowForwardIcon fontSize="small" />
+                  </Typography>
+                  <Typography sx={{ fontWeight: 700 }}>{s.to.name}</Typography>
+                  <Typography variant="h6" sx={{ ml: 'auto', fontWeight: 800, color: 'primary.main' }}>
+                    {currency(s.amount)}
+                  </Typography>
+                </Box>
               ))}
             </Box>
           ) : (
-            <Typography color="text.secondary">Todos están a paz y salvo.</Typography>
+            <EmptyState title="Todos están a paz y salvo 🐄" description="No hay pagos pendientes en este grupo." />
+          )}
+
+          {members.length > 0 && (
+            <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, mt: 2 }}>
+              {members.map((b) => (
+                <Chip
+                  key={b.userId}
+                  size="small"
+                  label={`${b.name}: ${b.balance >= 0 ? '+' : ''}${currency(b.balance)}`}
+                  sx={{
+                    bgcolor: b.balance >= 0 ? 'success.light' : 'error.light',
+                    color: b.balance >= 0 ? 'success.dark' : 'error.dark',
+                    fontWeight: 700,
+                  }}
+                />
+              ))}
+            </Box>
           )}
         </Box>
-      )}
+      </Box>
+
+      {/* Primary action */}
+      <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3, display: 'flex', justifyContent: { xs: 'stretch', sm: 'flex-start' } }}>
+        <Button
+          variant="contained"
+          color="primary"
+          size="large"
+          startIcon={<AddCircleIcon />}
+          onClick={() => setAddExpenseModalOpen(true)}
+          sx={{ px: 4, py: 1.25, fontSize: '1rem', width: { xs: '100%', sm: 'auto' } }}
+        >
+          Agregar gasto
+        </Button>
+      </Box>
+
+      {/* Expense list */}
+      <Box sx={{ px: { xs: 2, sm: 3 }, mt: 4, mb: 4 }}>
+        <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 700, mb: 1.5 }}>
+          Gastos
+        </Typography>
+
+        {!loadingExpenses && expenses.length === 0 && (
+          <EmptyState
+            title="Todavía no hay gastos"
+            description="Registra el primer gasto del grupo con el botón 'Agregar gasto'."
+          />
+        )}
+
+        <Grid container spacing={2}>
+          {expenses.map((expense) => (
+            <Grid item xs={12} sm={6} md={4} lg={3} key={expense.id}>
+              <ExpenseCard expense={expense} onDelete={handleDeleteExpense} />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
 
       <AddFriendsModal
         open={isAddFriendsModalOpen}
