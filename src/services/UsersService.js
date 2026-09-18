@@ -38,7 +38,12 @@ export const getUserByEmail = async (email) => {
 };
 
 export const searchUsers = async (query) => {
-  const response = await axios.get(`${baseUrl}/users/search`, { params: { q: query } });
+  // El backend ahora requiere el JWT para excluir al usuario logueado
+  // de sus propios resultados de búsqueda.
+  const response = await axios.get(`${baseUrl}/users/search`, {
+    params: { q: query },
+    headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+  });
   return response.data;
 };
 
