@@ -5,6 +5,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import styles from '../../styles/Header.module.css';
 import Logo from '../../assets/layer-MC1.svg';
 import { getCurrentUser, logout } from '../../services/AuthService';
+import WaveDivider from './WaveDivider';
 
 const Header = () => {
   const location = useLocation();
@@ -17,7 +18,8 @@ const Header = () => {
   };
 
   return (
-    <AppBar position="static" color="primary">
+    <>
+      <AppBar position="static" color="primary" elevation={0}>
       <Toolbar className={styles.toolbar}>
         <Box component={Link} to="/groups" className={styles.logoAndTitle} sx={{ textDecoration: 'none', color: 'inherit' }}>
           <img src={Logo} alt="Mi Vaquita" className={styles.logo} />
@@ -39,7 +41,9 @@ const Header = () => {
           </IconButton>
         </Tooltip>
       </Toolbar>
-    </AppBar>
+      </AppBar>
+      <WaveDivider color="#FAA918" />
+    </>
   );
 };
 

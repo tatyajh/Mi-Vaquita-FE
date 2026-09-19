@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Box, Button, Card, CardContent, Chip, Modal, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { formatCurrency as currency } from '../../utils/currency';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const CATEGORY_EMOJI = { comida: '🍔', transporte: '🚗', hospedaje: '🏠', entretenimiento: '🎉', otro: '🧾' };
 const PAYMENT_LABEL = { efectivo: '💵 Efectivo', transferencia: '🏦 Transferencia', tarjeta: '💳 Tarjeta' };
@@ -45,7 +46,7 @@ const ExpenseCard = ({ expense, onDelete }) => {
     <Card
       sx={{
         height: '100%',
-        borderRadius: 6,
+        borderRadius: MILK_BAG_RADIUS,
         overflow: 'hidden',
         background: `linear-gradient(160deg, #ffffff 0%, ${accentColor}22 100%)`,
         boxShadow: `0 10px 22px ${accentColor}55`,

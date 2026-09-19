@@ -8,6 +8,7 @@ import { getCurrentUser } from '../../services/AuthService';
 import { formatCurrency } from '../../utils/currency';
 import { hasUnseenExpenses } from '../../utils/lastViewed';
 import { resolveAccentColor } from '../../utils/color';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const GroupCard = ({ group, onView, onDelete }) => {
   const theme = useTheme();
@@ -70,7 +71,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
     <Card
       sx={{
         maxWidth: '100%',
-        borderRadius: 6,
+        borderRadius: MILK_BAG_RADIUS,
         overflow: 'hidden',
         boxShadow: `0 10px 24px ${accentColor}55`,
         display: 'flex',

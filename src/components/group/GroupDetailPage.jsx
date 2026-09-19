@@ -28,6 +28,7 @@ import EmptyState from '../common/EmptyState';
 import WaveDivider from '../common/WaveDivider';
 import { formatCurrency as currency } from '../../utils/currency';
 import { getTipsForTripType } from '../../data/savingsTips';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 import { markGroupViewed } from '../../utils/lastViewed';
 import ShareIcon from '@mui/icons-material/Share';
 
@@ -188,7 +189,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
           mx: { xs: 2, sm: 3 },
           mt: 1,
           p: { xs: 2, sm: 3 },
-          borderRadius: 5,
+          borderRadius: MILK_BAG_RADIUS,
           display: 'flex',
           alignItems: 'center',
           gap: 2,

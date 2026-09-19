@@ -1,6 +1,7 @@
 import React from 'react';
 import { Avatar, Box, Button, Card, CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
 
@@ -26,7 +27,7 @@ const FriendCard = ({ friend, onDelete }) => {
         height: '100%',
         display: 'flex',
         flexDirection: 'column',
-        borderRadius: 6,
+        borderRadius: MILK_BAG_RADIUS,
         overflow: 'hidden',
         boxShadow: `0 10px 22px ${accentColor}55`,
         background: `linear-gradient(160deg, ${accentColor}33 0%, ${accentColor}0d 100%)`,
