@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Grid } from '@mui/material';
+import { Alert, Box, Grid } from '@mui/material';
 import GroupModal from '../components/group/GroupModal';
 import GroupCard from '../components/group/GroupCard';
 import GroupService from '../services/GroupService';
@@ -13,6 +13,7 @@ const GroupsPage = () => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState(null);
   const [viewingGroup, setViewingGroup] = useState(null);
+  const [loadError, setLoadError] = useState('');
   const currentUser = getCurrentUser();
 
   useEffect(() => {
@@ -23,8 +24,13 @@ const GroupsPage = () => {
       try {
         const fetchedGroups = await GroupService.getGroups(currentUser.id);
         setGroups(fetchedGroups);
+        setLoadError('');
       } catch (error) {
         console.error('Error al cargar grupos:', error);
+        // Sin esto, un error de red se veía igual que "no tienes
+        // grupos todavía" (la lista se queda vacía) — se distingue
+        // con un mensaje explícito para no confundir al usuario.
+        setLoadError('No se pudieron cargar tus grupos. Verifica tu conexión e intenta de nuevo.');
       }
     };
 
@@ -83,7 +89,12 @@ const GroupsPage = () => {
             onAction={handleOpenModalForCreate}
             titleColor="primary.main"
           />
-          {groups.length === 0 ? (
+          {loadError && (
+            <Box sx={{ px: { xs: 2, sm: 3 } }}>
+              <Alert severity="error">{loadError}</Alert>
+            </Box>
+          )}
+          {groups.length === 0 && !loadError ? (
             <EmptyState
               title="Todavía no tienes grupos"
               description={'1. Crea un grupo\n2. Agrega amigos\n3. Anota los gastos\n4. Mira quién le debe a quién'}

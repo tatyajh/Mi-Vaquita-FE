@@ -75,10 +75,21 @@ const theme = createTheme({
   components: {
     MuiCard: {
       styleOverrides: {
-        root: {
+        // Función en vez de objeto plano: así se puede usar
+        // `theme.transitions.create(...)` en vez de escribir una
+        // duración/curva de animación a mano, y queda consistente con
+        // el resto de transiciones de MUI.
+        root: ({ theme }) => ({
           borderRadius: 20,
           boxShadow: '0 6px 16px rgba(54, 25, 13, 0.12)',
-        },
+          transition: theme.transitions.create(['transform', 'box-shadow'], {
+            duration: theme.transitions.duration.short,
+          }),
+          '&:hover': {
+            transform: 'translateY(-3px)',
+            boxShadow: '0 14px 28px rgba(54, 25, 13, 0.18)',
+          },
+        }),
       },
     },
     MuiPaper: {

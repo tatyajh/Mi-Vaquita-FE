@@ -26,6 +26,7 @@ const FriendsPage = () => {
       setFriends(friendsData);
     } catch (err) {
       console.error('Error al obtener los amigos:', err);
+      setError('No se pudo cargar tu lista de amigos. Intenta recargar la página.');
     }
   };
 
@@ -99,11 +100,14 @@ const FriendsPage = () => {
   };
 
   const handleDeleteFriend = async (friendId) => {
+    setError('');
+    setSuccess('');
     try {
       await FriendsService.deleteFriend(friendId);
       setFriends((prev) => prev.filter((friend) => friend.id !== friendId));
     } catch (err) {
       console.error('Error al eliminar el amigo:', err);
+      setError('No se pudo eliminar el amigo. Intenta de nuevo.');
     }
   };
 

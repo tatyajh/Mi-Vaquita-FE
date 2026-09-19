@@ -20,6 +20,7 @@
   display: flex;
   justify-content: space-between;
   gap: 4rem;
+  flex-wrap: wrap;
 }
 
 .link {
@@ -59,6 +60,7 @@
     align-items: center;
     width: 100%;
     padding-top: 0;
+    gap: 1rem;
   }
 
   .link {

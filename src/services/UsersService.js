@@ -57,6 +57,25 @@ export const getLoggedInUser = async () => {
   }
 };
 
+export const forgotPassword = async (email) => {
+  const response = await axios.post(`${baseUrl}/auth/forgot-password`, { email });
+  return response.data;
+};
+
+export const resetPassword = async (token, password) => {
+  const response = await axios.post(`${baseUrl}/auth/reset-password`, { token, password });
+  return response.data;
+};
+
+export const changePassword = async (currentPassword, newPassword) => {
+  const response = await apiClient.put('/users/me/password', { currentPassword, newPassword });
+  return response.data;
+};
+
+export const deactivateAccount = async () => {
+  const response = await apiClient.delete('/users/me');
+  return response.data;
+};
 
 const usersService = {
   login,
@@ -65,6 +84,10 @@ const usersService = {
   getUserByEmail,
   searchUsers,
   getLoggedInUser,
+  forgotPassword,
+  resetPassword,
+  changePassword,
+  deactivateAccount,
 };
 
 export default usersService;

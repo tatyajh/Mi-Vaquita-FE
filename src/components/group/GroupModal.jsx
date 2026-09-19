@@ -1,23 +1,24 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Box, TextField, Button, Typography, IconButton, MenuItem } from '@mui/material';
-import { SketchPicker } from 'react-color';
+import CloseIcon from '@mui/icons-material/Close';
 import GroupService from '../../services/GroupService';
 import { TRIP_TYPES } from '../../data/savingsTips';
+import ColorSwatchPicker, { GROUP_COLORS } from './ColorSwatchPicker';
 
 const GroupModal = ({ open, onClose, group, onSave }) => {
     const [groupName, setGroupName] = useState('');
-    const [groupColor, setGroupColor] = useState('#ED1651'); // default to brand magenta
+    const [groupColor, setGroupColor] = useState(GROUP_COLORS[0]);
     const [tripType, setTripType] = useState('');
     const [error, setError] = useState('');
 
     useEffect(() => {
         if (group) {
             setGroupName(group.name);
-            setGroupColor(group.color || '#FFFFFF');
+            setGroupColor(group.color || GROUP_COLORS[0]);
             setTripType(group.trip_type || '');
         } else {
             setGroupName('');
-            setGroupColor('#ED1651');
+            setGroupColor(GROUP_COLORS[0]);
             setTripType('');
         }
         setError('');
@@ -27,7 +28,7 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
         const trimmedName = groupName.trim();
         const groupData = {
             name: trimmedName,
-            color: groupColor.hex || groupColor,
+            color: groupColor,
             tripType: tripType || null,
         };
 
@@ -62,8 +63,10 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
             >
                 <IconButton
                     onClick={onClose}
+                    aria-label="Cerrar"
                     sx={{ position: 'absolute', right: 8, top: 8 }}
                 >
+                    <CloseIcon fontSize="small" />
                 </IconButton>
                 <Typography
                     variant="h6"
@@ -84,7 +87,8 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                 />
                 <TextField
                     select
-                    label="Tipo de paseo (para consejos de ahorro)"
+                    label="Tipo de paseo"
+                    helperText="Para darte consejos de ahorro relacionados"
                     value={tripType}
                     onChange={(e) => setTripType(e.target.value)}
                     fullWidth
@@ -95,18 +99,13 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                         <MenuItem key={t.value} value={t.value}>{t.emoji} {t.label}</MenuItem>
                     ))}
                 </TextField>
-                <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-                    <SketchPicker
-                        color={groupColor}
-                        onChangeComplete={(color) => setGroupColor(color)}
-                    />
-                </Box>
+                <ColorSwatchPicker value={groupColor} onChange={setGroupColor} />
                 <Button
                     variant="contained"
                     color="primary"
                     fullWidth
                     onClick={handleSave}
-                    sx={{ mt: 2 }}
+                    sx={{ mt: 3 }}
                 >
                     {group ? "Guardar" : "Crear"}
                 </Button>

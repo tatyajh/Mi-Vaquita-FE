@@ -1,0 +1,13 @@
+import apiClient from './apiClient';
+const root='/natilleras';
+const data=r=>r.data;
+export const listNatilleras=()=>apiClient.get(root).then(data);
+export const createNatillera=body=>apiClient.post(root,body).then(data);
+export const getNatillera=id=>apiClient.get(`${root}/${id}`).then(data);
+export const addContribution=(id,body)=>apiClient.post(`${root}/${id}/contributions`,body).then(data);
+export const correctContribution=(id,contributionId,body)=>apiClient.put(`${root}/${id}/contributions/${contributionId}`,body).then(data);
+export const getContributionAudit=id=>apiClient.get(`${root}/${id}/audit`).then(data);
+export const addLoan=(id,body)=>apiClient.post(`${root}/${id}/loans`,body).then(data);
+export const addLoanPayment=(id,loanId,body)=>apiClient.post(`${root}/${id}/loans/${loanId}/payments`,body).then(data);
+export const getClosure=id=>apiClient.get(`${root}/${id}/closure`).then(data);
+export const closeNatillera=id=>apiClient.post(`${root}/${id}/close`).then(data);

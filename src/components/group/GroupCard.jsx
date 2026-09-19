@@ -64,6 +64,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
       onDelete(group.id);
     } catch (error) {
       console.error('Error al eliminar el grupo:', error);
+      alert(error.response?.data?.message || 'No se pudo eliminar el grupo. Intenta de nuevo.');
     }
   };
 

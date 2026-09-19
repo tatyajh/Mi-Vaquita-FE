@@ -31,6 +31,7 @@ import { getTipsForTripType } from '../../data/savingsTips';
 import { MILK_BAG_RADIUS } from '../../utils/shape';
 import { markGroupViewed } from '../../utils/lastViewed';
 import ShareIcon from '@mui/icons-material/Share';
+import { Link } from 'react-router-dom';
 
 const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
 
@@ -118,6 +119,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       await loadExpensesAndBalances();
     } catch (error) {
       console.error('Error adding expense:', error);
+      alert(error.response?.data?.message || 'No se pudo registrar el gasto. Intenta de nuevo.');
     }
   };
 
@@ -127,6 +129,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       await loadExpensesAndBalances();
     } catch (error) {
       console.error('Error deleting expense:', error);
+      alert(error.response?.data?.message || 'No se pudo eliminar el gasto. Intenta de nuevo.');
     }
   };
 
@@ -181,6 +184,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         >
           Volver
         </Button>
+        <Button component={Link} to={`/groups/${group.id}/activities`} sx={{ ml: 2 }} variant="contained">Amigo secreto y rifas</Button>
       </Box>
 
       {/* Group header, washed in the group's own color */}
