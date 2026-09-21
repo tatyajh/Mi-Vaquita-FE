@@ -8,4 +8,5 @@
 // `borderRadius: 6` en 108px reales — un radio enorme que recortaba el
 // contenido de las tarjetas (ver GroupCard/FriendCard/ExpenseCard). Un
 // string como este se usa tal cual, sin multiplicador.
-export const MILK_BAG_RADIUS = '10px 10px 40px 40px';
+export const MILK_BAG_RADIUS = '8px 8px 28px 28px';
+export const MILK_CARTON_CLIP = 'polygon(9% 0, 91% 0, 100% 11%, 100% 90%, 94% 100%, 6% 100%, 0 90%, 0 11%)';

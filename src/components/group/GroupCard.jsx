@@ -8,7 +8,7 @@ import { getCurrentUser } from '../../services/AuthService';
 import { formatCurrency } from '../../utils/currency';
 import { hasUnseenExpenses } from '../../utils/lastViewed';
 import { resolveAccentColor } from '../../utils/color';
-import { MILK_BAG_RADIUS } from '../../utils/shape';
+import { MILK_BAG_RADIUS, MILK_CARTON_CLIP } from '../../utils/shape';
 
 const GroupCard = ({ group, onView, onDelete }) => {
   const theme = useTheme();
@@ -73,10 +73,24 @@ const GroupCard = ({ group, onView, onDelete }) => {
       sx={{
         maxWidth: '100%',
         borderRadius: MILK_BAG_RADIUS,
+        clipPath: MILK_CARTON_CLIP,
         overflow: 'hidden',
         boxShadow: `0 10px 24px ${accentColor}55`,
         display: 'flex',
         flexDirection: 'column',
+        minHeight: 310,
+        position: 'relative',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 9,
+          left: '14%',
+          right: '14%',
+          height: 3,
+          borderRadius: 4,
+          background: 'rgba(255,255,255,.72)',
+          zIndex: 2,
+        },
       }}
     >
       <Box
