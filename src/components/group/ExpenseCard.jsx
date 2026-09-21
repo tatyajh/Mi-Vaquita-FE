@@ -3,21 +3,10 @@ import { Box, Button, Card, CardContent, Chip, Modal, Typography } from '@mui/ma
 import { useTheme } from '@mui/material/styles';
 import { formatCurrency as currency } from '../../utils/currency';
 import { MILK_BAG_RADIUS } from '../../utils/shape';
+import { flavorForId, readableAsText } from '../../utils/color';
 
 const CATEGORY_EMOJI = { comida: '🍔', transporte: '🚗', hospedaje: '🏠', entretenimiento: '🎉', otro: '🧾' };
 const PAYMENT_LABEL = { efectivo: '💵 Efectivo', transferencia: '🏦 Transferencia', tarjeta: '💳 Tarjeta' };
-
-// Deterministically pick a flavor color from an id/string so the same
-// expense always gets the same candy accent.
-const flavorForId = (flavors, id) => {
-  const keys = Object.keys(flavors);
-  const str = String(id ?? '');
-  let hash = 0;
-  for (let i = 0; i < str.length; i += 1) {
-    hash = (hash * 31 + str.charCodeAt(i)) >>> 0;
-  }
-  return flavors[keys[hash % keys.length]];
-};
 
 // Íconos livianos por categoría inferida del texto de la descripción,
 // sin depender de un campo de categoría real en el backend.
@@ -62,7 +51,7 @@ const ExpenseCard = ({ expense, onDelete }) => {
           <Typography variant="h6" sx={{ wordBreak: 'break-word', fontWeight: 800 }}>{expense.description}</Typography>
         </Box>
         <Typography variant="body2" color="text.secondary">Pagado por: {expense.paid_by_name}</Typography>
-        <Typography sx={{ fontWeight: 900, fontSize: '1.7rem', color: accentColor }}>{currency(expense.amount)}</Typography>
+        <Typography sx={{ fontWeight: 900, fontSize: '1.7rem', color: readableAsText(accentColor) }}>{currency(expense.amount)}</Typography>
         {expense.payment_method && (
           <Chip
             size="small"

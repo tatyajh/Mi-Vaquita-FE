@@ -23,8 +23,8 @@ export default function CalendarPage(){
   useEffect(()=>{load();},[load]);
   const firstOffset=new Date(`${range.start}T12:00:00`).getDay();
   const days=Array.from({length:new Date(month.getFullYear(),month.getMonth()+1,0).getDate()},(_,i)=>`${range.start.slice(0,8)}${String(i+1).padStart(2,'0')}`);
-  const changePrefs=async key=>{const current=data.preferences||{in_app_enabled:true,email_enabled:true};const body={inAppEnabled:key==='in_app_enabled'?!current.in_app_enabled:current.in_app_enabled,emailEnabled:key==='email_enabled'?!current.email_enabled:current.email_enabled};const preferences=await calendarApi.updatePreferences(body);setData(x=>({...x,preferences}));};
-  const read=async id=>{await calendarApi.markReminderRead(id);setData(x=>({...x,reminders:x.reminders.filter(r=>r.id!==id)}));};
+  const changePrefs=async key=>{const current=data.preferences||{in_app_enabled:true,email_enabled:true};const body={inAppEnabled:key==='in_app_enabled'?!current.in_app_enabled:current.in_app_enabled,emailEnabled:key==='email_enabled'?!current.email_enabled:current.email_enabled};try{const preferences=await calendarApi.updatePreferences(body);setData(x=>({...x,preferences}));}catch(e){setError(e.response?.data?.message||'No se pudo guardar la preferencia. Intenta de nuevo.');}};
+  const read=async id=>{try{await calendarApi.markReminderRead(id);setData(x=>({...x,reminders:x.reminders.filter(r=>r.id!==id)}));}catch(e){setError(e.response?.data?.message||'No se pudo marcar el recordatorio como leído.');}};
   return <Box className="mv-page"><Box sx={{maxWidth:1200,mx:'auto',p:{xs:2,md:4}}}>
     <Box className="mv-page-banner calendar-banner"><Box><Typography component="h1">Tu calendario</Typography><Typography>Fechas importantes de tus natilleras, aportes y actividades.</Typography></Box><CalendarMonthOutlinedIcon/></Box>
     {error&&<Alert severity="error" sx={{mb:2}}>{error}</Alert>}

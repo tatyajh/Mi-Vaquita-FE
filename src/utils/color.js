@@ -45,3 +45,17 @@ export const resolveAccentColor = (flavors, id, explicitColor) => {
   }
   return flavorForId(flavors, id);
 };
+
+// El mismo problema de ámbar/lima pero al revés: cuando el acento se
+// usa como color de TEXTO/ícono sobre un fondo blanco o casi blanco
+// (ExpenseCard), un ámbar o lima claro es casi ilegible aunque no sea
+// "blanco sobre blanco" literal. En vez de saltar a otro color (lo que
+// rompería la asociación "este id siempre es este color"), se oscurece
+// el mismo tono lo suficiente para que sirva como texto.
+export const readableAsText = (hex) => {
+  if (relativeLuminance(hex) <= 0.55) return hex;
+  const clean = (hex || '').replace('#', '');
+  if (clean.length !== 6) return hex;
+  const darken = (channel) => Math.round(parseInt(channel, 16) * 0.62).toString(16).padStart(2, '0');
+  return `#${darken(clean.slice(0, 2))}${darken(clean.slice(2, 4))}${darken(clean.slice(4, 6))}`;
+};
