@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Checkbox, FormControlLabel, Modal, Typography } from '@mui/material';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const MAX_GROUP_MEMBERS = 20;
 
@@ -62,7 +63,7 @@ const AddFriendsModal = ({ open, onClose, onAddFriends, friends, currentMemberCo
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: 4,
-          borderRadius: 4,
+          borderRadius: MILK_BAG_RADIUS,
           maxHeight: '80vh',
           overflowY: 'auto',
         }}

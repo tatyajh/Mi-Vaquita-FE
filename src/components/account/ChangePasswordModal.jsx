@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Box, Button, Modal, Typography } from '@mui/material';
 import usersService from '../../services/UsersService';
 import PasswordField from '../common/PasswordField';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[0-9])/;
 
@@ -60,7 +61,7 @@ const ChangePasswordModal = ({ open, onClose }) => {
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: { xs: 3, sm: 4 },
-          borderRadius: 4,
+          borderRadius: MILK_BAG_RADIUS,
         }}
       >
         <Typography variant="h6" component="h2" sx={{ fontWeight: 800, mb: 2, color: 'primary.main' }}>

@@ -5,6 +5,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
 import AccountBalanceOutlinedIcon from '@mui/icons-material/AccountBalanceOutlined';
 import CreditCardOutlinedIcon from '@mui/icons-material/CreditCardOutlined';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 export const CATEGORIES = [
   { value: 'comida', label: 'Comida', emoji: '🍔' },
@@ -87,7 +88,7 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: { xs: 3, sm: 4 },
-          borderRadius: 5,
+          borderRadius: MILK_BAG_RADIUS,
           background: 'linear-gradient(165deg, #ffffff 0%, #fff6ea 100%)',
         }}
       >
@@ -170,7 +171,7 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
                 component="img"
                 src={receiptPreview}
                 alt="Vista previa del recibo"
-                sx={{ width: 96, height: 96, objectFit: 'cover', borderRadius: 3, border: '2px solid', borderColor: 'secondary.light' }}
+                sx={{ width: 96, height: 96, objectFit: 'cover', borderRadius: '14px', border: '2px solid', borderColor: 'secondary.light' }}
               />
               <IconButton
                 size="small"

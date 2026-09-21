@@ -7,7 +7,7 @@ import ExpensesService from '../../services/ExpensesService';
 import { getCurrentUser } from '../../services/AuthService';
 import { formatCurrency } from '../../utils/currency';
 import { hasUnseenExpenses } from '../../utils/lastViewed';
-import { resolveAccentColor } from '../../utils/color';
+import { resolveAccentColor, getContrastText } from '../../utils/color';
 import { MILK_BAG_RADIUS, MILK_CARTON_CLIP } from '../../utils/shape';
 
 const GroupCard = ({ group, onView, onDelete }) => {
@@ -21,6 +21,11 @@ const GroupCard = ({ group, onView, onDelete }) => {
   // tener selector de color) recaían en un botón blanco-sobre-blanco
   // ilegible; con color casi blanco se usa un acento de marca en su lugar.
   const accentColor = resolveAccentColor(theme.palette.flavors, group.id, group.color);
+  // Colores claros como el ámbar o la lima pasan el filtro de "casi
+  // blanco" pero igual dejan el texto/botón blanco fijo casi
+  // ilegible encima — se calcula el contraste real en vez de asumir
+  // blanco siempre.
+  const headerTextColor = getContrastText(accentColor);
 
   useEffect(() => {
     let isMounted = true;
@@ -90,7 +95,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
           minWidth: 0,
           p: 2,
           background: `linear-gradient(160deg, ${accentColor} 0%, ${accentColor}cc 100%)`,
-          color: '#ffffff',
+          color: headerTextColor,
         }}
       >
         <Box
@@ -142,7 +147,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
             size="small"
             variant="contained"
             onClick={handleView}
-            sx={{ bgcolor: accentColor, '&:hover': { bgcolor: accentColor } }}
+            sx={{ bgcolor: accentColor, color: headerTextColor, '&:hover': { bgcolor: accentColor } }}
           >
             Ver
           </Button>

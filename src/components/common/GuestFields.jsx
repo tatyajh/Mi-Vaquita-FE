@@ -2,6 +2,7 @@ import React from 'react';
 import { Box, Button, Grid, IconButton, Paper, TextField, Typography } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const emptyGuest = () => ({ name: '', email: '', phone: '' });
 
@@ -15,7 +16,7 @@ export default function GuestFields({ value = [], onChange }) {
     <Typography variant="body2" color="text.secondary" sx={{ mb: 1.5 }}>
       Escribe el nombre y al menos un correo o número de WhatsApp. No necesitas usar separadores.
     </Typography>
-    {guests.map((guest, index) => <Paper key={index} variant="outlined" sx={{ p: 2, mb: 1.5, borderRadius: 3, position: 'relative' }}>
+    {guests.map((guest, index) => <Paper key={index} variant="outlined" sx={{ p: 2, mb: 1.5, borderRadius: MILK_BAG_RADIUS, position: 'relative' }}>
       <Grid container spacing={1.5}>
         <Grid item xs={12}><TextField fullWidth label="Nombre del invitado" value={guest.name} onChange={e => update(index, 'name', e.target.value)} /></Grid>
         <Grid item xs={12} sm={6}><TextField fullWidth type="email" label="Correo (opcional)" value={guest.email} onChange={e => update(index, 'email', e.target.value)} /></Grid>

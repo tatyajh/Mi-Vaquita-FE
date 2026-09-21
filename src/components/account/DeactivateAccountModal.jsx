@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Alert, Box, Button, Modal, TextField, Typography } from '@mui/material';
 import usersService from '../../services/UsersService';
 import { logout } from '../../services/AuthService';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const CONFIRM_WORD = 'DAR DE BAJA';
 
@@ -47,7 +48,7 @@ const DeactivateAccountModal = ({ open, onClose, onDeactivated }) => {
           bgcolor: 'background.paper',
           boxShadow: 24,
           p: { xs: 3, sm: 4 },
-          borderRadius: 4,
+          borderRadius: MILK_BAG_RADIUS,
         }}
       >
         <Typography variant="h6" component="h2" sx={{ fontWeight: 800, mb: 1, color: 'error.dark' }}>

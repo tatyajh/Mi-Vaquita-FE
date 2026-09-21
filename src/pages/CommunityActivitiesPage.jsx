@@ -490,7 +490,7 @@ export default function CommunityActivitiesPage() {
                       sx={{
                         p: 2,
                         border: "1px solid #dcebbd",
-                        borderRadius: 3,
+                        borderRadius: '14px',
                         background:
                           p.role === "responsible" || p.role === "admin"
                             ? "#f1f7df"
@@ -832,7 +832,7 @@ export default function CommunityActivitiesPage() {
                             sx={{
                               p: 2,
                               border: "1px solid #dcebbd",
-                              borderRadius: 3,
+                              borderRadius: '14px',
                             }}
                           >
                             <Typography fontWeight={800}>{p.name}</Typography>

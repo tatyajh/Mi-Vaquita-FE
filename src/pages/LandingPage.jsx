@@ -5,6 +5,7 @@ import SavingsIcon from '@mui/icons-material/Savings';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import ReceiptLongIcon from '@mui/icons-material/ReceiptLong';
 import Logo from '../assets/layer-MC1.svg';
+import { MILK_BAG_RADIUS } from '../utils/shape';
 
 const DIFFERENTIATORS = [
   {
@@ -63,7 +64,7 @@ const LandingPage = () => {
         <Grid container spacing={3} sx={{ mt: { xs: 4, sm: 6 } }}>
           {DIFFERENTIATORS.map((item) => (
             <Grid item xs={12} sm={4} key={item.title}>
-              <Paper sx={{ p: 3, height: '100%', borderRadius: 4, textAlign: 'center' }} elevation={2}>
+              <Paper sx={{ p: 3, height: '100%', borderRadius: MILK_BAG_RADIUS, textAlign: 'center' }} elevation={2}>
                 {item.icon}
                 <Typography variant="h6" sx={{ fontWeight: 700, mt: 1.5 }}>{item.title}</Typography>
                 <Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>

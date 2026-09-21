@@ -228,7 +228,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
           sx={{
             display: 'inline-flex',
             p: 1.5,
-            borderRadius: 3,
+            borderRadius: '16px',
             bgcolor: group.color || 'secondary.light',
             boxShadow: `0 6px 14px ${group.color || '#FAA918'}66`,
           }}
@@ -268,7 +268,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         <Box
           sx={{
             bgcolor: 'secondary.light',
-            borderRadius: 4,
+            borderRadius: MILK_BAG_RADIUS,
             p: { xs: 2, sm: 3 },
           }}
         >
@@ -291,7 +291,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
                     alignItems: 'center',
                     gap: 1.5,
                     bgcolor: 'background.paper',
-                    borderRadius: 3,
+                    borderRadius: '14px',
                     px: 2,
                     py: 1.25,
                   }}
@@ -355,7 +355,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
 
       {/* Consejos de ahorro contextuales */}
       <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3 }}>
-        <Box sx={{ bgcolor: `${group.color || '#9FCB3B'}1a`, borderRadius: 4, p: { xs: 2, sm: 2.5 } }}>
+        <Box sx={{ bgcolor: `${group.color || '#9FCB3B'}1a`, borderRadius: MILK_BAG_RADIUS, p: { xs: 2, sm: 2.5 } }}>
           <Typography variant="subtitle1" sx={{ fontWeight: 800, color: 'primary.main', mb: 1 }}>
             💡 Consejos para ahorrar
           </Typography>

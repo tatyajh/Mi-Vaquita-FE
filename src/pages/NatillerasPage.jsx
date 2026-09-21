@@ -446,7 +446,7 @@ export default function NatillerasPage() {
                       <Box
                         sx={{
                           border: "1px solid #eee",
-                          borderRadius: 3,
+                          borderRadius: '14px',
                           p: 1.5,
                           display: "flex",
                           justifyContent: "space-between",
@@ -730,7 +730,7 @@ export default function NatillerasPage() {
                   ].map(([label, value]) => (
                     <Grid item xs={12} sm={4} key={label}>
                       <Box
-                        sx={{ p: 2, borderRadius: 3, background: "#f1f7df" }}
+                        sx={{ p: 2, borderRadius: '14px', background: "#f1f7df" }}
                       >
                         <Typography>{label}</Typography>
                         <Typography variant="h6">{cop(value)}</Typography>

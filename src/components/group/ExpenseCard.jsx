@@ -81,7 +81,7 @@ const ExpenseCard = ({ expense, onDelete }) => {
               width: 64,
               height: 64,
               objectFit: 'cover',
-              borderRadius: 3,
+              borderRadius: '14px',
               cursor: 'pointer',
               border: '2px solid',
               borderColor: accentColor,
@@ -113,7 +113,7 @@ const ExpenseCard = ({ expense, onDelete }) => {
               component="img"
               src={expense.receipt_url}
               alt="Recibo en tamaño completo"
-              sx={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: 3, boxShadow: 8 }}
+              sx={{ maxWidth: '90vw', maxHeight: '90vh', borderRadius: '14px', boxShadow: 8 }}
             />
           </Box>
         </Modal>

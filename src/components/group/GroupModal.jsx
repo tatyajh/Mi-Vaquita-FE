@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import GroupService from '../../services/GroupService';
 import { TRIP_TYPES } from '../../data/savingsTips';
 import ColorSwatchPicker, { GROUP_COLORS } from './ColorSwatchPicker';
+import { MILK_BAG_RADIUS } from '../../utils/shape';
 
 const GroupModal = ({ open, onClose, group, onSave }) => {
     const [groupName, setGroupName] = useState('');
@@ -62,7 +63,7 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                     bgcolor: 'background.paper',
                     boxShadow: 24,
                     p: { xs: 3, sm: 4 },
-                    borderRadius: 4,
+                    borderRadius: MILK_BAG_RADIUS,
                 }}
             >
                 <IconButton

@@ -2,6 +2,7 @@ import React from 'react';
 import { Avatar, Box, Button, Card, CardContent, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { MILK_BAG_RADIUS } from '../../utils/shape';
+import { getContrastText } from '../../utils/color';
 
 const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
 
@@ -37,7 +38,7 @@ const FriendCard = ({ friend, onDelete }) => {
     >
       <CardContent sx={{ display: 'flex', flexDirection: 'column', gap: 1.5, height: '100%', p: 2.5 }}>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
-          <Avatar sx={{ bgcolor: accentColor, width: 48, height: 48, fontWeight: 800, fontSize: '1.2rem' }}>
+          <Avatar sx={{ bgcolor: accentColor, color: getContrastText(accentColor), width: 48, height: 48, fontWeight: 800, fontSize: '1.2rem' }}>
             {initials(friend.name, friend.email)}
           </Avatar>
           <Box sx={{ minWidth: 0 }}>

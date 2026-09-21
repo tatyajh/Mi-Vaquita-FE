@@ -5,6 +5,7 @@ import {
   ListItemIcon, ListItemText, Typography,
 } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
+import { MILK_BAG_RADIUS } from '../utils/shape';
 import billingService from '../services/BillingService';
 
 const FREE_FEATURES = [
@@ -80,7 +81,7 @@ const PricingPage = () => {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6}>
-            <Card sx={{ height: '100%', borderRadius: 4 }} elevation={2}>
+            <Card sx={{ height: '100%', borderRadius: MILK_BAG_RADIUS }} elevation={2}>
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>Gratis</Typography>
                 <Typography variant="h4" sx={{ my: 1 }}>$0</Typography>
@@ -96,7 +97,7 @@ const PricingPage = () => {
             </Card>
           </Grid>
           <Grid item xs={12} sm={6}>
-            <Card sx={{ height: '100%', borderRadius: 4, border: '2px solid', borderColor: 'primary.main' }} elevation={4}>
+            <Card sx={{ height: '100%', borderRadius: MILK_BAG_RADIUS, border: '2px solid', borderColor: 'primary.main' }} elevation={4}>
               <CardContent sx={{ p: 3 }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <Typography variant="h6" sx={{ fontWeight: 700 }}>Pro</Typography>

@@ -27,6 +27,15 @@ const relativeLuminance = (hex) => {
 
 export const isNearWhite = (hex) => relativeLuminance(hex) > 0.9;
 
+// Colores como el ámbar (#FAA918) o la lima (#9FCB3B) pasan el filtro
+// de isNearWhite (no son "casi blancos") pero siguen siendo demasiado
+// claros para que texto/íconos BLANCOS encima se lean bien — de ahí
+// "Ver" o el nombre del grupo volviéndose casi invisibles en esos
+// colores. Se elige entre blanco y un texto oscuro según cuál da más
+// contraste contra el color de fondo real, en vez de asumir blanco
+// siempre.
+export const getContrastText = (hex) => (relativeLuminance(hex) > 0.6 ? '#36190d' : '#ffffff');
+
 // Color de acento a usar: el del grupo/elemento si es válido y no es casi
 // blanco (donde el texto/ícono blanco encima se volvería ilegible), o si
 // no, un color determinístico de la paleta de acentos de marca.

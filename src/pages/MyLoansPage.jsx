@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from "react";
+import { MILK_BAG_RADIUS } from "../utils/shape";
 import {
   Alert,
   Box,
@@ -51,8 +52,8 @@ export default function MyLoansPage() {
         {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
         {!!loans.length && (
           <Grid container spacing={2} sx={{ mb: 3 }}>
-            <Grid item xs={12} sm={6}><Card sx={{ borderRadius: 4, bgcolor: "#cfeaa5", boxShadow: "none" }}><CardContent><Typography>Saldo total pendiente</Typography><Typography variant="h4" fontWeight={800}>{cop(totals.balance)}</Typography></CardContent></Card></Grid>
-            <Grid item xs={12} sm={6}><Card sx={{ borderRadius: 4, bgcolor: "#fff39a", boxShadow: "none" }}><CardContent><Typography>Intereses pendientes</Typography><Typography variant="h4" fontWeight={800}>{cop(totals.interest)}</Typography></CardContent></Card></Grid>
+            <Grid item xs={12} sm={6}><Card sx={{ borderRadius: MILK_BAG_RADIUS, bgcolor: "#cfeaa5", boxShadow: "none" }}><CardContent><Typography>Saldo total pendiente</Typography><Typography variant="h4" fontWeight={800}>{cop(totals.balance)}</Typography></CardContent></Card></Grid>
+            <Grid item xs={12} sm={6}><Card sx={{ borderRadius: MILK_BAG_RADIUS, bgcolor: "#fff39a", boxShadow: "none" }}><CardContent><Typography>Intereses pendientes</Typography><Typography variant="h4" fontWeight={800}>{cop(totals.interest)}</Typography></CardContent></Card></Grid>
           </Grid>
         )}
         <Stack spacing={3}>
@@ -61,7 +62,7 @@ export default function MyLoansPage() {
             const progress = total ? Math.min(100, Number(loan.repaid) / total * 100) : 0;
             const next = loan.schedule?.find((q) => Number(q.balance) > 0);
             return (
-              <Card key={loan.id} sx={{ borderRadius: { xs: 3, sm: 5 }, boxShadow: "none", border: "1px solid #d7e6b8" }}>
+              <Card key={loan.id} sx={{ borderRadius: MILK_BAG_RADIUS, boxShadow: "none", border: "1px solid #d7e6b8" }}>
                 <CardContent sx={{ p: { xs: 2, sm: 3 } }}>
                   <Stack direction={{ xs: "column", sm: "row" }} justifyContent="space-between" gap={1}>
                     <Box>
@@ -73,23 +74,23 @@ export default function MyLoansPage() {
                     </Box>
                     <Box sx={{ textAlign: { xs: "left", sm: "right" } }}><Typography variant="body2">Saldo pendiente</Typography><Typography variant="h5" fontWeight={800}>{cop(loan.balance)}</Typography></Box>
                   </Stack>
-                  <LinearProgress variant="determinate" value={progress} sx={{ my: 2, height: 10, borderRadius: 8 }} />
+                  <LinearProgress variant="determinate" value={progress} sx={{ my: 2, height: 10, borderRadius: '8px' }} />
                   <Grid container spacing={1.5}>
                     {[["Capital inicial", loan.principal], ["Interés contratado", loan.interest], ["Capital pendiente", loan.capitalPending], ["Interés pendiente", loan.interestPending]].map(([label, value]) => (
-                      <Grid item xs={6} md={3} key={label}><Box sx={{ bgcolor: "#f5f9e9", borderRadius: 3, p: 1.5, height: "100%" }}><Typography variant="caption" color="text.secondary">{label}</Typography><Typography fontWeight={800}>{cop(value)}</Typography></Box></Grid>
+                      <Grid item xs={6} md={3} key={label}><Box sx={{ bgcolor: "#f5f9e9", borderRadius: '14px', p: 1.5, height: "100%" }}><Typography variant="caption" color="text.secondary">{label}</Typography><Typography fontWeight={800}>{cop(value)}</Typography></Box></Grid>
                     ))}
                   </Grid>
                   {next && <Alert severity={next.status === "overdue" ? "warning" : "success"} sx={{ mt: 2 }}>Próxima cuota: <strong>{dateText(next.due_on)}</strong> · pendiente {cop(next.balance)}</Alert>}
                   <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>Cronograma</Typography>
                   <Grid container spacing={1}>
-                    {loan.schedule?.map((q) => <Grid item xs={12} sm={6} key={q.id}><Box sx={{ border: "1px solid #e2e7d7", borderRadius: 3, p: 1.5 }}><Stack direction="row" justifyContent="space-between" gap={1}><Box><Typography fontWeight={700}>Cuota {q.installment_number} · {dateText(q.due_on)}</Typography><Typography variant="body2">Capital {cop(q.principal_due)} · interés {cop(q.interest_due)}</Typography></Box><Chip size="small" label={labels[q.status]} color={colors[q.status]} /></Stack><Typography variant="body2" sx={{ mt: 0.5 }}>Pendiente: {cop(q.balance)}</Typography></Box></Grid>)}
+                    {loan.schedule?.map((q) => <Grid item xs={12} sm={6} key={q.id}><Box sx={{ border: "1px solid #e2e7d7", borderRadius: '14px', p: 1.5 }}><Stack direction="row" justifyContent="space-between" gap={1}><Box><Typography fontWeight={700}>Cuota {q.installment_number} · {dateText(q.due_on)}</Typography><Typography variant="body2">Capital {cop(q.principal_due)} · interés {cop(q.interest_due)}</Typography></Box><Chip size="small" label={labels[q.status]} color={colors[q.status]} /></Stack><Typography variant="body2" sx={{ mt: 0.5 }}>Pendiente: {cop(q.balance)}</Typography></Box></Grid>)}
                   </Grid>
                   {!!loan.payments?.length && <><Typography variant="h6" sx={{ mt: 3, mb: 1 }}>Abonos registrados</Typography>{loan.payments.map((p) => <Typography key={p.id} variant="body2" sx={{ py: 0.5 }}>{dateText(p.created_at)} · {cop(p.amount)} — capital {cop(p.capital_amount || 0)}, interés {cop(p.interest_amount || 0)}</Typography>)}</>}
                 </CardContent>
               </Card>
             );
           })}
-          {!loans.length && <Card sx={{ borderRadius: 4, boxShadow: "none" }}><CardContent><Typography variant="h5" color="primary">No tienes préstamos registrados</Typography><Typography color="text.secondary">Cuando una natillera te registre un préstamo, aparecerá aquí con sus fechas y movimientos.</Typography></CardContent></Card>}
+          {!loans.length && <Card sx={{ borderRadius: MILK_BAG_RADIUS, boxShadow: "none" }}><CardContent><Typography variant="h5" color="primary">No tienes préstamos registrados</Typography><Typography color="text.secondary">Cuando una natillera te registre un préstamo, aparecerá aquí con sus fechas y movimientos.</Typography></CardContent></Card>}
         </Stack>
       </Box>
     </Box>
