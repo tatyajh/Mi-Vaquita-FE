@@ -238,6 +238,26 @@ export default function CommunityActivitiesPage() {
       "Notificaciones pendientes reintentadas.",
     );
     if (result?.whatsapp?.length) setWhatsappLinks(result.whatsapp);
+    if (result?.failedCount) {
+      setNotice("");
+      setError(
+        result.failureCode === "resend_test_sender"
+          ? "Resend rechazó el correo: el remitente de prueba solo puede escribir al correo propietario de la cuenta. Para enviar a invitados debes verificar un dominio en Resend y usarlo como remitente."
+          : `El proveedor volvió a rechazar ${result.failedCount} correo${result.failedCount === 1 ? "" : "s"}. No se modificó el sorteo; puedes volver a intentar cuando el servicio esté disponible.`,
+      );
+    }
+  };
+  const complete = () => {
+    if (
+      !window.confirm(
+        "¿Marcar esta actividad como terminada? El sorteo y sus asignaciones se conservarán sin cambios.",
+      )
+    )
+      return;
+    run(
+      () => api.completeActivity(activityId),
+      "Actividad marcada como terminada.",
+    );
   };
   const ownParticipant = activity?.participants?.find(
     (p) => Number(p.user_id) === Number(current?.id),
@@ -510,15 +530,33 @@ export default function CommunityActivitiesPage() {
                   </Grid>
                 ))}
               </Grid>
-              {activity.status === "drawn" && (
-                <Button
+              {["drawn", "closed"].includes(activity.status) && (
+                <Stack
+                  direction={{ xs: "column", sm: "row" }}
+                  spacing={1.5}
                   sx={{ mt: 2 }}
-                  variant="outlined"
-                  disabled={busy}
-                  onClick={retry}
                 >
-                  Reintentar notificaciones fallidas
-                </Button>
+                  {activity.notifications?.some(
+                    (notification) => notification.status === "failed",
+                  ) && (
+                    <Button variant="outlined" disabled={busy} onClick={retry}>
+                      Reintentar correos fallidos
+                    </Button>
+                  )}
+                  {activity.status === "drawn" &&
+                    ["secret_santa", "raffle"].includes(activity.type) &&
+                    Number(activity.effective_owner) === Number(current?.id) && (
+                      <Button variant="green" disabled={busy} onClick={complete}>
+                        Finalizar actividad
+                      </Button>
+                    )}
+                </Stack>
+              )}
+              {activity.status === "closed" && (
+                <Alert severity="success" sx={{ mt: 2 }}>
+                  Esta actividad está terminada. El resultado quedó guardado y
+                  no se volverá a sortear.
+                </Alert>
               )}
               {whatsappLinks.length > 0 && (
                 <Alert severity="info" sx={{ mt: 2 }}>

@@ -14,6 +14,7 @@ export const setExclusions = (id, participantId, excludedParticipantIds) => apiC
 export const setNumbers = (id, assignments) => apiClient.put(`${root}/activities/${id}/numbers`, { assignments }).then(data);
 export const drawActivity = (id) => apiClient.post(`${root}/activities/${id}/draw`).then(data);
 export const retryNotifications = (id) => apiClient.post(`${root}/activities/${id}/notifications/retry`).then(data);
+export const completeActivity = (id) => apiClient.post(`${root}/activities/${id}/complete`).then(data);
 export const addTransaction = (id, body) => apiClient.post(`${root}/activities/${id}/transactions`, body).then(data);
 export const addProduct = (id, body) => apiClient.post(`${root}/activities/${id}/products`, body).then(data);
 export const addInventoryMovement = (id, productId, body) => apiClient.post(`${root}/activities/${id}/products/${productId}/movements`, body).then(data);
