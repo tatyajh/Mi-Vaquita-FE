@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Alert, Box, Button, TextField, Grid } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import usersService from '../services/UsersService';
+import PasswordField from '../components/common/PasswordField';
 
 const LoginPage = () => {
   let navigate = useNavigate();
@@ -42,7 +43,7 @@ const LoginPage = () => {
   return (
     <AuthLayout title="Mi vaquita" subtitle="Inicia sesión para armar tus paseos">
       <Box component="form" onSubmit={handleLogin} noValidate>
-        <TextField
+        <PasswordField
           margin="normal"
           required
           fullWidth
@@ -60,7 +61,6 @@ const LoginPage = () => {
           fullWidth
           name="password"
           label="Contraseña"
-          type="password"
           id="password"
           autoComplete="current-password"
           value={password}

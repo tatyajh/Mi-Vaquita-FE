@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { Alert, Box, Button, TextField } from '@mui/material';
+import { Alert, Box, Button } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import usersService from '../services/UsersService';
+import PasswordField from '../components/common/PasswordField';
 
 // Misma regla que el backend (al menos una minúscula y un número).
 const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[0-9])/;
@@ -63,26 +64,24 @@ const ResetPasswordPage = () => {
               <Link to="/forgot-password">¿Olvidaste tu contraseña?</Link>.
             </Alert>
           )}
-          <TextField
+          <PasswordField
             margin="normal"
             required
             fullWidth
             name="password"
             label="Nueva contraseña"
-            type="password"
             id="password"
             autoComplete="new-password"
             helperText="Debe incluir al menos una letra minúscula y un número"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
-          <TextField
+          <PasswordField
             margin="normal"
             required
             fullWidth
             name="confirmPassword"
             label="Confirmar nueva contraseña"
-            type="password"
             id="confirmPassword"
             autoComplete="new-password"
             value={confirmPassword}

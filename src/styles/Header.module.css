@@ -1,3 +1,11 @@
+.appBar {
+  position: relative !important;
+  overflow: hidden;
+  isolation: isolate;
+  background: linear-gradient(105deg, #ed1651 0%, #d80e54 62%, #a91c68 100%) !important;
+  border-radius: 0 0 28px 28px;
+}
+
 .toolbar {
   display: grid;
   grid-template-columns: minmax(190px, 1fr) auto minmax(190px, 1fr);
@@ -5,6 +13,36 @@
   min-height: 76px;
   padding: 0 clamp(16px, 3vw, 42px);
   gap: 24px;
+  position: relative;
+  z-index: 2;
+}
+
+.ribbonTop,
+.ribbonBottom {
+  position: absolute;
+  pointer-events: none;
+  z-index: -1;
+  filter: saturate(1.05);
+}
+
+.ribbonTop {
+  width: 46%;
+  height: 130px;
+  left: -7%;
+  top: -94px;
+  border-radius: 0 0 55% 48%;
+  background: linear-gradient(115deg, rgba(143,196,63,.88), rgba(255,246,156,.78) 46%, rgba(247,165,190,.58));
+  transform: rotate(-2deg);
+}
+
+.ribbonBottom {
+  width: 42%;
+  height: 88px;
+  right: -7%;
+  bottom: -70px;
+  border-radius: 55% 45% 0 0;
+  background: linear-gradient(100deg, rgba(108,45,112,.8), rgba(247,165,190,.8) 48%, rgba(255,246,156,.76));
+  transform: rotate(-3deg);
 }
 
 .logoAndTitle {
@@ -35,6 +73,7 @@
  .icon { justify-self: end; min-width: 44px; min-height: 44px; }
 
 @media (max-width: 760px) {
+  .appBar { border-radius: 0 0 22px 22px; }
   .toolbar {
     grid-template-columns: 1fr auto;
     grid-template-rows: auto auto;
@@ -62,6 +101,9 @@
     -webkit-overflow-scrolling: touch;
   }
   .navigation::-webkit-scrollbar { display: none; }
+
+  .ribbonTop { width: 78%; height: 112px; left: -29%; top: -86px; }
+  .ribbonBottom { width: 70%; height: 74px; right: -30%; bottom: -59px; }
 
   .link {
     flex: 0 0 auto;

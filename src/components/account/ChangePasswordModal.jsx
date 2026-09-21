@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, Box, Button, Modal, TextField, Typography } from '@mui/material';
+import { Alert, Box, Button, Modal, Typography } from '@mui/material';
 import usersService from '../../services/UsersService';
+import PasswordField from '../common/PasswordField';
 
 const PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[0-9])/;
 
@@ -65,26 +66,23 @@ const ChangePasswordModal = ({ open, onClose }) => {
         <Typography variant="h6" component="h2" sx={{ fontWeight: 800, mb: 2, color: 'primary.main' }}>
           Cambiar contraseña
         </Typography>
-        <TextField
+        <PasswordField
           label="Contraseña actual"
-          type="password"
           fullWidth
           margin="normal"
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
         />
-        <TextField
+        <PasswordField
           label="Nueva contraseña"
-          type="password"
           fullWidth
           margin="normal"
           helperText="Debe incluir al menos una letra minúscula y un número"
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
         />
-        <TextField
+        <PasswordField
           label="Confirmar nueva contraseña"
-          type="password"
           fullWidth
           margin="normal"
           value={confirmPassword}

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Alert, Box, Button, TextField, Grid } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import usersService from '../services/UsersService';
+import PasswordField from '../components/common/PasswordField';
 
 // Mirrors the backend Joi rule in Mi-Vaquita-BE/src/validations/users.validations.js:
 // password must contain at least one lowercase letter and one digit.
@@ -73,7 +74,7 @@ const RegisterPage = () => {
             {error}
           </Alert>
         )}
-        <TextField
+        <PasswordField
           margin="normal"
           required
           fullWidth
@@ -103,20 +104,18 @@ const RegisterPage = () => {
           fullWidth
           name="password"
           label="Contraseña"
-          type="password"
           id="password"
           autoComplete="new-password"
           helperText="Debe incluir al menos una letra minúscula y un número"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
         />
-        <TextField
+        <PasswordField
           margin="normal"
           required
           fullWidth
           name="confirmPassword"
           label="Confirmar contraseña"
-          type="password"
           id="confirmPassword"
           autoComplete="new-password"
           error={Boolean(confirmPassword) && confirmPassword !== password}

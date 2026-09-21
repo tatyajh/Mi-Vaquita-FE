@@ -79,6 +79,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
         display: 'flex',
         flexDirection: 'column',
         minHeight: 310,
+        background: `${accentColor}14`,
         position: 'relative',
         '&::before': {
           content: '""',
@@ -134,7 +135,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
           {group.name}
         </Typography>
       </Box>
-      <CardContent sx={{ p: 2.5, bgcolor: `${accentColor}14` }}>
+      <CardContent sx={{ p: 2.5, bgcolor: `${accentColor}14`, flexGrow: 1 }}>
         <Typography sx={{ fontWeight: 700, fontSize: '1rem' }}>
           {myBalance === null
             ? 'Cargando saldo…'

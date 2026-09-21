@@ -32,8 +32,10 @@ const Header = () => {
 
   return (
     <>
-      <AppBar position="static" color="primary" elevation={0}>
+      <AppBar position="static" color="primary" elevation={0} className={styles.appBar}>
         <Toolbar className={styles.toolbar}>
+          <span className={styles.ribbonTop} aria-hidden="true" />
+          <span className={styles.ribbonBottom} aria-hidden="true" />
           <Box component={Link} to="/home" className={styles.logoAndTitle} sx={{ textDecoration: 'none', color: 'inherit' }}>
             <img src={Logo} alt="Mi Vaquita" className={styles.logo} />
             <Typography variant="h6" component="div" fontSize={'22px'} fontWeight={700}>
