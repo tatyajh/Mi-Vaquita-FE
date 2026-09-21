@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Alert, Box, Button, TextField, Grid } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Alert, Box, Button, Checkbox, FormControlLabel, Link, TextField, Grid } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import usersService from '../services/UsersService';
 import PasswordField from '../components/common/PasswordField';
@@ -15,6 +15,7 @@ const RegisterPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [acceptedTerms, setAcceptedTerms] = useState(false);
   const [error, setError] = useState('');
   const [submitting, setSubmitting] = useState(false);
 
@@ -30,6 +31,9 @@ const RegisterPage = () => {
     }
     if (password !== confirmPassword) {
       return 'Las contraseñas no coinciden';
+    }
+    if (!acceptedTerms) {
+      return 'Debes aceptar los términos de servicio y la política de privacidad';
     }
     return '';
   };
@@ -127,13 +131,35 @@ const RegisterPage = () => {
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
         />
+        <FormControlLabel
+          sx={{ mt: 1, alignItems: 'flex-start' }}
+          control={
+            <Checkbox
+              checked={acceptedTerms}
+              onChange={(e) => setAcceptedTerms(e.target.checked)}
+              sx={{ pt: 0 }}
+            />
+          }
+          label={
+            <span>
+              Acepto los{' '}
+              <Link component={RouterLink} to="/terminos" target="_blank" rel="noopener">
+                términos de servicio
+              </Link>{' '}
+              y la{' '}
+              <Link component={RouterLink} to="/privacidad" target="_blank" rel="noopener">
+                política de privacidad
+              </Link>
+            </span>
+          }
+        />
         <Button
           type="submit"
           fullWidth
           variant="contained"
           color="primary"
-          disabled={submitting}
-          sx={{ mt: 3, mb: 1, py: 1.2 }}
+          disabled={submitting || !acceptedTerms}
+          sx={{ mt: 2, mb: 1, py: 1.2 }}
         >
           {submitting ? 'Registrando...' : 'Registrarse'}
         </Button>

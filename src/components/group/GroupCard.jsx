@@ -81,17 +81,6 @@ const GroupCard = ({ group, onView, onDelete }) => {
         minHeight: 310,
         background: `${accentColor}14`,
         position: 'relative',
-        '&::before': {
-          content: '""',
-          position: 'absolute',
-          top: 9,
-          left: '14%',
-          right: '14%',
-          height: 3,
-          borderRadius: 4,
-          background: 'rgba(255,255,255,.72)',
-          zIndex: 2,
-        },
       }}
     >
       <Box
@@ -113,7 +102,7 @@ const GroupCard = ({ group, onView, onDelete }) => {
             bgcolor: 'rgba(255,255,255,0.9)',
           }}
         >
-          <img src={GroupSVG} alt="Group logo" width={60} height={60} style={{ display: 'block' }} />
+          <img src={group.photo_data || GroupSVG} alt={group.photo_data ? `Foto de ${group.name}` : 'Logo del grupo'} width={60} height={60} style={{ display: 'block', objectFit:'cover', borderRadius:'50%' }} />
         </Box>
         <Typography
           component="div"

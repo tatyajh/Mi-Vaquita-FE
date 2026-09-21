@@ -9,6 +9,7 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
     const [groupName, setGroupName] = useState('');
     const [groupColor, setGroupColor] = useState(GROUP_COLORS[0]);
     const [tripType, setTripType] = useState('');
+    const [photoData, setPhotoData] = useState(null);
     const [error, setError] = useState('');
 
     useEffect(() => {
@@ -16,10 +17,12 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
             setGroupName(group.name);
             setGroupColor(group.color || GROUP_COLORS[0]);
             setTripType(group.trip_type || '');
+            setPhotoData(group.photo_data || null);
         } else {
             setGroupName('');
             setGroupColor(GROUP_COLORS[0]);
             setTripType('');
+            setPhotoData(null);
         }
         setError('');
     }, [group]);
@@ -30,6 +33,7 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
             name: trimmedName,
             color: groupColor,
             tripType: tripType || null,
+            photoData,
         };
 
         try {
@@ -100,6 +104,18 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                     ))}
                 </TextField>
                 <ColorSwatchPicker value={groupColor} onChange={setGroupColor} />
+                <Box sx={{ mt: 2 }}>
+                    <Typography fontWeight={700} sx={{ mb: 1 }}>Foto de la salida (opcional)</Typography>
+                    <Button component="label" variant="outlined" fullWidth>
+                        {photoData ? 'Cambiar foto' : 'Elegir foto'}
+                        <input hidden type="file" accept="image/jpeg,image/png,image/webp" onChange={(event) => {
+                            const file=event.target.files?.[0];if(!file)return;
+                            if(file.size>8*1024*1024){setError('La foto no puede pesar más de 8 MB.');return;}
+                            const reader=new FileReader();reader.onload=()=>{const image=new Image();image.onload=()=>{const size=Math.min(720,Math.max(image.width,image.height));const scale=size/Math.max(image.width,image.height);const canvas=document.createElement('canvas');canvas.width=Math.round(image.width*scale);canvas.height=Math.round(image.height*scale);canvas.getContext('2d').drawImage(image,0,0,canvas.width,canvas.height);setPhotoData(canvas.toDataURL('image/jpeg',.78));};image.src=reader.result;};reader.readAsDataURL(file);
+                        }} />
+                    </Button>
+                    {photoData&&<Box sx={{mt:1.5,display:'flex',alignItems:'center',gap:2}}><img src={photoData} alt="Vista previa" width="72" height="72" style={{objectFit:'cover',borderRadius:18}}/><Button color="error" onClick={()=>setPhotoData(null)}>Quitar</Button></Box>}
+                </Box>
                 <Button
                     variant="contained"
                     color="primary"

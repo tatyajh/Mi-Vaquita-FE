@@ -89,6 +89,7 @@
   .logo {
     width: 46px;
   }
+  .brandName { display: none; }
 
   .navigation {
     grid-column: 1 / -1;

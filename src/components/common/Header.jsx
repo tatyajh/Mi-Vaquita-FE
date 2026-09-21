@@ -38,7 +38,7 @@ const Header = () => {
           <span className={styles.ribbonBottom} aria-hidden="true" />
           <Box component={Link} to="/home" className={styles.logoAndTitle} sx={{ textDecoration: 'none', color: 'inherit' }}>
             <img src={Logo} alt="Mi Vaquita" className={styles.logo} />
-            <Typography variant="h6" component="div" fontSize={'22px'} fontWeight={700}>
+            <Typography className={styles.brandName} variant="h6" component="div" fontSize={'22px'} fontWeight={700}>
               Mi Vaquita
             </Typography>
           </Box>

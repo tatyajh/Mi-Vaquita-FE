@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { Alert, Box, Button, TextField, Grid } from '@mui/material';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
+import { Alert, Box, Button, Link, TextField, Grid } from '@mui/material';
 import AuthLayout from '../components/auth/AuthLayout';
 import usersService from '../services/UsersService';
 import PasswordField from '../components/common/PasswordField';
@@ -67,7 +67,7 @@ const LoginPage = () => {
           onChange={(e) => setPassword(e.target.value)}
         />
         <Box sx={{ textAlign: 'right', mt: -1 }}>
-          <Button component={Link} to="/forgot-password" size="small" color="primary" sx={{ textTransform: 'none' }}>
+          <Button component={RouterLink} to="/forgot-password" size="small" color="primary" sx={{ textTransform: 'none' }}>
             ¿Olvidaste tu contraseña?
           </Button>
         </Box>
@@ -93,6 +93,14 @@ const LoginPage = () => {
             </Button>
           </Grid>
         </Grid>
+        <Box sx={{ textAlign: 'center', mt: 2 }}>
+          <Link component={RouterLink} to="/terminos" variant="caption" color="text.secondary" sx={{ mr: 1.5 }}>
+            Términos
+          </Link>
+          <Link component={RouterLink} to="/privacidad" variant="caption" color="text.secondary">
+            Privacidad
+          </Link>
+        </Box>
       </Box>
     </AuthLayout>
   );
