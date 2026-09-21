@@ -10,6 +10,7 @@ import PrivateNatilleraPage from './pages/PrivateNatilleraPage';
 import HomePage from './pages/HomePage';
 import PricingPage from './pages/PricingPage';
 import CalendarPage from './pages/CalendarPage';
+import NotFoundPage from './pages/NotFoundPage';
 
 const AppRoutes = () => {
   return (
@@ -28,7 +29,7 @@ const AppRoutes = () => {
       <Route path="natilleras/:natilleraId/privado" element={<PrivateNatilleraPage />} />
       <Route path="groups/:groupId/activities" element={<ActivitiesPage />} />
       <Route path="groups/:groupId/activities/:activityId" element={<ActivitiesPage />} />
-      <Route path="*" element={<Navigate to="/home" replace />} />
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 };

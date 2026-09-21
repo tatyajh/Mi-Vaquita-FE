@@ -9,6 +9,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import InvitationPage from "./pages/InvitationPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   return (
@@ -21,7 +22,7 @@ const App = () => {
         <Route path="/invitacion" element={<InvitationPage />} />
         <Route path="/terminos" element={<TermsPage />} />
         <Route path="/privacidad" element={<PrivacyPage />} />
-        <Route path="/" element={<Navigate to="/login" replace />} />
+        <Route path="/" element={<LandingPage />} />
         <Route path="/*" element={<PrivateRoutes />} />
       </Routes>
     </Router>
