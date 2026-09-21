@@ -10,6 +10,8 @@ import InvitationPage from "./pages/InvitationPage";
 import TermsPage from "./pages/TermsPage";
 import PrivacyPage from "./pages/PrivacyPage";
 import LandingPage from "./pages/LandingPage";
+import PrivateActivityPage from "./pages/PrivateActivityPage";
+import PrivateNatilleraPage from "./pages/PrivateNatilleraPage";
 
 const App = () => {
   return (
@@ -20,6 +22,12 @@ const App = () => {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/reset-password" element={<ResetPasswordPage />} />
         <Route path="/invitacion" element={<InvitationPage />} />
+        {/* Públicas a propósito: un invitado sin cuenta llega acá con
+            solo su token de invitado (ver guestAccessToken en
+            InvitationPage/CommunityService), nunca con el 'token' de
+            sesión que exige PrivateRoutes más abajo. */}
+        <Route path="/actividades/:activityId/privado" element={<PrivateActivityPage />} />
+        <Route path="/natilleras/:natilleraId/privado" element={<PrivateNatilleraPage />} />
         <Route path="/terminos" element={<TermsPage />} />
         <Route path="/privacidad" element={<PrivacyPage />} />
         <Route path="/" element={<LandingPage />} />

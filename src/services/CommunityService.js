@@ -3,12 +3,23 @@ import apiClient from './apiClient';
 const root = '/community';
 const data = (response) => response.data;
 
+// Estas dos son las únicas que un invitado sin cuenta puede llamar:
+// usan el token de invitado (guardado aparte en InvitationPage, nunca
+// como 'token') si existe. Si quien mira el link SÍ tiene sesión
+// propia (por ejemplo el dueño probando su propia invitación), no hay
+// guestAccessToken guardado y el interceptor de apiClient manda el
+// 'token' normal — el backend acepta cualquiera de los dos acá.
+const guestAuthHeader = () => {
+  const guestToken = localStorage.getItem('guestAccessToken');
+  return guestToken ? { headers: { Authorization: `Bearer ${guestToken}` } } : {};
+};
+
 export const listActivities = () => apiClient.get(`${root}/activities`).then(data);
 export const createGuest = (body) => apiClient.post(`${root}/guests`, body).then(data);
 export const createActivity = (body) => apiClient.post(`${root}/activities`, body).then(data);
 export const getActivity = (id) => apiClient.get(`${root}/activities/${id}`).then(data);
-export const getPrivateActivity = (id) => apiClient.get(`${root}/activities/${id}/private`).then(data);
-export const getPrivateNatillera = (id) => apiClient.get(`${root}/natilleras/${id}/private`).then(data);
+export const getPrivateActivity = (id) => apiClient.get(`${root}/activities/${id}/private`, guestAuthHeader()).then(data);
+export const getPrivateNatillera = (id) => apiClient.get(`${root}/natilleras/${id}/private`, guestAuthHeader()).then(data);
 export const inviteGuest = (id, participantId) => apiClient.post(`${root}/activities/${id}/invitations`, { participantId }).then(data);
 export const setExclusions = (id, participantId, excludedParticipantIds) => apiClient.put(`${root}/activities/${id}/exclusions`, { participantId, excludedParticipantIds }).then(data);
 export const setNumbers = (id, assignments) => apiClient.put(`${root}/activities/${id}/numbers`, { assignments }).then(data);
