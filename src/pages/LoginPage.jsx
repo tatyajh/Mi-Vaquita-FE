@@ -43,19 +43,20 @@ const LoginPage = () => {
   return (
     <AuthLayout title="Mi vaquita" subtitle="Inicia sesión para armar tus paseos">
       <Box component="form" onSubmit={handleLogin} noValidate>
-        <PasswordField
+        <TextField
           margin="normal"
           required
           fullWidth
           id="email"
           label="Correo"
           name="email"
+          type="email"
           autoComplete="email"
           autoFocus
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <TextField
+        <PasswordField
           margin="normal"
           required
           fullWidth
