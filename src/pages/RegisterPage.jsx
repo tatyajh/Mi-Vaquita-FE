@@ -13,6 +13,7 @@ const RegisterPage = () => {
   let navigate = useNavigate();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [acceptedTerms, setAcceptedTerms] = useState(false);
@@ -25,6 +26,9 @@ const RegisterPage = () => {
     }
     if (!password) {
       return 'La contraseña es obligatoria';
+    }
+    if (!/^\+?[1-9]\d{7,14}$/.test(phone.replace(/[\s()-]/g, ''))) {
+      return 'Escribe tu WhatsApp con indicativo de país, por ejemplo +573001234567';
     }
     if (!PASSWORD_PATTERN.test(password)) {
       return 'La contraseña debe tener al menos una letra minúscula y un número';
@@ -50,7 +54,7 @@ const RegisterPage = () => {
 
     setSubmitting(true);
     try {
-      await usersService.register(name, email, password);
+      await usersService.register(name, email, phone, password);
       navigate('/login');
     } catch (err) {
       const status = err?.response?.status;
@@ -78,7 +82,7 @@ const RegisterPage = () => {
             {error}
           </Alert>
         )}
-        <PasswordField
+        <TextField
           margin="normal"
           required
           fullWidth
@@ -103,6 +107,20 @@ const RegisterPage = () => {
           onChange={(e) => setEmail(e.target.value)}
         />
         <TextField
+          margin="normal"
+          required
+          fullWidth
+          id="phone"
+          label="WhatsApp"
+          name="phone"
+          type="tel"
+          autoComplete="tel"
+          placeholder="+57 300 123 4567"
+          helperText="Lo usaremos para preparar invitaciones y avisos por WhatsApp."
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+        <PasswordField
           margin="normal"
           required
           fullWidth
