@@ -98,10 +98,15 @@ export default function CommunityActivitiesPage() {
     try {
       setError("");
       if (activityId) {
+        setItems([]);
         const detail = await api.getActivity(activityId);
         setActivity(detail);
         setWhatsappLinks(detail.preparedWhatsapp || []);
-      } else setItems(await api.listActivities());
+      } else {
+        setActivity(null);
+        setWhatsappLinks([]);
+        setItems(await api.listActivities());
+      }
     } catch (e) {
       setError(errorText(e));
     }
@@ -414,7 +419,7 @@ export default function CommunityActivitiesPage() {
             </Grid>
           </>
         )}
-        {activity && (
+        {activityId && activity && (
           <>
             <Alert severity="info" sx={{ mb: 3 }}>
               <b>Registrado en Mi Vaquita · pagado por fuera.</b> La aplicación
