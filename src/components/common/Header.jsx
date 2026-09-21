@@ -8,7 +8,6 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import styles from '../../styles/Header.module.css';
 import Logo from '../../assets/layer-MC1.svg';
 import { getCurrentUser, logout } from '../../services/AuthService';
-import WaveDivider from './WaveDivider';
 import ChangePasswordModal from '../account/ChangePasswordModal';
 import DeactivateAccountModal from '../account/DeactivateAccountModal';
 
@@ -38,10 +37,10 @@ const Header = () => {
           <Box component={Link} to="/groups" className={styles.logoAndTitle} sx={{ textDecoration: 'none', color: 'inherit' }}>
             <img src={Logo} alt="Mi Vaquita" className={styles.logo} />
             <Typography variant="h6" component="div" fontSize={'22px'} fontWeight={700}>
-              Mi Vaquita <span style={{ color: '#9fcb3b' }}>🌿</span>
+              Mi Vaquita
             </Typography>
           </Box>
-          <Box className={styles.navigation}>
+          <Box component="nav" aria-label="Navegación principal" className={styles.navigation}>
             <Link to="/friends" className={`${styles.link} ${location.pathname === '/friends' ? styles.active : ''}`}>
               Amig@s
             </Link>
@@ -50,6 +49,9 @@ const Header = () => {
             </Link>
             <Link to="/natilleras" className={`${styles.link} ${location.pathname.startsWith('/natilleras') ? styles.active : ''}`}>
               Natilleras
+            </Link>
+            <Link to="/activities" className={`${styles.link} ${location.pathname.startsWith('/activities') ? styles.active : ''}`}>
+              Actividades
             </Link>
           </Box>
           <Tooltip title={currentUser ? `Cuenta (${currentUser.name})` : 'Cuenta'}>
@@ -96,7 +98,6 @@ const Header = () => {
           </Menu>
         </Toolbar>
       </AppBar>
-      <WaveDivider color="#FAA918" />
       <ChangePasswordModal open={changePasswordOpen} onClose={() => setChangePasswordOpen(false)} />
       <DeactivateAccountModal
         open={deactivateOpen}

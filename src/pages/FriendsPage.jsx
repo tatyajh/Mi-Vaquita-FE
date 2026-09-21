@@ -1,11 +1,13 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Alert, Autocomplete, Box, CircularProgress, Grid, TextField, Typography } from '@mui/material';
+import { Alert, Autocomplete, Box, CircularProgress, Grid, Paper, TextField, Typography } from '@mui/material';
+import PeopleAltOutlinedIcon from '@mui/icons-material/PeopleAltOutlined';
 import FriendsService from '../services/FriendsService';
 import UsersService from '../services/UsersService';
 import { getCurrentUser } from '../services/AuthService';
 import FriendCard from '../components/friends/FriendCard';
 import PageHeader from '../components/common/PageHeader';
 import EmptyState from '../components/common/EmptyState';
+import '../styles/FeaturePages.css';
 
 const SEARCH_DEBOUNCE_MS = 300;
 
@@ -120,14 +122,16 @@ const FriendsPage = () => {
   };
 
   return (
-    <Box sx={{ pb: 3 }}>
+    <Box className="mv-page" sx={{ pb: 4 }}>
       <PageHeader
         title="Amig@s"
         subtitle="Las personas con las que compartes grupos y gastos."
         titleColor="accentGreen.dark"
       />
 
-      <Box sx={{ px: { xs: 2, sm: 3 }, mb: 3 }}>
+      <Paper className="mv-page-panel" sx={{ mx: { xs: 2, sm: 3 }, mt: 2 }}>
+        <Typography variant="h6" sx={{ mb: 0.5, color: 'accentGreen.dark', fontWeight: 800 }}>Encuentra a tu gente</Typography>
+        <Typography color="text.secondary" sx={{ mb: 2 }}>Busca por nombre o correo. Solo agregarás a la persona que selecciones.</Typography>
         <Autocomplete
           options={options}
           filterOptions={(x) => x}
@@ -140,7 +144,7 @@ const FriendsPage = () => {
           loading={searching}
           disabled={submitting}
           noOptionsText={inputValue.trim() ? 'No encontramos resultados' : 'Escribe un nombre o correo'}
-          sx={{ minWidth: 280, maxWidth: 420 }}
+          sx={{ width: '100%', maxWidth: 560 }}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -168,14 +172,15 @@ const FriendsPage = () => {
             {success}
           </Alert>
         )}
-      </Box>
+      </Paper>
 
-      <Box sx={{ px: { xs: 2, sm: 3 } }}>
-        <Typography variant="h6" sx={{ mb: 2, color: 'primary.main', fontWeight: 700 }}>Amigos</Typography>
+      <Paper className="mv-page-panel" sx={{ mx: { xs: 2, sm: 3 }, mt: 3 }}>
+        <Typography variant="h6" sx={{ mb: 2, color: 'accentGreen.dark', fontWeight: 800 }}>Tus amigos</Typography>
         {friends.length === 0 ? (
           <EmptyState
+            icon={<PeopleAltOutlinedIcon fontSize="inherit" />}
             title="Todavía no has agregado amigos"
-            description="Busca a alguien por su correo y presiona 'Agregar amigo' para empezar a compartir gastos con ellos."
+            description="Usa el buscador de arriba y elige a la persona correcta para empezar a compartir planes y gastos."
           />
         ) : (
           <Grid container spacing={2}>
@@ -186,7 +191,7 @@ const FriendsPage = () => {
             ))}
           </Grid>
         )}
-      </Box>
+      </Paper>
     </Box>
   );
 };

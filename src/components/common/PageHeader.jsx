@@ -36,7 +36,7 @@ const PageHeader = ({ title, subtitle, actionLabel, onAction, actionIcon, titleC
           size="large"
           startIcon={actionIcon}
           onClick={onAction}
-          sx={{ px: 3 }}
+          sx={{ px: 3, minHeight: 44, width: { xs: '100%', sm: 'auto' } }}
         >
           {actionLabel}
         </Button>

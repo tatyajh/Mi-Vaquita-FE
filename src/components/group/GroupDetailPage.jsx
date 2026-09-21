@@ -25,7 +25,6 @@ import AddFriendsModal from '../friends/AddFriendModal';
 import AddExpenseModal from './AddExpenseModal';
 import ExpenseCard from './ExpenseCard';
 import EmptyState from '../common/EmptyState';
-import WaveDivider from '../common/WaveDivider';
 import { formatCurrency as currency } from '../../utils/currency';
 import { getTipsForTripType } from '../../data/savingsTips';
 import { MILK_BAG_RADIUS } from '../../utils/shape';
@@ -241,7 +240,6 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         </Menu>
       </Box>
 
-      <WaveDivider color={group.color || '#FAA918'} sx={{ mt: 2 }} />
 
       {/* Balances / settle-up section, promoted directly under the header */}
       <Box sx={{ px: { xs: 2, sm: 3 }, mt: 3 }}>

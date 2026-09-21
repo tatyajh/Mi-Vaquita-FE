@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Alert, Box, Grid } from '@mui/material';
+import { Alert, Box, Grid, Paper } from '@mui/material';
+import GroupsOutlinedIcon from '@mui/icons-material/GroupsOutlined';
 import GroupModal from '../components/group/GroupModal';
 import GroupCard from '../components/group/GroupCard';
 import GroupService from '../services/GroupService';
@@ -7,6 +8,7 @@ import GroupDetailPage from '../components/group/GroupDetailPage';
 import { getCurrentUser } from '../services/AuthService';
 import PageHeader from '../components/common/PageHeader';
 import EmptyState from '../components/common/EmptyState';
+import '../styles/FeaturePages.css';
 
 const GroupsPage = () => {
   const [isModalOpen, setModalOpen] = useState(false);
@@ -81,7 +83,7 @@ const GroupsPage = () => {
       {viewingGroup ? (
         <GroupDetailPage group={viewingGroup} onBack={handleBackToGroups} onEdit={handleOpenModalForEdit} onDelete={handleDeleteGroup} />
       ) : (
-        <>
+        <Box className="mv-page" sx={{ pb: 4 }}>
           <PageHeader
             title="Grupos"
             subtitle="Tus paseos y planes compartidos con amigos."
@@ -95,12 +97,13 @@ const GroupsPage = () => {
             </Box>
           )}
           {groups.length === 0 && !loadError ? (
-            <EmptyState
-              title="Todavía no tienes grupos"
-              description={'1. Crea un grupo\n2. Agrega amigos\n3. Anota los gastos\n4. Mira quién le debe a quién'}
-              actionLabel="Crear tu primer parche"
-              onAction={handleOpenModalForCreate}
-            />
+            <Paper className="mv-page-panel" sx={{ mx: { xs: 2, sm: 3 }, mt: 2 }}>
+              <EmptyState
+                icon={<GroupsOutlinedIcon fontSize="inherit" />}
+                title="Todavía no tienes grupos"
+                description={'Crea tu primer parche, agrega participantes y lleva los gastos compartidos en un solo lugar.'}
+              />
+            </Paper>
           ) : (
             <Grid container spacing={2} sx={{ px: { xs: 2, sm: 3 }, m: 0, width: '100%' }}>
               {groups.map(group => (
@@ -114,7 +117,7 @@ const GroupsPage = () => {
               ))}
             </Grid>
           )}
-        </>
+        </Box>
       )}
       {isModalOpen && (
         <GroupModal

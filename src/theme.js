@@ -1,9 +1,6 @@
 import { createTheme } from '@mui/material/styles';
 
-// Tema de marca "Cosechas" para Mi Vaquita: la paleta y tipografía real
-// de cosechasexpress.com (magenta vibrante, ámbar, verdes de marca),
-// tipografía redondeada tipo display para títulos, y las mismas curvas
-// orgánicas/formas de píldora que ya traía el tema anterior.
+// Tema propio de Mi Vaquita: verde protagonista con acentos alegres.
 const theme = createTheme({
   palette: {
     primary: {
@@ -85,10 +82,6 @@ const theme = createTheme({
           transition: theme.transitions.create(['transform', 'box-shadow'], {
             duration: theme.transitions.duration.short,
           }),
-          '&:hover': {
-            transform: 'translateY(-3px)',
-            boxShadow: '0 14px 28px rgba(54, 25, 13, 0.18)',
-          },
         }),
       },
     },
