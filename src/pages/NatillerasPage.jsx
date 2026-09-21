@@ -94,6 +94,8 @@ export default function NatillerasPage() {
     [busy, setBusy] = useState(false);
   const [borrowerSearch, setBorrowerSearch] = useState("");
   const [borrowerResults, setBorrowerResults] = useState([]);
+  const [statusFilter,setStatusFilter]=useState('all');
+  const [personFilter,setPersonFilter]=useState('all');
   const [form, setForm] = useState({
     name: "",
     purpose: "",
@@ -439,8 +441,16 @@ export default function NatillerasPage() {
                     </Button>
                   )}
                 </Stack>
+                <Stack direction={{xs:'column',sm:'row'}} spacing={1.5} sx={{mt:2}}>
+                  <TextField select size="small" label="Estado" value={statusFilter} onChange={(e)=>setStatusFilter(e.target.value)} sx={{minWidth:160}}>
+                    <MenuItem value="all">Todos</MenuItem>{Object.entries(statusLabel).map(([value,label])=><MenuItem key={value} value={value}>{label}</MenuItem>)}
+                  </TextField>
+                  <TextField select size="small" label="Persona" value={personFilter} onChange={(e)=>setPersonFilter(e.target.value)} sx={{minWidth:200}}>
+                    <MenuItem value="all">Todas</MenuItem>{detail.members.map((m)=><MenuItem key={m.id} value={String(m.id)}>{m.name}</MenuItem>)}
+                  </TextField>
+                </Stack>
                 <Grid container spacing={1} sx={{ mt: 2 }}>
-                  {detail.schedule.map((s, i) => (
+                  {detail.schedule.filter((s)=>(statusFilter==='all'||s.status===statusFilter)&&(personFilter==='all'||String(s.userId)===personFilter)).map((s, i) => (
                     <Grid
                       item
                       xs={12}
@@ -460,7 +470,7 @@ export default function NatillerasPage() {
                       >
                         <Box>
                           <Typography fontWeight={700}>
-                            {s.name} · {s.dueOn}
+                            {s.name} · {dateText(s.dueOn)}
                           </Typography>
                           <Typography variant="body2">
                             {cop(s.paid)} de {cop(s.due)} · Falta{" "}
@@ -551,7 +561,10 @@ export default function NatillerasPage() {
                     </Button>
                   )}
                 </Stack>
-                {detail.loans.map((l) => (
+                <TextField select size="small" label="Persona" value={personFilter} onChange={(e)=>setPersonFilter(e.target.value)} sx={{minWidth:200,mt:2}}>
+                  <MenuItem value="all">Todas</MenuItem>{detail.loans.map((l)=><MenuItem key={l.id} value={String(l.user_id)}>{l.member_name}</MenuItem>)}
+                </TextField>
+                {detail.loans.filter((l)=>personFilter==='all'||String(l.user_id)===personFilter).map((l) => (
                   <Box
                     key={l.id}
                     sx={{ borderBottom: "1px solid #eee", py: 2 }}
