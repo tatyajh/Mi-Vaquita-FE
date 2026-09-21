@@ -574,15 +574,44 @@ export default function CommunityActivitiesPage() {
                     gap={1}
                   >
                     {whatsappLinks.map((link, index) => (
-                      <Button
+                      <Stack
                         key={`${link.participantId}-${index}`}
-                        variant="outlined"
-                        href={link.whatsappUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                        direction={{ xs: "column", sm: "row" }}
+                        spacing={1}
                       >
-                        Abrir WhatsApp {index + 1}
-                      </Button>
+                        <Button
+                          variant="outlined"
+                          href={link.whatsappUrl}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                        >
+                          Abrir WhatsApp {index + 1}
+                        </Button>
+                        <Button
+                          color="success"
+                          onClick={() =>
+                            run(
+                              () =>
+                                api.markNotificationManualSent(
+                                  activityId,
+                                  link.notificationId,
+                                ),
+                              "Envío manual confirmado.",
+                            ).then((result) => {
+                              if (result)
+                                setWhatsappLinks((items) =>
+                                  items.filter(
+                                    (item) =>
+                                      item.notificationId !==
+                                      link.notificationId,
+                                  ),
+                                );
+                            })
+                          }
+                        >
+                          Marcar enviado
+                        </Button>
+                      </Stack>
                     ))}
                   </Stack>
                 </Alert>
@@ -717,7 +746,7 @@ export default function CommunityActivitiesPage() {
                         "& .MuiChip-label": { color: "#fff" },
                       }}
                       key={`${n.status}-${n.channel}`}
-                      label={`${n.channel === "email" ? "Correo" : "WhatsApp"}: ${n.count} ${n.status === "sent" ? "enviado" : n.status === "failed" ? "fallido" : n.status === "prepared" ? "listo para enviar" : "pendiente"}`}
+                      label={`${n.channel === "email" ? "Correo" : "WhatsApp"}: ${n.count} ${n.status === "sent" ? "enviado" : n.status === "manual_sent" ? "enviado manualmente" : n.status === "failed" ? "fallido" : n.status === "prepared" ? "listo para enviar" : "pendiente"}`}
                       color={
                         n.status === "sent"
                           ? "success"
