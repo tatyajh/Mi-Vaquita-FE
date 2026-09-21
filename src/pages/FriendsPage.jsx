@@ -19,6 +19,7 @@ const FriendsPage = () => {
   const [success, setSuccess] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const debounceRef = useRef(null);
+  const searchRequestRef = useRef(0);
 
   const fetchFriends = async () => {
     try {
@@ -41,21 +42,28 @@ const FriendsPage = () => {
 
     const query = inputValue.trim();
     if (!query) {
+      searchRequestRef.current += 1;
       setOptions([]);
       setSearching(false);
       return;
     }
 
     setSearching(true);
+    const requestId = ++searchRequestRef.current;
     debounceRef.current = setTimeout(async () => {
       try {
         const results = await UsersService.searchUsers(query);
-        setOptions(Array.isArray(results) ? results : []);
+        // Una búsqueda anterior puede responder después de la más
+        // reciente. Ignorarla evita mostrar/agregar una persona distinta
+        // de la que corresponde al texto visible en el selector.
+        if (requestId === searchRequestRef.current) {
+          setOptions(Array.isArray(results) ? results : []);
+        }
       } catch (err) {
         console.error('Error al buscar usuarios:', err);
-        setOptions([]);
+        if (requestId === searchRequestRef.current) setOptions([]);
       } finally {
-        setSearching(false);
+        if (requestId === searchRequestRef.current) setSearching(false);
       }
     }, SEARCH_DEBOUNCE_MS);
 
@@ -80,7 +88,7 @@ const FriendsPage = () => {
       setSuccess(`¡${selectedUser.name} fue agregado a tus amigos!`);
       setInputValue('');
       setOptions([]);
-      fetchFriends();
+      await fetchFriends();
     } catch (err) {
       const status = err?.response?.status;
       const serverMessage = err?.response?.data?.message;
