@@ -6,6 +6,7 @@ import LockResetIcon from '@mui/icons-material/LockReset';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import LogoutIcon from '@mui/icons-material/Logout';
 import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
+import AccountBalanceWalletOutlinedIcon from '@mui/icons-material/AccountBalanceWalletOutlined';
 import styles from '../../styles/Header.module.css';
 import Logo from '../../assets/layer-MC1.svg';
 import { getCurrentUser, logout } from '../../services/AuthService';
@@ -74,6 +75,12 @@ const Header = () => {
             </IconButton>
           </Tooltip>
           <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+            <MenuItem component={Link} to="/mis-prestamos" onClick={() => setMenuAnchor(null)}>
+              <ListItemIcon>
+                <AccountBalanceWalletOutlinedIcon fontSize="small" color="primary" />
+              </ListItemIcon>
+              Mis préstamos
+            </MenuItem>
             <MenuItem
               component={Link}
               to="/precios"

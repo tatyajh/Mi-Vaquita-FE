@@ -10,6 +10,7 @@ import PrivateNatilleraPage from './pages/PrivateNatilleraPage';
 import HomePage from './pages/HomePage';
 import PricingPage from './pages/PricingPage';
 import CalendarPage from './pages/CalendarPage';
+import MyLoansPage from './pages/MyLoansPage';
 import NotFoundPage from './pages/NotFoundPage';
 
 const AppRoutes = () => {
@@ -19,6 +20,7 @@ const AppRoutes = () => {
       <Route path="home" element={<HomePage />} />
       <Route path="precios" element={<PricingPage />} />
       <Route path="calendario" element={<CalendarPage />} />
+      <Route path="mis-prestamos" element={<MyLoansPage />} />
       <Route path="friends" element={<FriendsPage />} />
       <Route path="groups" element={<GroupsPage />} />
       <Route path="natilleras" element={<NatillerasPage />} />

@@ -24,6 +24,7 @@ import {
 } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
 import FriendsService from "../services/FriendsService";
+import { searchUsers } from "../services/UsersService";
 import { getCurrentUser } from "../services/AuthService";
 import { formatCurrency as cop } from "../utils/currency";
 import * as api from "../services/NatilleraService";
@@ -90,6 +91,8 @@ export default function NatillerasPage() {
     [tab, setTab] = useState(0),
     [error, setError] = useState(""),
     [busy, setBusy] = useState(false);
+  const [borrowerSearch, setBorrowerSearch] = useState("");
+  const [borrowerResults, setBorrowerResults] = useState([]);
   const [form, setForm] = useState({
     name: "",
     purpose: "",
@@ -113,6 +116,7 @@ export default function NatillerasPage() {
     quotaId: "",
     description: "",
     note: "",
+    borrowerType: "member",
   });
   const update = (key, value) => setForm((f) => ({ ...f, [key]: value }));
   const load = useCallback(async () => {
@@ -152,8 +156,29 @@ export default function NatillerasPage() {
   const admin = detail?.owner_id === current?.id;
   const begin = (name, seed = {}) => {
     setError("");
+    if (name === "loan") {
+      setBorrowerSearch("");
+      setBorrowerResults([]);
+    }
     setForm((f) => ({ ...f, ...seed }));
     setDialog(name);
+  };
+  const findBorrowers = async () => {
+    if (borrowerSearch.trim().length < 2) {
+      setError("Escribe al menos dos letras del nombre o correo.");
+      return;
+    }
+    setBusy(true);
+    setError("");
+    try {
+      const results = await searchUsers(borrowerSearch.trim());
+      const memberIds = new Set((detail?.members || []).map((m) => Number(m.id)));
+      setBorrowerResults(results.filter((u) => !memberIds.has(Number(u.id))));
+    } catch (e) {
+      setError(errorText(e));
+    } finally {
+      setBusy(false);
+    }
   };
   const submit = () => {
     if (dialog === "create")
@@ -511,6 +536,7 @@ export default function NatillerasPage() {
                       onClick={() =>
                         begin("loan", {
                           userId: detail.members[0]?.id || "",
+                          borrowerType: "member",
                           principal: "",
                           annualRate: "",
                           termMonths: "",
@@ -527,15 +553,29 @@ export default function NatillerasPage() {
                     sx={{ borderBottom: "1px solid #eee", py: 2 }}
                   >
                     <Typography fontWeight={700}>
-                      {l.member_name} · {cop(l.principal)}
+                      {l.member_name} · {cop(l.principal)}{" "}
+                      {!l.is_member && (
+                        <Chip size="small" color="secondary" label="Externo" />
+                      )}
                     </Typography>
                     <Typography>
                       Interés simple: {l.annual_rate}% anual por {l.term_months}{" "}
                       meses · {cop(l.interest)}
                     </Typography>
                     <Typography>
-                      Abonado: {cop(l.repaid)} · Saldo: {cop(l.balance)}
+                      Capital pendiente: {cop(l.capitalPending)} · Interés
+                      pendiente: {cop(l.interestPending)}
                     </Typography>
+                    <Typography color="text.secondary">
+                      Pagado a capital: {cop(l.capitalPaid)} · Pagado a
+                      intereses: {cop(l.interestPaid)} · Saldo total: {cop(l.balance)}
+                    </Typography>
+                    {l.schedule?.find((q) => q.balance > 0) && (
+                      <Typography variant="body2" sx={{ mt: 0.5 }}>
+                        Próxima cuota: {dateText(l.schedule.find((q) => q.balance > 0).due_on)} ·{" "}
+                        {cop(l.schedule.find((q) => q.balance > 0).balance)}
+                      </Typography>
+                    )}
                     {admin && detail.status === "active" && l.balance > 0 && (
                       <Button
                         onClick={() =>
@@ -901,7 +941,7 @@ export default function NatillerasPage() {
                   </Alert>
                 </>
               )}
-              {["contribution", "loan"].includes(dialog) && (
+              {dialog === "contribution" && (
                 <TextField
                   select
                   label="Participante"
@@ -941,6 +981,78 @@ export default function NatillerasPage() {
               )}
               {dialog === "loan" && (
                 <>
+                  <Alert severity="info">
+                    El préstamo se registra aquí, pero el dinero se entrega y
+                    se paga por fuera de Mi Vaquita.
+                  </Alert>
+                  <TextField
+                    select
+                    label="Tipo de prestatario"
+                    value={form.borrowerType}
+                    onChange={(e) => {
+                      update("borrowerType", e.target.value);
+                      update(
+                        "userId",
+                        e.target.value === "member"
+                          ? detail?.members?.[0]?.id || ""
+                          : "",
+                      );
+                    }}
+                  >
+                    <MenuItem value="member">Integrante de la natillera</MenuItem>
+                    <MenuItem value="external">Usuario externo registrado</MenuItem>
+                  </TextField>
+                  {form.borrowerType === "member" ? (
+                    <TextField
+                      select
+                      label="Integrante"
+                      value={form.userId}
+                      onChange={(e) => update("userId", e.target.value)}
+                    >
+                      {detail?.members.map((m) => (
+                        <MenuItem value={m.id} key={m.id}>
+                          {m.name}
+                        </MenuItem>
+                      ))}
+                    </TextField>
+                  ) : (
+                    <Box>
+                      <Stack direction={{ xs: "column", sm: "row" }} spacing={1}>
+                        <TextField
+                          fullWidth
+                          label="Buscar por nombre o correo"
+                          value={borrowerSearch}
+                          onChange={(e) => setBorrowerSearch(e.target.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter") {
+                              e.preventDefault();
+                              findBorrowers();
+                            }
+                          }}
+                        />
+                        <Button variant="outlined" onClick={findBorrowers} disabled={busy}>
+                          Buscar
+                        </Button>
+                      </Stack>
+                      <Stack spacing={1} sx={{ mt: 1 }}>
+                        {borrowerResults.map((u) => (
+                          <Button
+                            key={u.id}
+                            variant={Number(form.userId) === Number(u.id) ? "contained" : "outlined"}
+                            onClick={() => update("userId", u.id)}
+                            sx={{ justifyContent: "flex-start", textAlign: "left" }}
+                          >
+                            {u.name} · {u.email}
+                          </Button>
+                        ))}
+                        {borrowerResults.length === 0 && borrowerSearch.length >= 2 && (
+                          <Typography variant="body2" color="text.secondary">
+                            Si no aparece, primero debe crear una cuenta en Mi Vaquita. No será agregado como integrante.
+                          </Typography>
+                        )}
+                      </Stack>
+                    </Box>
+                  )}
                   <TextField
                     label="Capital (COP)"
                     type="number"
