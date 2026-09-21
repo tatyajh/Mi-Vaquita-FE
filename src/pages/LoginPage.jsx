@@ -10,6 +10,11 @@ const LoginPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [sessionMessage] = useState(() => {
+    const message = sessionStorage.getItem('sessionMessage') || '';
+    sessionStorage.removeItem('sessionMessage');
+    return message;
+  });
   const [submitting, setSubmitting] = useState(false);
 
   const handleLogin = async (e) => {
@@ -43,6 +48,7 @@ const LoginPage = () => {
   return (
     <AuthLayout title="Mi vaquita" subtitle="Inicia sesión para armar tus paseos">
       <Box component="form" onSubmit={handleLogin} noValidate>
+        {sessionMessage && <Alert severity="info" sx={{ mb: 1 }}>{sessionMessage}</Alert>}
         <TextField
           margin="normal"
           required

@@ -11,7 +11,9 @@ const data = (response) => response.data;
 // 'token' normal — el backend acepta cualquiera de los dos acá.
 const guestAuthHeader = () => {
   const guestToken = localStorage.getItem('guestAccessToken');
-  return guestToken ? { headers: { Authorization: `Bearer ${guestToken}` } } : {};
+  return guestToken
+    ? { headers: { Authorization: `Bearer ${guestToken}` }, skipAuthRedirect: true }
+    : {};
 };
 
 export const listActivities = () => apiClient.get(`${root}/activities`).then(data);
@@ -35,5 +37,5 @@ export const inviteNatilleraGuest = (id, participantId) => apiClient.post(`${roo
 export const addNatilleraQuota = (id, body) => apiClient.post(`${root}/natilleras/${id}/quotas`, body).then(data);
 export const addNatilleraContribution = (id, body) => apiClient.post(`${root}/natilleras/${id}/contributions`, body).then(data);
 export const addNatilleraLedger = (id, body) => apiClient.post(`${root}/natilleras/${id}/ledger`, body).then(data);
-export const claimInvitation = (token, pin) => apiClient.post(`${root}/invitations/claim`, { token, pin }).then(data);
-export const accessInvitation = (token, pin) => apiClient.post(`${root}/invitations/access`, { token, pin }).then(data);
+export const claimInvitation = (token, pin) => apiClient.post(`${root}/invitations/claim`, { token, pin }, { skipAuthRedirect: true }).then(data);
+export const accessInvitation = (token, pin) => apiClient.post(`${root}/invitations/access`, { token, pin }, { skipAuthRedirect: true }).then(data);
