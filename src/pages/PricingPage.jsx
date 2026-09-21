@@ -21,7 +21,11 @@ const PRO_FEATURES = [
 
 const PricingPage = () => {
   const [searchParams] = useSearchParams();
-  const checkoutResult = searchParams.get('checkout');
+  // Wompi (a diferencia de Stripe) no manda "success"/"cancel": solo
+  // redirige de vuelta con ?id=<transacción> pase lo que pase. El
+  // resultado real (aprobado/rechazado) llega por el webhook, así que
+  // acá solo avisamos que estamos verificando y refrescamos el estado.
+  const isReturningFromCheckout = searchParams.get('checkout') === 'return';
   const [status, setStatus] = useState(null);
   const [loadingStatus, setLoadingStatus] = useState(true);
   const [upgrading, setUpgrading] = useState(false);
@@ -32,7 +36,7 @@ const PricingPage = () => {
       .then(setStatus)
       .catch(() => setStatus({ isPro: false }))
       .finally(() => setLoadingStatus(false));
-  }, [checkoutResult]);
+  }, [isReturningFromCheckout]);
 
   const handleUpgrade = async () => {
     setError('');
@@ -62,14 +66,14 @@ const PricingPage = () => {
           Lo esencial siempre es gratis. Pro suma un poco más de comodidad.
         </Typography>
 
-        {checkoutResult === 'success' && (
-          <Alert severity="success" sx={{ mb: 3 }}>
-            ¡Listo! Tu pago se está procesando. Puede tardar unos segundos en reflejarse aquí.
+        {isReturningFromCheckout && !isPro && (
+          <Alert severity="info" sx={{ mb: 3 }}>
+            Estamos confirmando tu pago con Wompi. Si acabas de pagar, puede tardar unos segundos en reflejarse aquí — recarga la página en un momento.
           </Alert>
         )}
-        {checkoutResult === 'cancel' && (
-          <Alert severity="info" sx={{ mb: 3 }}>
-            Cancelaste el proceso de pago. Puedes intentarlo de nuevo cuando quieras.
+        {isReturningFromCheckout && isPro && (
+          <Alert severity="success" sx={{ mb: 3 }}>
+            ¡Listo! Tu plan Pro ya está activo.
           </Alert>
         )}
         {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
