@@ -77,7 +77,7 @@ export default function MyLoansPage() {
                   </Stack>
                   <LinearProgress variant="determinate" value={progress} sx={{ my: 2, height: 10, borderRadius: '8px' }} />
                   <Grid container spacing={1.5}>
-                    {[["Capital inicial", loan.principal], ["Interés contratado", loan.interest], ["Capital pendiente", loan.capitalPending], ["Interés pendiente", loan.interestPending]].map(([label, value]) => (
+                    {[["Capital inicial", loan.principal], ["Interés estimado del plan", loan.interest], ["Capital pendiente", loan.capitalPending], ["Interés pendiente (real)", loan.interestPending]].map(([label, value]) => (
                       <Grid item xs={6} md={3} key={label}><Box sx={{ bgcolor: "#f5f9e9", borderRadius: '14px', p: 1.5, height: "100%" }}><Typography variant="caption" color="text.secondary">{label}</Typography><Typography fontWeight={800}>{cop(value)}</Typography></Box></Grid>
                     ))}
                   </Grid>

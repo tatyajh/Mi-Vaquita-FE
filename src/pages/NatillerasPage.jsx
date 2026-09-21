@@ -576,7 +576,7 @@ export default function NatillerasPage() {
                       )}
                     </Typography>
                     <Typography>
-                      Interés simple: {l.annual_rate}% anual por {l.term_months}{" "}
+                      Interés sobre saldo: {l.annual_rate}% anual, estimado para {l.term_months}{" "}
                       meses · {cop(l.interest)}
                     </Typography>
                     <Typography>
