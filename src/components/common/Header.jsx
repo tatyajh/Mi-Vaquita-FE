@@ -47,6 +47,9 @@ const Header = () => {
             <Link to="/home" className={`${styles.link} ${location.pathname === '/home' ? styles.active : ''}`}>
               Inicio
             </Link>
+            <Link to="/calendario" className={`${styles.link} ${location.pathname === '/calendario' ? styles.active : ''}`}>
+              Calendario
+            </Link>
             <Link to="/friends" className={`${styles.link} ${location.pathname === '/friends' ? styles.active : ''}`}>
               Amig@s
             </Link>
