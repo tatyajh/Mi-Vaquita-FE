@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Container, Link, Paper, Typography } from '@mui/material';
+import { Alert, Box, Container, Link, Paper, Typography } from '@mui/material';
 
 const PrivacyPage = () => {
   return (
@@ -13,6 +13,7 @@ const PrivacyPage = () => {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             Última actualización: septiembre de 2026
           </Typography>
+          <Alert severity="warning" sx={{ mb: 3 }}><strong>Documento preliminar.</strong> Responsable del tratamiento: [PENDIENTE]. Identificación, domicilio, correo y canal de consultas o reclamos: [PENDIENTE ANTES DE VENDER].</Alert>
 
           <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>Qué datos recogemos</Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
@@ -43,6 +44,16 @@ const PrivacyPage = () => {
             iniciar sesión y de aparecer en búsquedas de amigos. Conservamos tu historial de
             gastos dentro de grupos compartidos con otras personas, para no alterar sus
             saldos, pero ya no queda asociado a una cuenta activa.
+          </Typography>
+
+          <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>Finalidades, conservación y proveedores</Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Usamos los datos para crear cuentas, mostrar participantes autorizados, calcular registros y enviar comunicaciones solicitadas. Intervienen proveedores de alojamiento, base de datos y correo que pueden procesar información fuera de Colombia. [PENDIENTE DE REVISIÓN LEGAL: periodos exactos de conservación, países y mecanismos de transferencia]. No guardamos el contenido de contraseñas, PIN ni enlaces privados en texto plano.
+          </Typography>
+
+          <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>Menores y eliminación</Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            Mi Vaquita no está dirigida a menores sin acompañamiento de su representante. Puedes solicitar actualización, consulta, corrección o eliminación mediante [CANAL PENDIENTE]. Algunos movimientos compartidos se conservan de forma limitada cuando sean necesarios para no alterar cuentas de otras personas.
           </Typography>
 
           <Typography variant="body2" sx={{ mt: 4 }}>

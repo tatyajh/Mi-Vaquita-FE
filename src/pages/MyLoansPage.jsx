@@ -15,10 +15,11 @@ import {
 import * as api from "../services/NatilleraService";
 import { formatCurrency as cop } from "../utils/currency";
 import "../styles/FeaturePages.css";
+import { formatDateCO } from '../utils/date';
 
 const labels = { paid: "Pagada", partial: "Parcial", overdue: "Vencida", pending: "Pendiente" };
 const colors = { paid: "success", partial: "warning", overdue: "error", pending: "default" };
-const dateText = (value) => String(value || "").slice(0, 10);
+const dateText = formatDateCO;
 
 export default function MyLoansPage() {
   const [loans, setLoans] = useState([]);

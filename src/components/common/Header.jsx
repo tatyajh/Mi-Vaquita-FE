@@ -14,6 +14,7 @@ import ChangePasswordModal from '../account/ChangePasswordModal';
 import DeactivateAccountModal from '../account/DeactivateAccountModal';
 
 const Header = () => {
+  const billingEnabled = process.env.REACT_APP_BILLING_ENABLED === 'true';
   const location = useLocation();
   const navigate = useNavigate();
   const currentUser = getCurrentUser();
@@ -21,9 +22,9 @@ const Header = () => {
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
   const [deactivateOpen, setDeactivateOpen] = useState(false);
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     setMenuAnchor(null);
-    logout();
+    await logout();
     navigate('/login');
   };
 
@@ -81,7 +82,7 @@ const Header = () => {
               </ListItemIcon>
               Mis préstamos
             </MenuItem>
-            <MenuItem
+            {billingEnabled && <MenuItem
               component={Link}
               to="/precios"
               onClick={() => setMenuAnchor(null)}
@@ -90,7 +91,7 @@ const Header = () => {
                 <WorkspacePremiumIcon fontSize="small" color="primary" />
               </ListItemIcon>
               Actualizar a Pro
-            </MenuItem>
+            </MenuItem>}
             <Divider />
             <MenuItem
               onClick={() => {

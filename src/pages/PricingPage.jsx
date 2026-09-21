@@ -21,6 +21,7 @@ const PRO_FEATURES = [
 ];
 
 const PricingPage = () => {
+  const billingEnabled = process.env.REACT_APP_BILLING_ENABLED === 'true';
   const [searchParams] = useSearchParams();
   // Wompi (a diferencia de Stripe) no manda "success"/"cancel": solo
   // redirige de vuelta con ?id=<transacción> pase lo que pase. El
@@ -64,8 +65,10 @@ const PricingPage = () => {
           Planes de Mi Vaquita
         </Typography>
         <Typography variant="body1" align="center" color="text.secondary" sx={{ mb: 4 }}>
-          Lo esencial siempre es gratis. Pro suma un poco más de comodidad.
+          {billingEnabled ? 'Lo esencial siempre es gratis. Pro suma un poco más de comodidad.' : 'Durante el piloto, todas las funciones disponibles son gratuitas.'}
         </Typography>
+
+        {!billingEnabled && <Alert severity="info" sx={{ mb: 3 }}>Los pagos están desactivados mientras validamos Mi Vaquita con usuarios reales.</Alert>}
 
         {isReturningFromCheckout && !isPro && (
           <Alert severity="info" sx={{ mb: 3 }}>
@@ -80,7 +83,7 @@ const PricingPage = () => {
         {error && <Alert severity="error" sx={{ mb: 3 }}>{error}</Alert>}
 
         <Grid container spacing={3}>
-          <Grid item xs={12} sm={6}>
+          {billingEnabled && <Grid item xs={12} sm={6}>
             <Card sx={{ height: '100%', borderRadius: MILK_BAG_RADIUS }} elevation={2}>
               <CardContent sx={{ p: 3 }}>
                 <Typography variant="h6" sx={{ fontWeight: 700 }}>Gratis</Typography>
@@ -95,7 +98,7 @@ const PricingPage = () => {
                 </List>
               </CardContent>
             </Card>
-          </Grid>
+          </Grid>}
           <Grid item xs={12} sm={6}>
             <Card sx={{ height: '100%', borderRadius: MILK_BAG_RADIUS, border: '2px solid', borderColor: 'primary.main' }} elevation={4}>
               <CardContent sx={{ p: 3 }}>

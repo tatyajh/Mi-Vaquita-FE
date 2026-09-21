@@ -9,6 +9,7 @@ import { getCurrentUser } from '../services/AuthService';
 import '../styles/FeaturePages.css';
 import * as calendarApi from '../services/CalendarService';
 import { formatCurrency } from '../utils/currency';
+import OnboardingDialog from '../components/onboarding/OnboardingDialog';
 
 const options = [
   { tone: 'green', icon: SavingsOutlinedIcon, title: 'Organiza una natillera', copy: 'Planea cuotas, préstamos, ventas y el reparto final.', to: '/natilleras', action: 'Ver natilleras' },
@@ -19,8 +20,11 @@ const options = [
 export default function HomePage() {
   const user = getCurrentUser();
   const [upcoming,setUpcoming]=useState([]);
+  const onboardingKey = `mv_onboarding_completed:${user?.id || 'anonymous'}`;
+  const [onboardingOpen,setOnboardingOpen]=useState(() => localStorage.getItem(onboardingKey) !== 'true');
+  const closeOnboarding=()=>{localStorage.setItem(onboardingKey,'true');setOnboardingOpen(false);};
   useEffect(()=>{const now=new Date(),end=new Date();end.setDate(end.getDate()+60);calendarApi.getCalendar(now.toISOString().slice(0,10),end.toISOString().slice(0,10)).then(x=>setUpcoming(x.events.filter(e=>e.status!=='completed').slice(0,5))).catch(()=>{});},[]);
-  return <Box className="mv-page"><Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 4 } }}>
+  return <Box className="mv-page"><OnboardingDialog open={onboardingOpen} onClose={closeOnboarding}/><Box sx={{ maxWidth: 1200, mx: 'auto', p: { xs: 2, md: 4 } }}>
     <Box className="mv-home-hero">
       <Box>
         <Chip label="Todo en un solo lugar" className="mv-home-chip" />
@@ -29,6 +33,7 @@ export default function HomePage() {
         <Stack direction={{ xs: 'column', sm: 'row' }} spacing={1.5} sx={{ mt: 3 }}>
           <Button component={Link} to="/natilleras" variant="contained" color="secondary">Crear una natillera</Button>
           <Button component={Link} to="/activities" variant="outlined">Nueva actividad</Button>
+          <Button onClick={()=>setOnboardingOpen(true)}>Ver guía</Button>
         </Stack>
       </Box>
       <Box className="mv-home-visual" aria-hidden="true"><SavingsOutlinedIcon /><span>$</span></Box>

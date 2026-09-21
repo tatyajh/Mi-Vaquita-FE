@@ -33,9 +33,10 @@ import SavingsOutlinedIcon from "@mui/icons-material/SavingsOutlined";
 import CalendarMonthOutlinedIcon from "@mui/icons-material/CalendarMonthOutlined";
 import PaidOutlinedIcon from "@mui/icons-material/PaidOutlined";
 import "../styles/FeaturePages.css";
+import { formatDateCO } from '../utils/date';
 
 const today = () => new Date().toISOString().slice(0, 10);
-const dateText = (v) => String(v || "").slice(0, 10);
+const dateText = formatDateCO;
 const surface = {
   borderRadius: "20px",
   p: { xs: 2, sm: 3 },
@@ -117,6 +118,7 @@ export default function NatillerasPage() {
     description: "",
     note: "",
     borrowerType: "member",
+    role: "member",
   });
   const update = (key, value) => setForm((f) => ({ ...f, [key]: value }));
   const load = useCallback(async () => {
@@ -238,6 +240,8 @@ export default function NatillerasPage() {
           note: form.note || null,
         }),
       );
+    if (dialog === "member")
+      return run(() => api.addMember(id, { userId: Number(form.userId), role: form.role }));
     if (dialog === "ledger")
       return run(() =>
         community.addNatilleraLedger(id, {
@@ -426,7 +430,7 @@ export default function NatillerasPage() {
                       onClick={() =>
                         begin("contribution", {
                           userId: detail.members[0]?.id || "",
-                          dueOn: dateText(detail.schedule[0]?.dueOn),
+                          dueOn: String(detail.schedule[0]?.dueOn || '').slice(0, 10),
                           amount: "",
                         })
                       }
@@ -606,9 +610,9 @@ export default function NatillerasPage() {
                     </Typography>
                   </Box>
                   {admin && detail.status === "active" && (
-                    <Button
-                      variant="outlined"
-                      onClick={() =>
+                    <Stack direction={{xs:'column',sm:'row'}} spacing={1}>
+                    <Button variant="contained" onClick={() => begin('member',{userId:'',role:'member'})}>Agregar integrante</Button>
+                    <Button variant="outlined" onClick={() =>
                         begin("participantContribution", {
                           participantId:
                             detail.participants?.[0]?.participant_id || "",
@@ -620,6 +624,7 @@ export default function NatillerasPage() {
                     >
                       Registrar aporte flexible
                     </Button>
+                    </Stack>
                   )}
                 </Stack>
                 {detail.participants?.map((p) => (
@@ -638,10 +643,13 @@ export default function NatillerasPage() {
                     <Box>
                       <Typography fontWeight={800}>
                         {p.name}{" "}
-                        <Chip
-                          size="small"
-                          label={roleLabel[p.role] || p.role}
-                        />
+                        {admin && p.user_id !== detail.owner_id ? (
+                          <TextField select size="small" value={p.role} onChange={(e)=>run(()=>api.updateParticipantRole(id,p.participant_id,e.target.value))} sx={{minWidth:140,ml:1}}>
+                            {Object.entries(roleLabel).map(([value,label])=><MenuItem value={value} key={value}>{label}</MenuItem>)}
+                          </TextField>
+                        ) : (
+                          <Chip size="small" label={roleLabel[p.role] || p.role}/>
+                        )}
                       </Typography>
                       <Typography variant="body2">
                         {p.email || p.phone || "Sin contacto"} · Aportado{" "}
@@ -823,6 +831,7 @@ export default function NatillerasPage() {
                 payment: "Registrar abono",
                 quota: "Nueva cuota extraordinaria",
                 participantContribution: "Registrar aporte flexible",
+                member: "Agregar integrante",
                 ledger: "Movimiento del fondo",
               }[dialog]
             }
@@ -954,6 +963,17 @@ export default function NatillerasPage() {
                     </MenuItem>
                   ))}
                 </TextField>
+              )}
+              {dialog === "member" && (
+                <>
+                  <Alert severity="info">Solo se muestran amistades con una cuenta activa. La incorporación y los cambios de rol quedarán auditados.</Alert>
+                  <TextField select label="Persona" value={form.userId} onChange={(e)=>update('userId',e.target.value)}>
+                    {friends.filter((f)=>!detail?.members?.some((m)=>Number(m.id)===Number(f.friend_user_id))).map((f)=><MenuItem key={f.friend_user_id} value={f.friend_user_id}>{f.name}</MenuItem>)}
+                  </TextField>
+                  <TextField select label="Rol" value={form.role} onChange={(e)=>update('role',e.target.value)}>
+                    {Object.entries(roleLabel).map(([value,label])=><MenuItem key={value} value={value}>{label}</MenuItem>)}
+                  </TextField>
+                </>
               )}
               {dialog === "contribution" && (
                 <TextField

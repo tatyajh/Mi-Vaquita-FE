@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { Box, Container, Link, Paper, Typography } from '@mui/material';
+import { Alert, Box, Container, Link, Paper, Typography } from '@mui/material';
 
 const TermsPage = () => {
   return (
@@ -13,6 +13,7 @@ const TermsPage = () => {
           <Typography variant="body2" color="text.secondary" sx={{ mb: 3 }}>
             Última actualización: septiembre de 2026
           </Typography>
+          <Alert severity="warning" sx={{ mb: 3 }}><strong>Documento preliminar para piloto gratuito.</strong> No habilitar ventas hasta completar y revisar: responsable legal, identificación, domicilio, correo y canal de reclamaciones.</Alert>
 
           <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>1. Qué es Mi Vaquita</Typography>
           <Typography variant="body1" sx={{ mb: 2 }}>
@@ -49,6 +50,11 @@ const TermsPage = () => {
           <Typography variant="body1" sx={{ mb: 2 }}>
             Podemos actualizar estos términos ocasionalmente. Si los cambios son
             importantes, lo indicaremos dentro de la aplicación.
+          </Typography>
+
+          <Typography variant="h6" sx={{ mt: 3, mb: 1 }}>6. Responsable y contacto</Typography>
+          <Typography variant="body1" sx={{ mb: 2 }}>
+            [PENDIENTE ANTES DE VENDER: nombre o razón social] · [identificación] · [domicilio] · [correo de atención] · [canal de reclamaciones].
           </Typography>
 
           <Typography variant="body2" sx={{ mt: 4 }}>

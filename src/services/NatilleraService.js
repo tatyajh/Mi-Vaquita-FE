@@ -10,5 +10,7 @@ export const getContributionAudit=id=>apiClient.get(`${root}/${id}/audit`).then(
 export const addLoan=(id,body)=>apiClient.post(`${root}/${id}/loans`,body).then(data);
 export const addLoanPayment=(id,loanId,body)=>apiClient.post(`${root}/${id}/loans/${loanId}/payments`,body).then(data);
 export const getMyLoans=()=>apiClient.get(`${root}/loans/mine`).then(data);
+export const addMember=(id,body)=>apiClient.post(`${root}/${id}/members`,body).then(data);
+export const updateParticipantRole=(id,participantId,role)=>apiClient.patch(`${root}/${id}/participants/${participantId}/role`,{role}).then(data);
 export const getClosure=id=>apiClient.get(`${root}/${id}/closure`).then(data);
 export const closeNatillera=id=>apiClient.post(`${root}/${id}/close`).then(data);

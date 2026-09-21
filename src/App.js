@@ -12,6 +12,7 @@ import PrivacyPage from "./pages/PrivacyPage";
 import LandingPage from "./pages/LandingPage";
 import PrivateActivityPage from "./pages/PrivateActivityPage";
 import PrivateNatilleraPage from "./pages/PrivateNatilleraPage";
+import MobileNavigation from "./components/common/MobileNavigation";
 
 const App = () => {
   return (
@@ -46,6 +47,7 @@ const PrivateRoutes = () => {
     <>
       <Header />
       <AppRoutes />
+      <MobileNavigation />
     </>
   );
 };

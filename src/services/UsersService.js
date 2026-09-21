@@ -5,7 +5,7 @@ const baseUrl = `${process.env.REACT_APP_API_URL}`;
 
 export const login = async (email, password) => {
   try {
-    const response = await axios.post(`${baseUrl}/auth/login`, { email, password });
+    const response = await axios.post(`${baseUrl}/auth/login`, { email, password }, { withCredentials: true });
     return response.data;
   } catch (error) {
     console.error("Error al iniciar sesión:", error);
