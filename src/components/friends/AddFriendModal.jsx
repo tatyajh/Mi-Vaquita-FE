@@ -6,10 +6,12 @@ const MAX_GROUP_MEMBERS = 20;
 const AddFriendsModal = ({ open, onClose, onAddFriends, friends, currentMemberCount = 0 }) => {
   const [selectedFriends, setSelectedFriends] = useState([]);
   const [error, setError] = useState('');
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setSelectedFriends([]);
     setError('');
+    setSaving(false);
   }, [open]);
 
   const remainingSlots = Math.max(MAX_GROUP_MEMBERS - currentMemberCount, 0);
@@ -29,7 +31,7 @@ const AddFriendsModal = ({ open, onClose, onAddFriends, friends, currentMemberCo
     });
   };
 
-  const handleAddFriends = () => {
+  const handleAddFriends = async () => {
     if (selectedFriends.length === 0) {
       setError('Elige al menos a un amigo para continuar.');
       return;
@@ -38,8 +40,14 @@ const AddFriendsModal = ({ open, onClose, onAddFriends, friends, currentMemberCo
       setError(`Un grupo puede tener como máximo ${MAX_GROUP_MEMBERS} integrantes.`);
       return;
     }
-    onAddFriends(selectedFriends);
-    onClose();
+    setSaving(true);
+    try {
+      await onAddFriends(selectedFriends);
+    } catch (e) {
+      setError(e.response?.data?.message || 'No se pudieron agregar los amigos.');
+    } finally {
+      setSaving(false);
+    }
   };
 
   return (
@@ -66,23 +74,31 @@ const AddFriendsModal = ({ open, onClose, onAddFriends, friends, currentMemberCo
           Cupos disponibles en el grupo: {remainingSlots} de {MAX_GROUP_MEMBERS}
         </Typography>
         <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
-          {friends.map((friend) => (
+          {friends.map((friend) => {
+            const userId = friend.friend_user_id ?? friend.id;
+            return (
             <FormControlLabel
-              key={friend.id}
-              control={<Checkbox checked={selectedFriends.includes(friend.id)} onChange={() => handleToggleFriend(friend.id)} />}
-              label={`${friend.email}`}
+              key={userId}
+              control={<Checkbox checked={selectedFriends.includes(userId)} onChange={() => handleToggleFriend(userId)} />}
+              label={friend.name ? `${friend.name} · ${friend.email}` : friend.email}
             />
-          ))}
+            );
+          })}
+          {friends.length === 0 && (
+            <Typography variant="body2" color="text.secondary" sx={{ textAlign: 'center', py: 2 }}>
+              No tienes amigos disponibles para agregar a este grupo.
+            </Typography>
+          )}
         </Box>
         {error && <Typography color="error" variant="body2" sx={{ mt: 1 }}>{error}</Typography>}
         <Button
           variant="contained"
           color="primary"
           onClick={handleAddFriends}
-          disabled={remainingSlots === 0}
+          disabled={remainingSlots === 0 || saving || friends.length === 0}
           sx={{ mt: 2, width: '100%' }}
         >
-          Agregar
+          {saving ? 'Agregando…' : 'Agregar'}
         </Button>
       </Box>
     </Modal>

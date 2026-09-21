@@ -102,7 +102,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       setAddFriendsModalOpen(false);
     } catch (error) {
       console.error('Error adding friends to the group:', error);
-      alert(error.response?.data?.message || 'No se pudieron agregar los amigos al grupo.');
+      throw error;
     }
   };
 
@@ -394,7 +394,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       <AddFriendsModal
         open={isAddFriendsModalOpen}
         onClose={() => setAddFriendsModalOpen(false)}
-        friends={friends}
+        friends={friends.filter((friend) => !participants.some((participant) => Number(participant.id) === Number(friend.friend_user_id ?? friend.id)))}
         onAddFriends={handleAddFriends}
         currentMemberCount={participants.length}
       />
