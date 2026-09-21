@@ -30,6 +30,7 @@ import { getTipsForTripType } from '../../data/savingsTips';
 import { MILK_BAG_RADIUS } from '../../utils/shape';
 import { markGroupViewed } from '../../utils/lastViewed';
 import ShareIcon from '@mui/icons-material/Share';
+import FileDownloadIcon from '@mui/icons-material/FileDownload';
 import { Link } from 'react-router-dom';
 
 const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
@@ -129,6 +130,27 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
     } catch (error) {
       console.error('Error deleting expense:', error);
       alert(error.response?.data?.message || 'No se pudo eliminar el gasto. Intenta de nuevo.');
+    }
+  };
+
+  const handleExport = async () => {
+    try {
+      const csvBlob = await ExpensesService.exportGroupExpenses(group.id);
+      const url = window.URL.createObjectURL(csvBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = `grupo-${group.id}-gastos.csv`;
+      link.click();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      if (error.response?.status === 403) {
+        if (window.confirm('Exportar a Excel es una función Pro. ¿Quieres ver los planes?')) {
+          window.location.href = '/precios';
+        }
+        return;
+      }
+      console.error('Error exporting group expenses:', error);
+      alert('No se pudo exportar el grupo. Intenta de nuevo.');
     }
   };
 
@@ -250,9 +272,14 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
             p: { xs: 2, sm: 3 },
           }}
         >
-          <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 700, mb: 1.5 }}>
-            Cuentas
-          </Typography>
+          <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 1.5, flexWrap: 'wrap', gap: 1 }}>
+            <Typography variant="h6" sx={{ color: 'primary.main', fontWeight: 700 }}>
+              Cuentas
+            </Typography>
+            <Button size="small" startIcon={<FileDownloadIcon />} onClick={handleExport}>
+              Exportar a Excel
+            </Button>
+          </Box>
 
           {settlements.length > 0 ? (
             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>

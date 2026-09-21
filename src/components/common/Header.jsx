@@ -5,6 +5,7 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import LockResetIcon from '@mui/icons-material/LockReset';
 import PersonOffIcon from '@mui/icons-material/PersonOff';
 import LogoutIcon from '@mui/icons-material/Logout';
+import WorkspacePremiumIcon from '@mui/icons-material/WorkspacePremium';
 import styles from '../../styles/Header.module.css';
 import Logo from '../../assets/layer-MC1.svg';
 import { getCurrentUser, logout } from '../../services/AuthService';
@@ -70,6 +71,17 @@ const Header = () => {
             </IconButton>
           </Tooltip>
           <Menu anchorEl={menuAnchor} open={Boolean(menuAnchor)} onClose={() => setMenuAnchor(null)}>
+            <MenuItem
+              component={Link}
+              to="/precios"
+              onClick={() => setMenuAnchor(null)}
+            >
+              <ListItemIcon>
+                <WorkspacePremiumIcon fontSize="small" color="primary" />
+              </ListItemIcon>
+              Actualizar a Pro
+            </MenuItem>
+            <Divider />
             <MenuItem
               onClick={() => {
                 setMenuAnchor(null);

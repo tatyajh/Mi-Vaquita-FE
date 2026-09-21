@@ -42,6 +42,14 @@ export const deleteExpense = async (id) => {
   }
 };
 
+// Función Pro: descarga el CSV de gastos/saldos del grupo. responseType
+// 'blob' porque el backend devuelve texto CSV, no JSON; un 403 significa
+// que el usuario no tiene el plan Pro (lo maneja quien llama a esto).
+export const exportGroupExpenses = async (groupId) => {
+  const response = await apiClient.get(`${baseUrl}/group/${groupId}/export`, { responseType: 'blob' });
+  return response.data;
+};
+
 // Best-effort: el backend puede no tener el storage de recibos
 // configurado todavía (devuelve 501). En ese caso devolvemos null en
 // vez de lanzar, para que crear el gasto nunca quede bloqueado por la
@@ -66,6 +74,7 @@ const ExpensesService = {
   createExpense,
   deleteExpense,
   uploadReceipt,
+  exportGroupExpenses,
 };
 
 export default ExpensesService;
