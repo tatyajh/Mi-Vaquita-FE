@@ -12,12 +12,12 @@ const FREE_FEATURES = [
   'Grupos, gastos y saldos ilimitados',
   'Natilleras y actividades (amigo secreto, rifas)',
   'Amigos y reparto automático de gastos',
+  'Recordatorios automáticos por correo (cuotas, cuentas y préstamos)',
 ];
 
 const PRO_FEATURES = [
   'Exportar el historial de cada grupo a Excel/CSV',
-  'Recordatorios automáticos de cuotas de natillera pendientes',
-  'Colores de grupo personalizados',
+  'Colores de grupo 100% personalizados',
 ];
 
 const PricingPage = () => {

@@ -5,6 +5,7 @@ import GroupService from '../../services/GroupService';
 import { TRIP_TYPES } from '../../data/savingsTips';
 import ColorSwatchPicker, { GROUP_COLORS } from './ColorSwatchPicker';
 import { MILK_BAG_RADIUS } from '../../utils/shape';
+import billingService from '../../services/BillingService';
 
 const GroupModal = ({ open, onClose, group, onSave }) => {
     const [groupName, setGroupName] = useState('');
@@ -12,6 +13,20 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
     const [tripType, setTripType] = useState('');
     const [photoData, setPhotoData] = useState(null);
     const [error, setError] = useState('');
+    const [isPro, setIsPro] = useState(false);
+
+    useEffect(() => {
+        if (!open) return;
+        billingService.getBillingStatus()
+            .then((status) => setIsPro(Boolean(status.isPro)))
+            .catch(() => setIsPro(false));
+    }, [open]);
+
+    const handleRequestColorUpgrade = () => {
+        if (window.confirm('Los colores personalizados son una función Pro. ¿Quieres ver los planes?')) {
+            window.location.href = '/precios';
+        }
+    };
 
     useEffect(() => {
         if (group) {
@@ -46,6 +61,9 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
             }
             onSave(response);
         } catch (error) {
+            if (error.response?.data?.code === 'PRO_REQUIRED') {
+                setIsPro(false);
+            }
             setError(error.response?.data?.message || 'Ocurrió un error al guardar el grupo.');
         }
     };
@@ -104,7 +122,12 @@ const GroupModal = ({ open, onClose, group, onSave }) => {
                         <MenuItem key={t.value} value={t.value}>{t.emoji} {t.label}</MenuItem>
                     ))}
                 </TextField>
-                <ColorSwatchPicker value={groupColor} onChange={setGroupColor} />
+                <ColorSwatchPicker
+                    value={groupColor}
+                    onChange={setGroupColor}
+                    isPro={isPro}
+                    onRequestUpgrade={handleRequestColorUpgrade}
+                />
                 <Box sx={{ mt: 2 }}>
                     <Typography fontWeight={700} sx={{ mb: 1 }}>Foto de la salida (opcional)</Typography>
                     <Button component="label" variant="outlined" fullWidth>
