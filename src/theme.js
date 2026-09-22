@@ -19,13 +19,13 @@ const theme = createTheme({
       main: '#e8382f',
       light: '#fdecea',
       dark: '#b12b23',
-      contrastText: '#e8382f',
+      contrastText: '#ffffff',
     },
     success: {
       main: '#2fbf5b',
       light: '#e6f9ec',
       dark: '#1f8f42',
-      contrastText: '#2fbf5b',
+      contrastText: '#ffffff',
     },
     // Verde real de marca (tipo Cosechas: #9FCB3B/#23B24A), pensado
     // para usarse como acento de UI de verdad (botones, banners,
