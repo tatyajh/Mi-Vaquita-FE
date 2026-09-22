@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Box, Button, MenuItem, Modal, TextField, Typography, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
+import { Box, Button, Modal, TextField, Typography, IconButton, ToggleButtonGroup, ToggleButton } from '@mui/material';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import CloseIcon from '@mui/icons-material/Close';
 import PaymentsOutlinedIcon from '@mui/icons-material/PaymentsOutlined';
@@ -21,10 +21,15 @@ const PAYMENT_METHODS = [
   { value: 'tarjeta', label: 'Tarjeta', icon: <CreditCardOutlinedIcon fontSize="small" /> },
 ];
 
-const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }) => {
+const AddExpenseModal = ({ open, onClose, onAddExpense, currentUserId }) => {
   const [description, setDescription] = useState('');
   const [amount, setAmount] = useState('');
-  const [paidByUserId, setPaidByUserId] = useState(currentUserId ?? '');
+  // Un miembro registrado solo puede anotar lo que ÉL pagó, nunca a
+  // nombre de otro miembro registrado sin su consentimiento. Si quien
+  // pagó de verdad no quiere registrarse, se anota con su nombre en
+  // vez de elegirlo de la lista de miembros.
+  const [payerMode, setPayerMode] = useState('self');
+  const [payerName, setPayerName] = useState('');
   const [receiptFile, setReceiptFile] = useState(null);
   const [receiptPreview, setReceiptPreview] = useState(null);
   const [category, setCategory] = useState('otro');
@@ -35,13 +40,14 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
     if (open) {
       setDescription('');
       setAmount('');
-      setPaidByUserId(currentUserId ?? (members[0]?.userId ?? ''));
+      setPayerMode('self');
+      setPayerName('');
       setReceiptFile(null);
       setReceiptPreview(null);
       setCategory('otro');
       setPaymentMethod('efectivo');
     }
-  }, [open, currentUserId, members]);
+  }, [open]);
 
   useEffect(() => {
     // Preview client-side inmediata vía URL.createObjectURL, sin
@@ -60,12 +66,17 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
     setReceiptFile(file || null);
   };
 
+  const trimmedPayerName = payerName.trim();
+  const canSubmit = description.trim() && amount && Number(amount) > 0
+    && (payerMode === 'self' || trimmedPayerName);
+
   const handleSubmit = () => {
-    if (!description.trim() || !amount || Number(amount) <= 0 || !paidByUserId) return;
+    if (!canSubmit) return;
     onAddExpense({
       description: description.trim(),
       amount: Number(amount),
-      paidByUserId,
+      paidByUserId: payerMode === 'self' ? currentUserId : undefined,
+      paidByName: payerMode === 'other' ? trimmedPayerName : undefined,
       receiptFile,
       category,
       paymentMethod,
@@ -110,20 +121,29 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
         />
-        <TextField
-          select
-          label="¿Quién pagó?"
+        <Typography variant="caption" sx={{ display: 'block', mt: 2, mb: 0.5, fontWeight: 700, color: 'text.secondary' }}>
+          ¿Quién pagó?
+        </Typography>
+        <ToggleButtonGroup
+          value={payerMode}
+          exclusive
           fullWidth
-          margin="normal"
-          value={paidByUserId}
-          onChange={(e) => setPaidByUserId(e.target.value)}
+          onChange={(e, val) => val && setPayerMode(val)}
+          sx={{ '& .MuiToggleButton-root': { borderRadius: 999, border: '2px solid', borderColor: 'divider' } }}
         >
-          {members.map((member) => (
-            <MenuItem key={member.userId} value={member.userId}>
-              {member.name || member.email}
-            </MenuItem>
-          ))}
-        </TextField>
+          <ToggleButton value="self">Yo</ToggleButton>
+          <ToggleButton value="other">Otra persona (no registrada)</ToggleButton>
+        </ToggleButtonGroup>
+        {payerMode === 'other' && (
+          <TextField
+            label="Nombre de quién pagó"
+            helperText="Solo puedes anotar gastos que tú mismo pagaste. Si pagó alguien más, escribe su nombre en vez de elegir a otro miembro."
+            fullWidth
+            margin="normal"
+            value={payerName}
+            onChange={(e) => setPayerName(e.target.value)}
+          />
+        )}
 
         <Typography variant="caption" sx={{ display: 'block', mt: 2, mb: 0.5, fontWeight: 700, color: 'text.secondary' }}>
           Categoría
@@ -211,6 +231,7 @@ const AddExpenseModal = ({ open, onClose, onAddExpense, members, currentUserId }
           variant="contained"
           color="primary"
           fullWidth
+          disabled={!canSubmit}
           onClick={handleSubmit}
           sx={{ mt: 2 }}
         >

@@ -3,7 +3,6 @@ import { Routes, Route, Navigate } from "react-router-dom";
 import FriendsPage from "./pages/FriendsPage";
 import GroupsPage from "./pages/GroupsPage";
 import NatillerasPage from './pages/NatillerasPage';
-import ActivitiesPage from './pages/ActivitiesPage';
 import CommunityActivitiesPage from './pages/CommunityActivitiesPage';
 import HomePage from './pages/HomePage';
 import PricingPage from './pages/PricingPage';
@@ -25,8 +24,6 @@ const AppRoutes = () => {
       <Route path="natilleras/:id" element={<NatillerasPage />} />
       <Route path="activities" element={<CommunityActivitiesPage />} />
       <Route path="activities/:activityId" element={<CommunityActivitiesPage />} />
-      <Route path="groups/:groupId/activities" element={<ActivitiesPage />} />
-      <Route path="groups/:groupId/activities/:activityId" element={<ActivitiesPage />} />
       <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );

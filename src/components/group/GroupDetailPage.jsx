@@ -31,7 +31,6 @@ import { MILK_BAG_RADIUS } from '../../utils/shape';
 import { markGroupViewed } from '../../utils/lastViewed';
 import ShareIcon from '@mui/icons-material/Share';
 import FileDownloadIcon from '@mui/icons-material/FileDownload';
-import { Link } from 'react-router-dom';
 
 const initials = (name = '', email = '') => (name || email || '?').trim().charAt(0).toUpperCase();
 
@@ -106,7 +105,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
     }
   };
 
-  const handleAddExpense = async ({ description, amount, paidByUserId, receiptFile, category, paymentMethod }) => {
+  const handleAddExpense = async ({ description, amount, paidByUserId, paidByName, receiptFile, category, paymentMethod }) => {
     try {
       // El upload del recibo es best-effort: si falla o el backend no
       // lo tiene configurado (uploadReceipt ya devuelve null en ese
@@ -115,7 +114,7 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
       if (receiptFile) {
         receiptUrl = await ExpensesService.uploadReceipt(receiptFile);
       }
-      await ExpensesService.createExpense({ groupId: group.id, paidByUserId, description, amount, receiptUrl, category, paymentMethod });
+      await ExpensesService.createExpense({ groupId: group.id, paidByUserId, paidByName, description, amount, receiptUrl, category, paymentMethod });
       await loadExpensesAndBalances();
     } catch (error) {
       console.error('Error adding expense:', error);
@@ -205,7 +204,6 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         >
           Volver
         </Button>
-        <Button component={Link} to={`/groups/${group.id}/activities`} sx={{ ml: 2 }} variant="contained">Amigo secreto y rifas</Button>
       </Box>
 
       {/* Group header, washed in the group's own color */}
@@ -289,6 +287,8 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
                   sx={{
                     display: 'flex',
                     alignItems: 'center',
+                    flexWrap: 'wrap',
+                    rowGap: 0.5,
                     gap: 1.5,
                     bgcolor: 'background.paper',
                     borderRadius: '14px',
@@ -296,12 +296,12 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
                     py: 1.25,
                   }}
                 >
-                  <Typography sx={{ fontWeight: 700 }}>{s.from.name}</Typography>
+                  <Typography sx={{ fontWeight: 700, wordBreak: 'break-word' }}>{s.from.name}</Typography>
                   <Typography color="text.secondary" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
                     le paga <ArrowForwardIcon fontSize="small" />
                   </Typography>
-                  <Typography sx={{ fontWeight: 700 }}>{s.to.name}</Typography>
-                  <Typography variant="h5" sx={{ ml: 'auto', fontWeight: 900, color: 'primary.main' }}>
+                  <Typography sx={{ fontWeight: 700, wordBreak: 'break-word' }}>{s.to.name}</Typography>
+                  <Typography variant="h5" sx={{ ml: { xs: 0, sm: 'auto' }, fontWeight: 900, color: 'primary.main' }}>
                     {currency(s.amount)}
                   </Typography>
                 </Box>
@@ -402,7 +402,6 @@ const GroupDetailPage = ({ group, onBack, onEdit, onDelete }) => {
         open={isAddExpenseModalOpen}
         onClose={() => setAddExpenseModalOpen(false)}
         onAddExpense={handleAddExpense}
-        members={balances?.balances ?? []}
         currentUserId={currentUser?.id}
       />
     </>

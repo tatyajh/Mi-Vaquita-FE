@@ -13,11 +13,11 @@ export default function OnboardingDialog({ open, onClose }) {
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
   const finish = () => { setStep(0); onClose(); };
-  return <Dialog open={open} onClose={finish} fullScreen={fullScreen} fullWidth maxWidth="sm" PaperProps={{ sx: { borderRadius: { xs: 0, sm: 5 } } }}>
+  return <Dialog open={open} onClose={finish} fullScreen={fullScreen} fullWidth maxWidth="sm" PaperProps={{ sx: { borderRadius: { xs: 0, sm: '28px' } } }}>
     <DialogTitle sx={{ color: 'success.dark', fontWeight: 800 }}>{steps[step].title}</DialogTitle>
     <DialogContent>
       <Typography color="text.secondary">{steps[step].body}</Typography>
-      {step === 2 && <Paper variant="outlined" sx={{ mt: 3, p: 2.5, borderRadius: 4, bgcolor: '#f1f7df' }}>
+      {step === 2 && <Paper variant="outlined" sx={{ mt: 3, p: 2.5, borderRadius: '16px', bgcolor: '#f1f7df' }}>
         <Stack direction="row" spacing={2} alignItems="center"><SavingsOutlinedIcon color="success" fontSize="large" /><Box>
           <Typography fontWeight={800}>Ejemplo · Natillera Las Vecinas</Typography>
           <Typography variant="body2">Aportes registrados: $600.000 · Próxima cuota: 30 de septiembre</Typography>
